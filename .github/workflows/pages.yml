@@ -1,0 +1,52 @@
+# Builds the game and publishes it on GitHub Pages on every push to main.
+#   https://<owner>.github.io/<repo>/       release build (dev mode off)
+#   https://<owner>.github.io/<repo>/dev/   dev build (dev panel on)
+# One-time setup: Settings → Pages → Build and deployment → Source: «GitHub Actions».
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4 # version from «packageManager» in package.json
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build # typecheck + dist/dev/index.html + dist/release/index.html
+      - name: Assemble the site
+        run: |
+          mkdir -p site/dev
+          cp dist/release/index.html site/index.html
+          cp dist/dev/index.html site/dev/index.html
+          touch site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

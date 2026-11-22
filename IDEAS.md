@@ -54,3 +54,5 @@ The ninjas must be the same size as the girls and more elaborate animations.
 The airport express train needs more carriages. 
 
 The red tomato soup train should come to a halt.
+
+girlfriend must also die if hit by tram.

@@ -43,6 +43,14 @@ This typechecks and writes two self-contained single files, with the JS, CSS and
 
 You can also build just one with `pnpm build:dev` or `pnpm build:release`. `pnpm preview` serves the release build.
 
+## Play online (GitHub Pages)
+
+The game is published at **https://tysseng.github.io/oslostil/** (the dev build, with the dev panel on, is at `/dev/`).
+
+- `.github/workflows/pages.yml` builds both single-file builds and deploys them on every push to `main` (or by hand: Actions → «Deploy to GitHub Pages» → Run workflow).
+- One-time setup: in the repo on GitHub, **Settings → Pages → Build and deployment → Source: GitHub Actions**. Pages needs a public repo on a free plan.
+- Everything (code, sprites, the song) is inlined in one `index.html`, so no base path or asset setup is needed. Only the Press Start 2P font is loaded from Google Fonts.
+
 ## Dev mode
 
 Toggle it with the key left of «1» (§ on a Nordic Mac keyboard, ` on US layouts), in every build. It is on by default in `pnpm dev` and the dev build. It shows:

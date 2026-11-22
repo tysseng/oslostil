@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added bus station and plenty more">
-      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="More and more and more">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/IDEAS.md" beforeDir="false" afterPath="$PROJECT_DIR$/IDEAS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/kaostrikken.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/kaostrikken.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/sprites/boss.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/boss.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,23 +19,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.003889663017722" />
-      <entry key="MS500" value="1.5247406390510179" />
-      <entry key="S2" value="4.359268423693127" />
-      <entry key="S5" value="8.60092452324138" />
-      <entry key="S10" value="12.559566008042244" />
-      <entry key="S30" value="17.38531461829776" />
-      <entry key="S60" value="19.062910018310394" />
-      <entry key="M2" value="19.996202642271165" />
-      <entry key="M5" value="20.589636349048828" />
-      <entry key="M10" value="20.828256861333145" />
-      <entry key="M15" value="21.521015272424613" />
-      <entry key="M30" value="34.612648734688364" />
-      <entry key="H1" value="89.40317009847804" />
-      <entry key="H2" value="185.0440870289813" />
-      <entry key="H4" value="283.1533667467234" />
-      <entry key="D1" value="416.84914700434996" />
-      <entry key="W1" value="446.7691867255927" />
+      <entry key="MS100" value="1.0000000000009035" />
+      <entry key="MS500" value="1.0053784510137533" />
+      <entry key="S2" value="2.0433171826526992" />
+      <entry key="S5" value="4.8704891035802085" />
+      <entry key="S10" value="7.170751817403237" />
+      <entry key="S30" value="9.4981570528605" />
+      <entry key="S60" value="10.27155037489696" />
+      <entry key="M2" value="11.450476298689622" />
+      <entry key="M5" value="16.922697416093985" />
+      <entry key="M10" value="23.362746766595734" />
+      <entry key="M15" value="27.187030940284362" />
+      <entry key="M30" value="41.70803037856825" />
+      <entry key="H1" value="93.7670525845291" />
+      <entry key="H2" value="188.81231747636812" />
+      <entry key="H4" value="289.6909582509215" />
+      <entry key="D1" value="430.5027613425178" />
+      <entry key="W1" value="462.409238689762" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -64,23 +57,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9696934913339559" />
-      <entry key="MS500" value="1.5141175296286915" />
-      <entry key="S2" value="4.351276724170964" />
-      <entry key="S5" value="8.594259836262124" />
-      <entry key="S10" value="12.554496718209938" />
-      <entry key="S30" value="17.382884036593882" />
-      <entry key="S60" value="19.06156257535252" />
-      <entry key="M2" value="19.995491844303963" />
-      <entry key="M5" value="20.589342555880215" />
-      <entry key="M10" value="20.82810813316205" />
-      <entry key="M15" value="21.520913337128" />
-      <entry key="M30" value="34.612571535140056" />
-      <entry key="H1" value="89.40306562854782" />
-      <entry key="H2" value="185.04395620207637" />
-      <entry key="H4" value="283.15324961093995" />
-      <entry key="D1" value="416.8491133511768" />
-      <entry key="W1" value="446.76918142159195" />
+      <entry key="MS100" value="0.9659363289257182" />
+      <entry key="MS500" value="0.9984332817678931" />
+      <entry key="S2" value="2.0395771665448748" />
+      <entry key="S5" value="4.866685941845094" />
+      <entry key="S10" value="7.167884375812592" />
+      <entry key="S30" value="9.496870615728195" />
+      <entry key="S60" value="10.270853389650588" />
+      <entry key="M2" value="11.450092900766482" />
+      <entry key="M5" value="16.92247548273818" />
+      <entry key="M10" value="23.362593527339936" />
+      <entry key="M15" value="27.186911997602124" />
+      <entry key="M30" value="41.707940810951555" />
+      <entry key="H1" value="93.76694573355033" />
+      <entry key="H2" value="188.81218733084023" />
+      <entry key="H4" value="289.6908410582915" />
+      <entry key="D1" value="430.50272722005275" />
+      <entry key="W1" value="462.4092332960372" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -138,6 +131,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First version of oslostil game" />
     <MESSAGE value="Added bus station and plenty more" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added bus station and plenty more" />
+    <MESSAGE value="More and more and more" />
+    <option name="LAST_COMMIT_MESSAGE" value="More and more and more" />
   </component>
 </project>
