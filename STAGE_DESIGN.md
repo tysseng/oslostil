@@ -11,6 +11,7 @@ Oslo-stil has 8 stages that follow the song «Oslostil» (122 BPM, 2:27.6) bar b
 - **Now** = built and in the game today (`src/timeline.ts`, `src/schedule.ts`, `src/render/scenes.ts`).
 - **Proposed** = from `IDEAS.md` or gaps found while writing this; nothing here is decided until Joakim says so.
 - Times are song time (m:ss); bars follow the backing track, so vocal beats can sit a little off the bar grid.
+- The game starts in the evening at dusk and runs into the night, under the gradient skies the stages have today.
 
 ## Purpose and how to play
 
@@ -41,6 +42,7 @@ Oslo-stil is a playable music video: the song always plays to the end, and the p
 | Combo multiplier | ×1 to ×5 (one step per 8 hits) |
 | Boss hit | 30 |
 | Final hit | 2,000, plus 3,000 if the boss is at 0 HP |
+| Destroying a pram (proposed) | Minus points |
 
 **What makes each stage interesting**
 
@@ -49,10 +51,10 @@ Oslo-stil is a playable music video: the song always plays to the end, and the p
 | 0 · Intro | Calm warm-up: the first suitcases and tickets | Timing a jump | Street fixtures to climb on |
 | 1 · Sandvika | Ticket hunt: patterns reward double jumps and route choice; Victoria wakes up | Movement and collecting; this sets your ammo for the whole song | Jump on Victoria to reach the highest tickets |
 | 2 · Glitch | The screen works against you: glitch bars and blobs | Reading the beat through visual noise | Platforms that blink on the beat |
-| 3 · Neon | First real fight and first tram ride; speed jumps to 165 | Combat and riding | A new flying enemy instead of drones |
-| 4 · Map | Longest stage (16 bars): 2-HP bots, the triple-throw power-up and the ninja transformation | Spending ammo wisely | Subway section, rooftop running |
-| 5 · Kollektivkaos | Fastest yet (175), fire you can't destroy, two trams | Surviving under pressure | Giant ape, Eplehuset crash |
-| 6 · Final wave | Two enemies on every beat | Holding the combo | Escalating fire and sky |
+| 3 · Neon | First real fight and first tram ride through glossy modern Oslo; speed jumps to 165 | Combat and riding | Seagulls that poop on you instead of drones |
+| 4 · Map | Longest stage (16 bars): 2-HP bots, the triple-throw power-up and the ninja transformation, while the city turns British, the T-bane map grows and it all becomes Tokyoslo | Spending ammo wisely | T-bane train at the start, rooftop running |
+| 5 · Kollektivkaos | Fastest yet (175), fire you can't destroy, two trams | Surviving under pressure | Eplehuset crash |
+| 6 · Final wave | Two enemies on every beat | Holding the combo | A Godzilla-like monster wrecking the city |
 | 7 · Boss | A target that fires back on the beat | Precision, and saving tickets for it | Weak points on the eyes and the core |
 
 The main design tension is ammo: tickets only exist at Sandvika, so what you collect in the first 50 seconds decides how hard the boss fight is.
@@ -66,11 +68,11 @@ The song runs through 8 stages in 2:27.6; speed rises from 110 to 205 px/s as th
 | 0 | PLAYER ONE | Intro | 1–9 | 0:00–0:17.7 | Bus terminal outside Sandvika | 110 |
 | 1 | LEVEL 1 · Sandvika stasjon | Verse 1 | 10–25 | 0:17.7–0:49.2 | Sandvika station platform | 120 |
 | 2 | LEVEL 2 · Tekst-til-tale glitch | Pre-chorus 1 | 26–33 | 0:49.2–1:05.0 | Sandvika, glitching | 130 |
-| 3 | LEVEL 3 · Inn i spillet · Oslo neon | Chorus 1 | 34–41 | 1:05.0–1:20.7 | Neon coin-op Oslo | 165 |
-| 4 | LEVEL 4 · Language changed | Verse 2 | 42–57 | 1:20.7–1:52.2 | «Hele Oslo på en skjerm»: the city map | 145 |
-| 5 | LEVEL 5 · Kollektivkaos | Pre-chorus 2 | 58–65 | 1:52.2–2:07.9 | Burning trams and buses | 175 |
-| 6 | FINAL WAVE · Siste bølge | Chorus 2 | 66–69 | 2:07.9–2:15.8 | Chaos city | 195 |
-| 7 | BOSS · Kaos-trikken | Chorus 2 end + instrumental | 70–76 | 2:15.8–2:27.6 | Burning city, then neon city with a red sun | 195–205 |
+| 3 | LEVEL 3 · Inn i spillet · Oslo neon | Chorus 1 | 34–41 | 1:05.0–1:20.7 | Glossy modern Oslo in neon | 165 |
+| 4 | LEVEL 4 · Language changed | Verse 2 | 42–57 | 1:20.7–1:52.2 | Classic British Oslo, the T-bane map, then Tokyoslo | 145 |
+| 5 | LEVEL 5 · Kollektivkaos | Pre-chorus 2 | 58–65 | 1:52.2–2:07.9 | Burning Tokyoslo | 175 |
+| 6 | FINAL WAVE · Siste bølge | Chorus 2 | 66–69 | 2:07.9–2:15.8 | Burning Tokyoslo | 195 |
+| 7 | BOSS · Kaos-trikken | Chorus 2 end + instrumental | 70–76 | 2:15.8–2:27.6 | Burning Tokyoslo, then Tokyoslo under a red sun | 195–205 |
 
 After the final hit on «Oslo-STIL!» at 2:27.6, the win screen follows 2.2 s later.
 
@@ -78,15 +80,16 @@ After the final hit on «Oslo-STIL!» at 2:27.6, the win screen follows 2.2 s la
 
 Two girls waiting for a train at Sandvika befriend a ticket machine that shares the singer's name, get pulled into a retro arcade version of Oslo, turn into ninjas and end by defeating Kaos-trikken. Each beat is tied to a lyric line.
 
-1. **Intro, cold evening.** The girls walk through the bus terminal towards the station. «PLAYER ONE · TEKST-TIL-TALE ER STARTET».
+1. **Intro, a cold evening.** The girls walk through the bus terminal towards the station. «PLAYER ONE · TEKST-TIL-TALE ER STARTET».
 2. **Sandvika stasjon.** «tre blå maskiner står og lyser for seg selv»: three ticket machines on the platform. The left one is called Victoria. When the girls reach her at 0:26.4, she wakes up, gets a face and arms, and follows them as a companion.
 3. **The glitch.** They talk to her through text-to-speech, and «a-a-a-automaten hakker»: the world starts to glitch. «Sett inn et kort», and the banner «INSERT CARD» pulls them in.
-4. **Inside the game.** Chorus 1: Oslo turns into a neon coin-op world (Holmenkollen, a barcode skyline). The first ninjas and trams appear.
-5. **Choose travellers.** Victoria switches to English («Language changed»). The ticket categories (CHILD, ADULT, STUDENT, SENIOR) become enemies, and the city map is the battlefield. Card on the terminal at bar 49–50: «PIP! BLINK!», «Thank you for the purchase», and a triple-throw power-up.
-6. **Ninja mode (1:40.15).** «Plutselig er vi ninjaer i et coin-op spill»: white flash, the girls become ninjas, and tickets turn into shurikens. At 1:42.0 the screen changes colour (map turns red).
-7. **Kollektivkaos.** «gjennom brennende trikker og busser på skrå»: the city is on fire and the public transport has turned against them.
-8. **Final wave and boss.** Chorus 2 brings the biggest wave, tagged KAOS. At bar 70 Kaos-trikken walks in and fires its coupler cannon on the beat until the final hit on «Oslo-STIL!».
-9. **Win.** Victoria cheers on the win screen.
+4. **Inside the game: neon Oslo.** Chorus 1 turns Oslo into a glossy coin-op world of modern landmarks: Operaen, Munchmuseet, Barcode, Oslo S, Oslo City and Aker Brygge. The first street thugs, punks, graffiti vandals and trams appear.
+5. **Language changed: British Oslo.** «Ett trykk på et flagg – hun kan visst engelsk»: Victoria switches to English, and the city follows. It is still Oslo, but the buildings are classic and British in style, with old Norwegian red phone kiosks to jump on: Rådhuset, Stortinget, Slottet, Universitetet and Nationaltheatret replace the modern buildings. The ticket categories (CHILD, ADULT, STUDENT, SENIOR) become enemies.
+6. **The T-bane map.** On «hele Oslo på en skjerm» (1:27.9), the Oslo T-bane map starts spreading out behind the buildings, line by line from the centre, looking like the real map. Card on the terminal at bar 49–50: «PIP! BLINK!», «Thank you for the purchase», and a triple-throw power-up.
+7. **Tokyoslo.** «Plutselig er vi ninjaer i et coin-op spill» (1:40.15): white flash, the girls become ninjas, and tickets turn into shurikens. When the screen turns red at 1:42.0, the buildings turn Asian-inspired: still clearly Oslo's buildings, but with curved, sloping roofs and Asian billboards, one of them reading «TOKYOSLO». The city stays Tokyoslo for the rest of the game, and from here on the enemies are ninjas.
+8. **Kollektivkaos.** «gjennom brennende trikker og busser på skrå»: Tokyoslo is on fire and the public transport has turned against them.
+9. **Final wave and boss.** Chorus 2 brings the biggest wave, tagged KAOS, and a Godzilla-like monster wrecks the city, then leaves before the boss. At bar 70 Kaos-trikken walks in and fires its coupler cannon on the beat until the final hit on «Oslo-STIL!».
+10. **Win.** Victoria cheers on the win screen.
 
 The story is told through banners (bilingual Norwegian and English) and lyric subtitles; there are no cutscenes.
 
@@ -94,14 +97,18 @@ The story is told through banners (bilingual Norwegian and English) and lyric su
 
 Each stage below lists what is in the game now and what is proposed; the Proposed column is the planning backlog.
 
+**From dusk into the night.** Keep each stage's gradient sky exactly as it is today, especially in Neon Oslo. The game starts in the evening at dusk and moves into the night; it shows in lit windows, street lamps, neon and billboards.
+
+**Furthest backgrounds are pixelated bitmaps.** Each level's farthest layer is one pixel-art image, as wide as the level needs, so it scrolls past once without repeating; nearer layers (buildings, props, platforms) sit in front of it.
+
 ### 0 · Intro: bus terminal (bars 1–9, 0:00–0:17.7)
 
 |  | Now | Proposed |
 | --- | --- | --- |
-| Location | Bus terminal just before Sandvika stasjon, evening | — |
+| Location | Bus terminal just before Sandvika stasjon, at dusk | — |
 | Background | Night sky with snow, houses with lit windows, low terminal roof (no signs); green, red and green buses waiting at the stops, a red bus driving through right to left | Remove the snow for now; a pixel Entur billboard on a building |
 | Foreground | The two girls | Fixtures to jump on: benches, bins, light poles, signs, a kiosk |
-| Enemies | Suitcases and snow piles on every other beat; ticket patterns from bar 2 | Suitcases crumble when jumped on (higher bounce); a hit makes the girls stumble without damage; a slide kicks the suitcase away to the right |
+| Enemies | Suitcases and snow piles on every other beat; ticket patterns from bar 2 | Prams and a few scooters replace the snow piles; destroying a pram costs points. Suitcases crumble when jumped on (higher bounce); a hit makes the girls stumble without damage; a slide kicks the suitcase away to the right |
 | Platforms and mechanics | Flat ground; collect tickets as ammo (start with 3) | Bus roofs as platforms? |
 | Transition | The terminal roof's last section rises to station height, the station canopy scrolls in and the green train arrives; banner «LEVEL 1 · SANDVIKA STASJON» at bar 10 | The girls walk out through the terminal onto the platform; a departure board flips to «LEVEL 1» |
 
@@ -112,7 +119,7 @@ Each stage below lists what is in the game now and what is proposed; the Propose
 | Location | Sandvika station platform | — |
 | Background | Higher station canopy in sections with «OSLO S» boards; green local train overtakes, brakes and stops at the machines; tomato-soup train at 0:50; houses and snow behind | Someone installing a new ticket machine in the background; the squirrel from the machine's screen as an easter egg |
 | Foreground | Three ticket machines roll in at 0:21.7; Victoria (left) wakes at 0:26.4, hops three times and follows | Turn around and jump on Victoria to reach high things |
-| Enemies | Suitcases or snow on the downbeat (75 %), pigeons on beat 3 (55 %); lots of tickets at 12–70 px height | Pigeons bob up and down but never below slide height |
+| Enemies | Suitcases or snow on the downbeat (75 %), pigeons on beat 3 (55 %); lots of tickets at 12–70 px height | Prams and scooters instead of snow; pigeons bob up and down but never below slide height |
 | Platforms and mechanics | Tickets are the only ammo source in the game: low rows, jump arcs, staircases, double-jump pairs | Benches, bins and the machines themselves as platforms |
 | Transition | Cut to the glitch effects at bar 26 with «LEVEL 2 · TEKST-TIL-TALE GLITCH»; the station stays | The glitch starts on Victoria's screen and spreads over the whole picture during one bar |
 
@@ -131,52 +138,52 @@ Each stage below lists what is in the game now and what is proposed; the Propose
 
 |  | Now | Proposed |
 | --- | --- | --- |
-| Location | Neon coin-op Oslo | Vippetangen and Rådhusgata as recognisable spots |
-| Background | Pink sun, barcode skyline, Holmenkollen jump line, neon grid floor | Pixel Oslo landmarks (Holmenkollen, Munch) from `inspiration/` |
+| Location | Neon coin-op Oslo | Modern Oslo along the fjord, as a glossy coin-op game |
+| Background | Pink sun, barcode skyline, Holmenkollen jump line, neon grid floor | A glossy skyline of modern Oslo landmarks: Operaen, Munchmuseet, Barcode, Oslo S, Oslo City and Aker Brygge, with shiny highlights and reflections. Keep the neon grid floor. The sun becomes a round synthwave sunset with the classic horizontal stripes across it |
 | Foreground | Girls and Victoria; the friend's assist starts here | — |
-| Enemies | Ninja on beats 1 and 3, drone on 2 and 4; coins; trams at bars 36 and 40 | Replace the drones («this is not Ukraine»); ninjas the same size as the girls with richer animation |
+| Enemies | Ninja on beats 1 and 3, drone on 2 and 4; coins; trams at bars 36 and 40 | Seagulls instead of drones: they poop on you instead of shooting; street thugs, punks and graffiti vandals instead of ninjas (ninjas only arrive with Tokyoslo) |
 | Platforms and mechanics | Tram as a full-length moving platform (roof at 31 px): ride it or die on a side hit | A tram hit bounces the player out to the left instead of killing at once |
-| Transition | Cut to the map at bar 42 with «LANGUAGE CHANGED · TO ENGLISH · LEVEL 4» | Victoria taps the flag; the neon city flattens into a map of Oslo |
+| Transition | Cut to the map at bar 42 with «LANGUAGE CHANGED · TO ENGLISH · LEVEL 4» | Victoria taps the flag; the modern skyline gives way to classic Oslo in a British style, and a T-bane train arrives from the left and stops |
 
-### 4 · Language changed: the city map (bars 42–57, 1:20.7–1:52.2)
+### 4 · Language changed: British Oslo, the T-bane map and Tokyoslo (bars 42–57, 1:20.7–1:52.2)
 
 |  | Now | Proposed |
 | --- | --- | --- |
-| Location | «Hele Oslo på en skjerm»: Oslo as a map | Lines spreading out from the centre along T-bane and train routes |
-| Background | Teal map grid with place signs (Tjuvholmen, Kampen, Skullerud, Vulkan, Torshov, Valhall, Ormøya, Sinsen); turns red at 1:42.0 | A subway section here («tog og bane»); buildings to jump on |
+| Location | «Hele Oslo på en skjerm»: Oslo as a map | Classic central Oslo around Karl Johan, changing style twice. A T-bane train arrives from the left and stops at the start of the level; Rådhusgata as a recognisable spot |
+| Background | Teal map grid with place signs (Tjuvholmen, Kampen, Skullerud, Vulkan, Torshov, Valhall, Ormøya, Sinsen); turns red at 1:42.0 | Three phases. **British Oslo** from bar 42: the classic buildings Rådhuset, Stortinget, Slottet, Universitetet and Nationaltheatret drawn in a British architectural style (only the style of the buildings; no British signs or props), with old Norwegian red phone kiosks on the street; nothing modern. **The T-bane map** from «hele Oslo på en skjerm» (1:27.9): the map spreads out behind the buildings, line by line from the centre, and must look like the real one (`inspiration/tbanekart.avif`): coloured lines 1–5 sharing the tunnel through the centre and fanning out east and west, straight runs with 45° bends, white station dots, and no names or labels: only the T-bane map. **Tokyoslo** at 1:42.0, when the screen turns red: the buildings turn Asian-inspired but stay recognisable as the same Oslo buildings, with curved, tiered roofs, upturned eaves, lanterns and Asian-style neon billboards (invented text, no real brands). A billboard on one of the buildings reads «TOKYOSLO» (a sign in the scene, not on-screen text). Tokyoslo stays for the rest of the game |
 | Foreground | Girls and Victoria; ninja mode at 1:40.15 | Banner «YOU'RE A NINJA!» instead of «PLUTSELIG NINJAER!» |
-| Enemies | Ticket-category bots (CHILD, ADULT, STUDENT, SENIOR, 2 hp), drones, coins; trams at bars 46 and 54 | Bots that look like the categories (pram, briefcase, backpack, walking stick) |
-| Platforms and mechanics | Terminal pickup at bar 49: card on the terminal gives triple throws for 8 bars; tickets become shurikens in ninja mode | Platforms on roofs and map lines |
-| Transition | Inside the stage: white flash into ninja mode at 1:40.15, the map turns red at 1:42.0. Out: cut to the burning city at bar 58 with «LEVEL 5 · KOLLEKTIVKAOS» | The red map catches fire and burns away to show the burning city |
+| Enemies | Ticket-category bots (CHILD, ADULT, STUDENT, SENIOR, 2 hp), drones, coins; trams at bars 46 and 54 | Bots that look like the categories (pram, briefcase, backpack, walking stick); street thugs, punks and graffiti vandals until 1:42.0, ninjas after |
+| Platforms and mechanics | Terminal pickup at bar 49: card on the terminal gives triple throws for 8 bars; tickets become shurikens in ninja mode | The red phone kiosks are platforms to jump on (they stay through Tokyoslo); rooftops of the buildings as platforms |
+| Transition | Inside the stage: white flash into ninja mode at 1:40.15, the map turns red at 1:42.0. Out: cut to the burning city at bar 58 with «LEVEL 5 · KOLLEKTIVKAOS» | Inside: British Oslo, then the map grows, then Tokyoslo. Out: Tokyoslo catches fire and becomes the burning city |
 
 ### 5 · Kollektivkaos (bars 58–65, 1:52.2–2:07.9)
 
 |  | Now | Proposed |
 | --- | --- | --- |
-| Location | Burning city | Eplehuset (the Apple store) for the tram crash |
-| Background | Tilted red and blue burning trams and buses, flames, embers | A Rampage-style giant ape crushing trams and throwing a bus; trams get holes and crumble; a tram crashing into Eplehuset if hit at the right moment |
+| Location | Burning city | Burning Tokyoslo; Eplehuset (the Apple store) for the tram crash |
+| Background | Tilted red and blue burning trams and buses, flames, embers | Tokyoslo's buildings on fire; a tram crashing into Eplehuset if hit at the right moment |
 | Foreground | Ninja girls and Victoria | — |
-| Enemies | Ninjas, drones, fire hazards (solid, jump them); trams at bars 60 and 64 | Thrown buses and falling debris on the beat |
+| Enemies | Ninjas, drones, fire hazards (solid, jump them); trams at bars 60 and 64 | Falling debris on the beat |
 | Platforms and mechanics | Tram roofs | Wrecked trams as platforms |
-| Transition | Same scene; banner «FINAL WAVE · SISTE BØLGE» at bar 66 | The giant ape throws one last bus and leaves; the sky turns redder |
+| Transition | Same scene; banner «FINAL WAVE · SISTE BØLGE» at bar 66 | The sky turns redder and the ground starts to shake: the monster is coming |
 
 ### 6 · Final wave (bars 66–69, 2:07.9–2:15.8)
 
 |  | Now | Proposed |
 | --- | --- | --- |
-| Location | Chaos city | — |
-| Background | Same as Kollektivkaos | Escalating: more fire, red sky |
+| Location | Chaos city | Burning Tokyoslo |
+| Background | Same as Kollektivkaos | Burning Tokyoslo, more fire and a redder sky. A Godzilla-like monster rises over the city, crushes trams (they get holes and crumble) and throws a bus |
 | Foreground | Ninja girls and Victoria | Victoria cheers on the chorus calls (built) |
-| Enemies | KAOS bots and ninjas on every beat, plus drones or ninjas on the off-beat; tram at bar 68 | — |
+| Enemies | KAOS bots and ninjas on every beat, plus drones or ninjas on the off-beat; tram at bar 68 | Buses and debris thrown by the monster, landing on the beat |
 | Platforms and mechanics | Tram roof | — |
-| Transition | «BOSS · KAOS-TRIKKEN!» at bar 70; the boss walks in over one bar while the wave continues | The ground shakes on the beat before it appears |
+| Transition | «BOSS · KAOS-TRIKKEN!» at bar 70; the boss walks in over one bar while the wave continues | The monster leaves before bar 70; then the ground shakes on the beat as Kaos-trikken appears |
 
 ### 7 · Boss: Kaos-trikken (bars 70–76, 2:15.8–2:27.6)
 
 |  | Now | Proposed |
 | --- | --- | --- |
-| Location | Burning city until bar 73, then the neon city with a red sun (bars 74–76) | — |
-| Background | Kollektivkaos fires, then the boss version of the neon scene | — |
+| Location | Burning city until bar 73, then the neon city with a red sun (bars 74–76) | Tokyoslo, with the «TOKYOSLO» billboard |
+| Background | Kollektivkaos fires, then the boss version of the neon scene | Burning Tokyoslo, then Tokyoslo under the red sun for the boss |
 | Foreground | Kaos-trikken walks in over one bar and stands at the right; 16-frame sprite (walk, idle, attack, hit) | — |
 | Enemies | The boss fires on the beat: shots (jump) and fireballs (stay low); waves continue until bar 73 | Boss attack patterns that change with the bar: stomp, arm swipe, eye laser |
 | Platforms and mechanics | Boss has 60 HP; every thrown ticket hit takes 1; the final hit scores 2,000, plus 3,000 if HP is 0 | Weak points: the red eyes and the chest core |
@@ -202,11 +209,14 @@ There are 14 kinds, all scheduled on the beat; heights are px above the ground (
 | Kind | Stages | Height | HP | How to beat it | Proposed |
 | --- | --- | --- | --- | --- | --- |
 | Suitcase | 0, 1, 2 | 0 | 1 | Jump or hit | Crumbles when jumped on and bounces you higher; a hit makes you stumble without damage; a slide kicks it away |
-| Snow pile | 0, 1 | 0 | 1 | Jump or hit | Remove for now (no snow) |
+| Snow pile | 0, 1 | 0 | 1 | Jump or hit | Remove; replaced by prams and scooters |
+| Pram (new) | 0, 1 | 0 | 1 | Jump over it; don't destroy it | Replaces the snow piles; hitting or throwing at a pram gives minus points |
+| Scooter (new) | 0, 1 | 0 | 1 | Jump or hit | A few left on the platform, mixed in with the prams |
 | Pigeon | 1, 2 | 26 | 1 | Duck under, hit or throw | Bobs up and down, never below slide height |
 | Glitch blob | 2 | 0 | 1 | Jump or hit | — |
-| Ninja | 3, 5, 6 | 0 | 1 | Hit or throw | Same size as the girls, richer animation |
-| Drone | 3–7 | 30 | 1 | Stay low or throw | Remove; needs a replacement flying enemy |
+| Street thug, punk, graffiti vandal (new) | 3, 4 until 1:42.0 | 0 | 1 | Hit or throw | Replace the ninjas before the city turns into Tokyoslo |
+| Ninja | 3, 5, 6 | 0 | 1 | Hit or throw | Only from Tokyoslo (1:42.0) on; same size as the girls, richer animation |
+| Drone | 3–7 | 30 | 1 | Stay low or throw | Replace with seagulls that poop on you instead of shooting |
 | Tram | 3, 4, 5, 6 | Platform, roof at 31 | — | Jump onto the roof and ride it; a side hit kills | Bounces the player off to the left instead |
 | Bot | 4 (CHILD, ADULT, STUDENT, SENIOR), 6 (KAOS) | 0 | 2 | Two hits or throws | Look like their ticket category |
 | Fire | 5 | 0, solid | — | Jump over | — |
@@ -245,22 +255,15 @@ Today the only platforms are the ground and the tram roof; the main gameplay gap
 | Suitcase bounce pads | 0–2 | Crumble on landing, extra-high bounce |
 | Glitching platforms that blink on the beat | 2 | Fits «automaten hakker» |
 | Jump on buildings and map lines | 4 | Roof-top running in the map scene |
-| Subway section | 3 or 4 | Underground with trains on both sides |
-| Wrecked trams and thrown buses | 5 | From the Rampage-style ape |
+| T-bane train | 4 (start) | Arrives from the left and stops as level 4 begins |
+| Wrecked trams and thrown buses | 6 | From the Godzilla-like monster |
 | Tram crash into Eplehuset | 5 | Timed hit triggers the crash |
 | Tram hit bounces you off to the left | 3–6 | Replaces the instant death |
 | Boss weak points (eyes, chest core) | 7 | Extra damage for precise throws |
+| Old Norwegian red phone kiosks to jump on | 4 onwards | Street props in British Oslo that stay through Tokyoslo; a roof to stand on, like the tram |
 
 **Around the game:** a central high-score list with 3-letter initials (top list on the title screen, top 10 in the pause screen), and all sound effects made from the ticket-machine samples.
 
 ## Open questions
 
-- [ ] **Drones:** what replaces them as the flying enemy in stages 3–7? Pigeons, seagulls, flying ticket stubs?
-- [ ] **Snow:** if snow goes, what replaces the snow piles at Sandvika? Bins, prams, scooters?
-- [ ] **Subway section:** where does it fit? Inside stage 4 («tog og bane»), or as its own stage that splits stage 3 or 5?
-- [ ] **Vippetangen and Rådhusgata:** which stage do they belong to: neon Oslo (3) or the map (4)?
-- [ ] **Map scene:** keep place signs on a grid, or redraw it as T-bane and train lines spreading from the centre?
-- [ ] **Entur billboard:** the art rule bans company logos on vehicles; is a pixel Entur logo on a building OK, and does the same go for the Short Shift easter egg?
-- [ ] **Rampage ape vs. Kaos-trikken:** two giant creatures back to back (stages 5 and 7). Keep both, or let the ape be the stage 5 mini-boss?
-- [ ] **Vocal vs. backing timing:** pre-chorus 2 and chorus 2 are sung earlier than the backing sections; stage changes follow the backing today. Keep as is?
-- [ ] **«INSERT CARD» at bar 33:** IDEAS says to replace «insert coin»; does the card banner count, or should it change too?
+None right now. Decided: stage changes stay exactly as they are (they follow the backing track), and the «INSERT CARD» banner at bar 33 stays for now.

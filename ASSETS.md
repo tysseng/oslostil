@@ -142,3 +142,5 @@ All in `drawScene` (`src/render/scenes.ts`). These are kept as they are for now;
 | Ground strip and beat line | — | all | |
 | Eplehuset | ⬜ | (new) | idea: tram crashes into it |
 | Entur logo billboard | ⬜ | (new) | idea: pixelated logo on a building or station |
+| Tokyoslo street: Rådhuset, Stortinget, Slottet, Universitetet, Nationaltheatret with pagoda roofs, lanterns, neon signs, TOKYOSLO billboard | ✅ in game | Tokyoslo (stage 4 from 1:42.0, stages 5–7) | `assets/backgrounds/tokyoslo-buildings.png` (902 × 150, transparent, bottom row on `GROUND`) from `tools/backgrounds/tokyoslo.py`; drawn by `drawTokyoslo` in `scenes.ts` (parallax 0.45) in map after 1:42.0, chaos and boss |
+| Tokyoslo far skyline | 🟡 draft | Tokyoslo | `assets/backgrounds/tokyoslo-far.png` (640 × 150, tiles horizontally, parallax 0.15), same script; to be made full level width |

@@ -1,11 +1,13 @@
 // Scrolling backgrounds, one per part of the story.
 import { GROUND, H, W, barT, rng } from '../config';
-import { COLOR_T, MACHINES_T, SECTIONS, STATION_VX, VICTORIA_WAKE_T, machineCenter, machinesX, type SceneName } from '../timeline';
+import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, machineCenter, machinesX, type SceneName } from '../timeline';
 import trainGreenUrl from '../../assets/vehicles/hires/local-train-green.png';
 import trainTomatoUrl from '../../assets/vehicles/hires/local-train-tomato-soup.png';
 import airportExpressUrl from '../../assets/vehicles/hires/airport-express.png';
 import busGreenUrl from '../../assets/vehicles/hires/bus-green.png';
 import busRedUrl from '../../assets/vehicles/hires/bus-red.png';
+import tokyoStreetUrl from '../../assets/backgrounds/tokyoslo-buildings.png';
+import tokyoFarUrl from '../../assets/backgrounds/tokyoslo-far.png';
 import { R, ctx, loadImage, ready, text } from './draw';
 import { drawPlatformMachine } from './sprites';
 
@@ -196,6 +198,38 @@ function roofSection(k: RoofKind, x: number): void {
 /** positive modulo, for wrapping parallax layers */
 const wrap = (v: number, m: number) => ((v % m) + m) % m;
 
+/**
+ * Tokyoslo: from the colour change (COLOR_T, 1:42.0) to the end of the song the city is Oslo with Asian
+ * features (STAGE_DESIGN.md). Two pixel-art layers from tools/backgrounds/tokyoslo.py, bottom row on GROUND:
+ * a far skyline and the street of landmarks with neon signs and the TOKYOSLO billboard.
+ */
+const TOKYO_FAR = loadImage(tokyoFarUrl);
+const TOKYO_STREET = loadImage(tokyoStreetUrl);
+const TOKYO_FAR_PARALLAX = 0.15, TOKYO_STREET_PARALLAX = 0.45;
+/** screen x of the street's left end at COLOR_T, so the billboard is in view when Tokyoslo appears */
+const TOKYO_STREET_X0 = 30;
+let tokyoBx0: number | undefined;
+/** background scroll at COLOR_T (the same integration as scrollAt in game.ts) */
+function tokyoStartBx(): number {
+  if (tokyoBx0 === undefined) {
+    let x = 0;
+    for (let u = 0; u < COLOR_T; u += 0.05) x += sectionAt(u).speed * Math.min(0.05, COLOR_T - u);
+    tokyoBx0 = x;
+  }
+  return tokyoBx0;
+}
+/** Repeat an image horizontally across the screen with its bottom on GROUND. */
+function tileLayer(img: HTMLImageElement, x0: number): void {
+  if (!ready(img)) return;
+  const w = img.naturalWidth;
+  for (let x = wrap(x0, w) - w; x < W; x += w) ctx.drawImage(img, Math.round(x), GROUND - img.naturalHeight);
+}
+function drawTokyoslo(bx: number): void {
+  const d = bx - tokyoStartBx();
+  tileLayer(TOKYO_FAR, -d * TOKYO_FAR_PARALLAX);
+  tileLayer(TOKYO_STREET, TOKYO_STREET_X0 - d * TOKYO_STREET_PARALLAX);
+}
+
 export function sky(c: [string, string]): void {
   const g = ctx.createLinearGradient(0, 0, 0, GROUND);
   g.addColorStop(0, c[0]); g.addColorStop(1, c[1]);
@@ -235,12 +269,15 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
   } else if (name === 'neon' || name === 'boss') {
     R(W / 2 - 30, 40, 60, 30, name === 'boss' ? '#ff3366' : '#ff7ad9'); // sun
     for (let i = 0; i < 5; i++) R(W / 2 - 30, 52 + i * 4, 60, 1, SKY[name][1]);
-    for (let i = 0; i < 12; i++) { // barcode skyline
-      const hx = wrap(i * 40 - bx * 0.3, 480) - 40, hh = 30 + ((i * 17) % 50);
-      R(hx, GROUND - hh, 26, hh, '#1a0533'); R(hx, GROUND - hh, 26, 1, '#ff4fd8');
+    if (name === 'boss') drawTokyoslo(bx); // the boss fight is in Tokyoslo
+    else {
+      for (let i = 0; i < 12; i++) { // barcode skyline
+        const hx = wrap(i * 40 - bx * 0.3, 480) - 40, hh = 30 + ((i * 17) % 50);
+        R(hx, GROUND - hh, 26, hh, '#1a0533'); R(hx, GROUND - hh, 26, 1, '#ff4fd8');
+      }
+      const jx = wrap(300 - bx * 0.15, 700) - 100; // Holmenkollen jump
+      ctx.strokeStyle = '#4ff3ff'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx, GROUND - 90); ctx.lineTo(jx + 60, GROUND - 10); ctx.stroke();
     }
-    const jx = wrap(300 - bx * 0.15, 700) - 100; // Holmenkollen jump
-    ctx.strokeStyle = '#4ff3ff'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx, GROUND - 90); ctx.lineTo(jx + 60, GROUND - 10); ctx.stroke();
     for (let i = 0; i < 12; i++) R(wrap(i * 32 - bx, 384) - 32, GROUND, 1, H - GROUND, '#ff4fd8'); // neon grid floor
   } else if (name === 'map' || name === 'map2') {
     const line = name === 'map' ? '#2fe0c0' : '#ff6b6b';
@@ -248,11 +285,13 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
       const mx = wrap(i * 50 - bx * 0.2, 1000) - 50;
       R(mx, 20 + ((i * 37) % 100), 40, 1, line); R(mx + 20, 20 + ((i * 37) % 100), 1, 30, line);
     }
-    for (let i = 0; i < PLACES.length; i++) { // «hele Oslo på en skjerm» – place signs
+    if (name === 'map2') drawTokyoslo(bx); // 1:42.0: the city turns into Tokyoslo
+    else for (let i = 0; i < PLACES.length; i++) { // «hele Oslo på en skjerm» – place signs
       const sx = i * 260 + 200 - (bx - barT(42) * 145) * 0.8;
       if (sx > -80 && sx < W + 40) { R(sx, GROUND - 40, 2, 40, '#ccc'); R(sx - 30, GROUND - 52, 62, 12, '#0b3d91'); text(PLACES[i], sx + 1, GROUND - 49, '#fff', 4, 'center', null); }
     }
-  } else if (name === 'chaos') { // «brennende trikker og busser på skrå»
+  } else if (name === 'chaos') { // «brennende trikker og busser på skrå» – in burning Tokyoslo
+    drawTokyoslo(bx);
     for (let i = 0; i < 6; i++) {
       const bx2 = wrap(i * 110 - bx * 0.35, 660) - 80;
       ctx.save(); ctx.translate(bx2 + 40, GROUND - 20); ctx.rotate(-0.18 + (i % 3) * 0.12);
