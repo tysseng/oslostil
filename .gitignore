@@ -1,0 +1,8 @@
+dist/
+__pycache__/
+.DS_Store
+tools/timing/sherpa-onnx-whisper-*/
+tools/timing/*.tar.bz2
+tools/timing/line_starts.json
+node_modules/
+.idea/

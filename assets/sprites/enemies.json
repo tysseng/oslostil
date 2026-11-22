@@ -1,0 +1,93 @@
+{
+ "suitcase": {
+  "row": 0,
+  "frames": 1,
+  "fps": 1,
+  "w": 18,
+  "h": 17
+ },
+ "snow": {
+  "row": 1,
+  "frames": 2,
+  "fps": 2,
+  "w": 22,
+  "h": 12
+ },
+ "pigeon": {
+  "row": 2,
+  "frames": 2,
+  "fps": 8,
+  "w": 17,
+  "h": 13
+ },
+ "ticket": {
+  "row": 3,
+  "frames": 4,
+  "fps": 8,
+  "w": 16,
+  "h": 8
+ },
+ "blob": {
+  "row": 4,
+  "frames": 4,
+  "fps": 20,
+  "w": 16,
+  "h": 17
+ },
+ "ninja": {
+  "row": 5,
+  "frames": 2,
+  "fps": 8,
+  "w": 19,
+  "h": 21
+ },
+ "drone": {
+  "row": 6,
+  "frames": 2,
+  "fps": 16,
+  "w": 24,
+  "h": 12
+ },
+ "bot": {
+  "row": 7,
+  "frames": 2,
+  "fps": 3,
+  "w": 18,
+  "h": 21
+ },
+ "terminal": {
+  "row": 8,
+  "frames": 2,
+  "fps": 4,
+  "w": 16,
+  "h": 18
+ },
+ "fire": {
+  "row": 9,
+  "frames": 3,
+  "fps": 10,
+  "w": 21,
+  "h": 12
+ },
+ "coin": {
+  "row": 10,
+  "frames": 4,
+  "fps": 10,
+  "w": 12,
+  "h": 12
+ },
+ "shot": {
+  "row": 11,
+  "frames": 2,
+  "fps": 12,
+  "w": 12,
+  "h": 12
+ },
+ "fireball": {
+  "row": 12,
+  "frames": 2,
+  "fps": 12,
+  "w": 16,
+  "h": 11
+ }
+}

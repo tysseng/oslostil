@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="First version of oslostil game">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/oslostil.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/IDEAS.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/oslostil.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/automat.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/enemies.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/enemies.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/friend.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/kaostrikken.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/train-green-hd.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/train-green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/train-tomato-hd.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/train-tomato.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/victoria.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/airport-express-cab.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/airport-express-cab.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/airport-express.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/airport-express.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/bus-green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/bus-green.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/bus-red-articulated.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/bus-red-articulated.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/bus-red.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/bus-red.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-green-cab.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-green-cab.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-green.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-green.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-tomato-soup-cab.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-tomato-soup-cab.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-tomato-soup.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/local-train-tomato-soup.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-new-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-new-2.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-new.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-new.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old-2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old-2.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-new-short.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-new-short.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-new.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-new.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/preview-pixelated.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/automat/automat 1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/automat/automat sideview.HEIC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/bekk logo 1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/bekk logo 2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/entur icon.avif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/entur logo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/eplehusetkrasj.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/eplehusetkrasj2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/holmenkollen 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/landmark holmenkollen 1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/lexit logo 1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/lexit logo 2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/munch 1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/munch 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/nytrikk det onde øyet.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/oslokart.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/squirrel.HEIC" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/starbit logo.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/tbanekart.avif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/tbanelogo.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/airport express train/flytog 1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/airport express train/flytog 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/airport express train/flytog 3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/airport express train/flytog 4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/airport express train/flytog 5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/bus old/buss gammel 1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/bus red/buss 2.avif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/bus red/leddbuss 1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/bus red/leddbuss 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/green bus/green bus 1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/green bus/green bus 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/green bus/green bus 3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/green bus/green bus 4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train green/lokaltog vy 1.avif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train green/lokaltog vy 2.avif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train green/lokaltog vy 3.avif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train green/lokaltog vy 3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train green/lokaltog vy 4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train tomato soup/lokaltog tomatsuppe 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train tomato soup/lokaltog tomatsuppe 3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/local train tomato soup/lokaltog-tomatsuppe1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/new tram/nytrikk 3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/new tram/nytrikk1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/new tram/nytrikk2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/old tram/gammel trikk 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/old tram/gammel-trikk.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway new/bane4.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway new/tbane 5.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway new/tbane 6.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway new/tbane1.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway new/tbane2.avif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway new/tbane3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway new/tbane7.JPG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway old/tbane rød 1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway old/tbane rød 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/subway old/tbane rød 3.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/tram italia/italiatrikk1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/tram sl79/sl79-1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/tram sl79/sl79-blur.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mise.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/audio.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/env.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/render/draw.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/timeline.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/devpanel.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/devpanel.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/subtitles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/subtitles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/automat.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/boss.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/enemies.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/girls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/timing/whisper_windows.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/common.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/game_hd.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/pixel_trains.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/pixelate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/road.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/subways.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/trains.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/trams.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vite.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0498907539488467" />
+      <entry key="MS500" value="2.050165719304381" />
+      <entry key="S2" value="4.111832761425209" />
+      <entry key="S5" value="5.635762512236883" />
+      <entry key="S10" value="8.775188340713042" />
+      <entry key="S30" value="25.592789330126593" />
+      <entry key="S60" value="46.890736476648165" />
+      <entry key="M2" value="78.265436939106" />
+      <entry key="M5" value="126.05384322075314" />
+      <entry key="M10" value="154.25246389216028" />
+      <entry key="M15" value="166.61489881777084" />
+      <entry key="M30" value="187.683453301124" />
+      <entry key="H1" value="219.42686409439338" />
+      <entry key="H2" value="257.2557261201938" />
+      <entry key="H4" value="288.4177553344674" />
+      <entry key="D1" value="324.39913043251863" />
+      <entry key="W1" value="331.7388819115211" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.0211734209757812" />
+      <entry key="MS500" value="2.0381346088021304" />
+      <entry key="S2" value="4.105354609638925" />
+      <entry key="S5" value="5.6320478777151886" />
+      <entry key="S10" value="8.77213777316589" />
+      <entry key="S30" value="25.589783843152617" />
+      <entry key="S60" value="46.88799706974483" />
+      <entry key="M2" value="78.26314792474997" />
+      <entry key="M5" value="126.05236064688324" />
+      <entry key="M10" value="154.25155427929326" />
+      <entry key="M15" value="166.6142423088499" />
+      <entry key="M30" value="187.68306544313384" />
+      <entry key="H1" value="219.4265839621635" />
+      <entry key="H2" value="257.25551386941214" />
+      <entry key="H4" value="288.4176142694652" />
+      <entry key="D1" value="324.39909950176497" />
+      <entry key="W1" value="331.7388772657222" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3MSJ9aReDLz7Mw3Z2tVuSEsLS73" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/joakim/git/tysseng/oslostil",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "/Users/joakim/.local/share/mise/installs/pnpm/12.11.2/pnpm",
+    "ts.external.directory.path": "/Users/joakim/Library/Caches/JetBrains/IntelliJIdea2026.3/ts-go-native-preview/v7.1.0-dev.jetbrains.20261006.2/node_modules/@typescript/typescript-darwin-arm64/lib"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-ac68fc9d2b05-intellij.indexing.shared.core-IU-263.7307.200" />
+        <option value="bundled-js-predefined-d6986cc7102b-56aff7b04f6f-JavaScript-IU-263.7307.200" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="" />
+      <created>1795337884686</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1795337884686</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/src/game.js" />
+      </list>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="First version of oslostil game" />
+    <option name="LAST_COMMIT_MESSAGE" value="First version of oslostil game" />
+  </component>
+</project>

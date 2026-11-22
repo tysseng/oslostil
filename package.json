@@ -1,0 +1,21 @@
+{
+  "name": "oslostil",
+  "private": true,
+  "version": "0.4.0",
+  "description": "A game based music video for a 80s freestyle hit",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build --mode devbuild && vite build",
+    "build:dev": "vite build --mode devbuild",
+    "build:release": "vite build",
+    "preview": "vite preview --outDir dist/release",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vite-plugin-singlefile": "^2.3.4"
+  },
+  "packageManager": "pnpm@12.21.0"
+}
