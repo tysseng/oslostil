@@ -1,0 +1,23 @@
+{
+ "w": 144,
+ "h": 128,
+ "anchorX": 84,
+ "anims": {
+  "walk": {
+   "start": 0,
+   "count": 6
+  },
+  "idle": {
+   "start": 6,
+   "count": 4
+  },
+  "attack": {
+   "start": 10,
+   "count": 4
+  },
+  "hit": {
+   "start": 14,
+   "count": 2
+  }
+ }
+}

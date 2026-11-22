@@ -83,7 +83,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 - **Two resolutions:** the canvas is 1280 × 720 (320 × 180 game px × `RES` 4).
   - Rectangles and pixel sprites are drawn in game px with no smoothing, so they stay blocky.
   - Text and hi-res images keep their detail.
-- **Vehicles use smooth hi-res images for now** (`*-hd.png`, `drawHiRes`). Joakim didn't like the pixel versions; new vehicle sprites come later.
+- **Vehicles use smooth hi-res images for now.** Trains and buses are drawn straight from the masters in `assets/vehicles/hires/` (100 px per metre) with `drawVehicle` in `scenes.ts`, which trims them at load. Sizes: trains `TRAIN_PPM` 10 game px per metre, waiting buses `BUS_PPM` 13.2, the driving bus 80 % of that (it's further back). Joakim didn't like the pixel versions; new vehicle sprites come later. (The tram obstacle still expects a `tram-hd.png` from `game_hd.py`.)
 - **Sprites** are sheets of fixed-size cells, bottom-aligned (feet, base or wheels on the bottom row) and horizontally centred.
 - **Banners:** only the newest one is shown, so a new beat replaces the previous one at once.
 - **Lyric subtitles** are an HTML overlay, not canvas. They use white text with a black outline and no background box.
@@ -107,7 +107,8 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 | 0:21.7 | Three ticket machines roll in on the platform; the left one is Victoria, with a «VICTORIA» label | `MACHINES_T`, `drawPlatformMachine` |
 | ≈0:26.4 | The girls reach her: she gets a face and arms, hops 3 times, shoots up past floating height and settles, then follows. Banner «AUTOMAT VICTORIA BLIR MED!» | `VICTORIA_WAKE_T`, `victoriaLift`, `machineMood` |
 | after that | She talks on lyrics about her («automat», «hun …»), cheers on chorus «OSLOSTIL!» calls and the final hit, and cheers on the win screen | `machineMood` |
-| 0:50 | Tomato soup again | `TRAIN_RUNS` |
+| 0:41 | Airport express whisks through right to left (620 px/s) | `TRAIN_RUNS` |
+| 0:50 | Tomato soup | `TRAIN_RUNS` |
 | 1:40.15 | Ninja mode, white flash, girls switch to ninja sprites | `NINJA_T` |
 | 1:42.0 | Screen changes colour (map → red), red flash, no text | `COLOR_T` |
 | bar 70 → 76 | Boss Kaos-trikken, final hit 2:27.6, win screen 2.2 s later | `BOSS_AT`, `FINAL_HIT`, `WIN_AT` |

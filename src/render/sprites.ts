@@ -9,6 +9,7 @@ import victoriaUrl from '../../assets/sprites/victoria.png';
 import automatUrl from '../../assets/sprites/automat.png';
 import enemiesUrl from '../../assets/sprites/enemies.png';
 import bossUrl from '../../assets/sprites/kaostrikken.png';
+import bossMeta from '../../assets/sprites/kaostrikken.json';
 
 // The girls are pixel-art sprite sheets (made by tools/sprites/girls.py, editable in any pixel editor):
 // 24×32 frames, row 0 = normal clothes, row 1 = ninja; feet on the bottom row, body centred on x = 12.
@@ -131,19 +132,18 @@ export function drawEnemy(e: Enemy, x: number, t: number): void {
 }
 
 /**
- * Kaos-trikken: the new light-blue tram transformed into a mechanoid (sprite sheet from tools/sprites/boss.py).
- * 4 frames of 96 × 96: idle0 idle1 attack hit; base on the bottom row, centred.
+ * Kaos-trikken: the new light-blue tram transformed into a robot, facing left (sprite sheet + animation
+ * table from tools/sprites/boss.py). Cells are bossMeta.w × bossMeta.h, feet on the bottom row,
+ * the body centred on bossMeta.anchorX.
  */
 const BOSS = loadImage(bossUrl);
-const BOSS_FRAMES = ['idle0', 'idle1', 'attack', 'hit'] as const;
-export const BOSS_W = 94, BOSS_H = 96;
+export type BossAnim = keyof typeof bossMeta.anims;
 
-export function drawBoss(x: number, hit: boolean, hp: number, max: number, t = 0, attacking = false): void {
+export function drawBoss(x: number, hit: boolean, hp: number, max: number, anim: BossAnim = 'idle', at = 0): void {
   const y = GROUND, shake = hit ? Math.round((Math.random() - 0.5) * 3) : 0;
-  if (ready(BOSS)) {
-    const frame = hit ? 'hit' : attacking ? 'attack' : Math.floor(t * 2) % 2 ? 'idle1' : 'idle0';
-    ctx.drawImage(BOSS, BOSS_FRAMES.indexOf(frame) * 96, 0, 96, 96, Math.round(x) - 48 + shake, y - 96, 96, 96);
-  }
-  text('KAOS-TRIKKEN', x, y - BOSS_H - 8, '#ff4f6b', 4, 'center');
+  const { w, h, anchorX } = bossMeta, a = bossMeta.anims[hit ? 'hit' : anim];
+  const f = a.start + Math.min(a.count - 1, Math.max(0, Math.floor(at * a.count)));
+  if (ready(BOSS)) ctx.drawImage(BOSS, f * w, 0, w, h, Math.round(x) - anchorX + shake, y - h, w, h);
+  text('KAOS-TRIKKEN', x, y - h - 6, '#ff4f6b', 4, 'center');
   R(W / 2 - 60, 22, 120, 5, '#300'); R(W / 2 - 60, 22, (120 * hp) / max, 5, '#ff3366');
 }

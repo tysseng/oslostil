@@ -2,7 +2,7 @@
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { enemyX } from '../state';
-import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOP_COUNT, WAKE_HOPS, WAKE_RISE, beatPhase, bossVisible, bossX, isNinja, lyricAt, sectionAt } from '../timeline';
+import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOP_COUNT, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt } from '../timeline';
 import { R, ctx, flash, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
 import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawMachine, type Mood } from './sprites';
@@ -15,7 +15,13 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
   flash(t, NINJA_T, 0.4, '#fff'); // ninja transformation
-  if (bossVisible(t)) drawBoss(bossX(t), s.boss.hit > 0, s.boss.hp, s.boss.max, t, barAt(t) >= 70 && beatPhase(t, BEAT) < 0.25); // opens its jaw on the beat while it fires
+  if (bossVisible(t)) {
+    // walks in for a bar, then fires its coupler cannon on every beat and idles in between
+    const walking = t - BOSS_AT < BAR, ph = beatPhase(t, BEAT);
+    const [anim, at] = walking ? ['walk', ((t - BOSS_AT) / (2 * BEAT)) % 1] as const
+      : ph < 0.4 ? ['attack', ph / 0.4] as const : ['idle', ((t * 4) % 4) / 4] as const;
+    drawBoss(bossX(t), s.boss.hit > 0, s.boss.hp, s.boss.max, anim, at);
+  }
   for (const e of s.enemies) if (!e.dead) drawEnemy(e, enemyX(e, t), t);
   // companions
   if (t >= VICTORIA_WAKE_T) drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t));

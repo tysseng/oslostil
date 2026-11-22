@@ -42,3 +42,15 @@ Jumping on suitcases should make them crumble and you should bounce higher. Bein
 pidgeons should fly up and down, but never lower than so that you can slide under them. A slide into a suitcase should make it fly away to the right.
 
 Snow on the ground should be removed for now
+
+The burning trams part should have a big monkey or godzilla, like in Rampage, jumping on and crushing the trams. The trams should get holes and crumble. He should lift and throw a bus. 
+
+We need a subway section
+
+We need fixtures such as benches, trash cans, light poles, signs, convenience stores etc that the girls can jump on. 
+
+The ninjas must be the same size as the girls and more elaborate animations. 
+
+The airport express train needs more carriages. 
+
+The red tomato soup train should come to a halt.

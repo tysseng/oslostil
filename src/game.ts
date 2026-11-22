@@ -244,7 +244,7 @@ export class Game {
     if (bossVisible(t)) {
       const bx = bossX(t);
       for (const st of s.stars) {
-        if (!st.gone && st.x > bx - 40 && st.y > GROUND - 90) { // the mechanoid's body
+        if (!st.gone && st.x > bx - 42 && st.y > GROUND - 124) { // the robot's body
           st.gone = true; s.boss.hp = Math.max(0, s.boss.hp - 1); s.boss.hit = 0.1; s.score += 30; this.burst(st.x, st.y, '#ff0', 5);
         }
       }

@@ -1,11 +1,12 @@
 // Scrolling backgrounds, one per part of the story.
 import { GROUND, H, W, barT, rng } from '../config';
 import { COLOR_T, MACHINES_T, SECTIONS, STATION_VX, VICTORIA_WAKE_T, machineCenter, machinesX, type SceneName } from '../timeline';
-import trainGreenUrl from '../../assets/sprites/train-green-hd.png';
-import trainTomatoUrl from '../../assets/sprites/train-tomato-hd.png';
+import trainGreenUrl from '../../assets/vehicles/hires/local-train-green.png';
+import trainTomatoUrl from '../../assets/vehicles/hires/local-train-tomato-soup.png';
+import airportExpressUrl from '../../assets/vehicles/hires/airport-express.png';
 import busGreenUrl from '../../assets/vehicles/hires/bus-green.png';
 import busRedUrl from '../../assets/vehicles/hires/bus-red.png';
-import { R, RES, ctx, drawHiRes, loadImage, ready, text } from './draw';
+import { R, ctx, loadImage, ready, text } from './draw';
 import { drawPlatformMachine } from './sprites';
 
 export const SKY: Record<SceneName, [string, string]> = {
@@ -16,13 +17,16 @@ const GROUND_COLOR: Record<SceneName, string> = {
   station: '#2b2f45', glitch: '#2b1f45', neon: '#160022', boss: '#160012', map: '#0a2e33', map2: '#330a14', chaos: '#2a1206',
 };
 const PLACES = ['TJUVHOLMEN', 'KAMPEN', 'SKULLERUD', 'VULKAN', 'TORSHOV', 'VALHALL', 'ORMØYA', 'SINSEN'];
-// Local trains passing through Sandvika stasjon: for now the hi-res masters (tools/vehicles/game_hd.py),
-// drawn smoothly at 8 game px per metre. Pixel-art versions (pixel_trains.py) are parked until new sprites are made.
+// Trains passing through Sandvika stasjon: the hi-res masters (100 px per metre), trimmed and drawn smoothly at
+// TRAIN_PPM. Pixel-art versions (pixel_trains.py) are parked until new sprites are made.
 const TRAIN_GREEN = loadImage(trainGreenUrl);
 const TRAIN_TOMATO = loadImage(trainTomatoUrl);
+const AIRPORT_EXPRESS = loadImage(airportExpressUrl);
+/** game px per metre for the trains: a bit taller than before (8) but lower than the buses (BUS_PPM) */
+const TRAIN_PPM = 10;
 /** The trains run alongside the platform the girls walk on: the tops of the wheels are level with the
  * walking surface (GROUND), and the wheels themselves are hidden behind the platform edge. */
-const WHEEL_H = 7; // game px from the wheel bottoms (the image's bottom row) up to the wheel tops
+const WHEEL_M = 0.875; // metres from the wheel bottoms (the image's bottom row) up to the wheel tops
 /** Screen x of the train's left end at time t, or null when it isn't running. */
 type TrainPath = (t: number, width: number) => number | null;
 interface TrainRun { img: HTMLImageElement; path: TrainPath }
@@ -51,16 +55,15 @@ const stoppingTrain: TrainPath = (t, width) => {
 
 const TRAIN_RUNS: TrainRun[] = [
   { img: TRAIN_GREEN, path: stoppingTrain },                         // verse 1: overtakes, brakes, stops by the machines
+  { img: AIRPORT_EXPRESS, path: passing(41.0, W + 10, -620) },       // after the machines: whisks past right to left
   { img: TRAIN_TOMATO, path: passing(barT(26) + 0.5, W + 10, -210) }, // pre-chorus 1: another one the other way
 ];
 
 function drawTrains(t: number): void {
   for (const run of TRAIN_RUNS) {
     if (!ready(run.img)) continue;
-    const w = run.img.width / RES, h = run.img.height / RES; // size in game pixels
-    const x = run.path(t, w);
-    if (x === null || x > W || x + w < 0) continue;
-    drawHiRes(run.img, x, GROUND + WHEEL_H - h, w, h); // the ground strip, drawn later, covers the wheels
+    const x = run.path(t, (meta(run.img).box[2] * TRAIN_PPM) / HIRES_PPM); // width in game px
+    if (x !== null) drawVehicle(run.img, x, GROUND + WHEEL_M * TRAIN_PPM, TRAIN_PPM); // the ground strip, drawn later, covers the wheels
   }
 }
 
@@ -130,10 +133,10 @@ function drawVehicle(img: HTMLImageElement, x: number, y: number, ppm: number, f
 /** Buses waiting at the terminal stops: roof-layer x of the left end. The first is on screen at the start. */
 const WAITING_BUSES: [HTMLImageElement, number][] = [[BUS_GREEN, 120], [BUS_RED, 560], [BUS_GREEN, 950]];
 /** The red bus driving through behind them, right to left: start time and screen speed. */
-const DRIVING_BUS = { t0: 1.5, vx: -170 };
+const DRIVING_BUS = { t0: 1.5, vx: -170, ppm: BUS_PPM * 0.8 }; // a bit smaller: it's further away
 function drawBuses(t: number, bx: number): void {
   if (t > barT(10) + 8) return;
-  drawVehicle(BUS_RED, W + (t - DRIVING_BUS.t0) * DRIVING_BUS.vx, GROUND, BUS_PPM, true); // behind the waiting ones
+  drawVehicle(BUS_RED, W + (t - DRIVING_BUS.t0) * DRIVING_BUS.vx, GROUND, DRIVING_BUS.ppm, true); // behind the waiting ones
   for (const [img, x] of WAITING_BUSES) drawVehicle(img, x - bx * ROOF_PARALLAX, GROUND, BUS_PPM);
 }
 
