@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So many nice fixes!">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NEXT_CHANGES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So many nice fixes again!">
       <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/timeline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/timeline.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,23 +22,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000379240276094" />
-      <entry key="MS500" value="1.1866038184284167" />
-      <entry key="S2" value="2.6879594956383293" />
-      <entry key="S5" value="5.004094268148179" />
-      <entry key="S10" value="7.238277751348894" />
-      <entry key="S30" value="9.968401504192554" />
-      <entry key="S60" value="10.914103207535586" />
-      <entry key="M2" value="11.563653165385862" />
-      <entry key="M5" value="14.200086027226952" />
-      <entry key="M10" value="18.61451248577954" />
-      <entry key="M15" value="22.266954420814667" />
-      <entry key="M30" value="35.57359291774792" />
-      <entry key="H1" value="67.99042570990039" />
-      <entry key="H2" value="120.38862099268248" />
-      <entry key="H4" value="183.63127800261296" />
-      <entry key="D1" value="555.5538052381515" />
-      <entry key="W1" value="852.495816583479" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.000000000000005" />
+      <entry key="S5" value="1.000004142870536" />
+      <entry key="S10" value="1.0040227196776585" />
+      <entry key="S30" value="1.4001270991077934" />
+      <entry key="S60" value="2.337449091303988" />
+      <entry key="M2" value="4.197163371396859" />
+      <entry key="M5" value="9.399759914485138" />
+      <entry key="M10" value="15.854008410420162" />
+      <entry key="M15" value="20.65834107317313" />
+      <entry key="M30" value="34.96086689694957" />
+      <entry key="H1" value="67.47729481750615" />
+      <entry key="H2" value="120.43650600995849" />
+      <entry key="H4" value="184.825448491026" />
+      <entry key="D1" value="558.6246401108932" />
+      <entry key="W1" value="857.0725323074348" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -67,23 +60,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.965973215908309" />
-      <entry key="MS500" value="1.1786407951570992" />
-      <entry key="S2" value="2.683673513844934" />
-      <entry key="S5" value="5.000849869669802" />
-      <entry key="S10" value="7.23589700954029" />
-      <entry key="S30" value="9.967295419601859" />
-      <entry key="S60" value="10.91349575431018" />
-      <entry key="M2" value="11.563329955862049" />
-      <entry key="M5" value="14.199919983091338" />
-      <entry key="M10" value="18.61439830207524" />
-      <entry key="M15" value="22.26686236440391" />
-      <entry key="M30" value="35.57350817759393" />
-      <entry key="H1" value="67.99024243984093" />
-      <entry key="H2" value="120.38827258774786" />
-      <entry key="H4" value="183.63089654036406" />
-      <entry key="D1" value="555.5536574648597" />
-      <entry key="W1" value="852.4957899936387" />
+      <entry key="MS100" value="0.7631296044802796" />
+      <entry key="MS500" value="0.9473700705992677" />
+      <entry key="S2" value="0.9865745659392645" />
+      <entry key="S5" value="0.9946121820159055" />
+      <entry key="S10" value="1.0013221419908644" />
+      <entry key="S30" value="1.3991942839877975" />
+      <entry key="S60" value="2.336943641338763" />
+      <entry key="M2" value="4.196866234470037" />
+      <entry key="M5" value="9.399583065228738" />
+      <entry key="M10" value="15.853879698737622" />
+      <entry key="M15" value="20.658235096937048" />
+      <entry key="M30" value="34.96077496243326" />
+      <entry key="H1" value="67.47711604993863" />
+      <entry key="H2" value="120.43616673641797" />
+      <entry key="H4" value="184.82507234700174" />
+      <entry key="D1" value="558.62449242479" />
+      <entry key="W1" value="857.0725056700426" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -170,6 +163,7 @@
     <MESSAGE value="Updated level titles" />
     <MESSAGE value="Should fix highscore screen.&#10;Multiplier when jumping on things&#10;Backwards move is now faster than scroll" />
     <MESSAGE value="So many nice fixes!" />
-    <option name="LAST_COMMIT_MESSAGE" value="So many nice fixes!" />
+    <MESSAGE value="So many nice fixes again!" />
+    <option name="LAST_COMMIT_MESSAGE" value="So many nice fixes again!" />
   </component>
 </project>

@@ -3,9 +3,12 @@ import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { enemyX } from '../state';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
-import { R, ctx, flash, resetTransform, text } from './draw';
+import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
 import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawMachine, type Mood } from './sprites';
+import titleLogoUrl from '../../assets/ui/title-logo.png';
+
+const TITLE_LOGO = loadImage(titleLogoUrl);
 
 export function drawGame(g: Game, t: number, dev: boolean): void {
   const s = g.s, sec = sectionAt(t), beatFlash = Math.max(0, 1 - beatPhase(t, BEAT) * 4);
@@ -117,21 +120,24 @@ export function drawPause(): void {
   text('P / ENTER: FORTSETT · RESUME', W / 2, 104, '#ccc', 6, 'center');
 }
 
-function drawStartupBackdrop(t: number): void {
+function drawStartupBackdrop(t: number, titleLogo = false): void {
   sky(SKY.neon);
   for (let i = 0; i < 12; i++) R((((i * 32 - t * 60) % 384) + 384) % 384 - 32, GROUND, 1, H - GROUND, '#ff4fd8');
   R(0, GROUND, W, H - GROUND, '#160022'); R(0, GROUND, W, 1, '#ff4fd8');
-  text('OSLO-STIL', W / 2, 28, '#ffe14a', 24, 'center', '#ff2bd6');
+  if (titleLogo) {
+    if (ready(TITLE_LOGO)) drawHiRes(TITLE_LOGO, 54.4, 11.6, 211.2, 70.4);
+  } else text('OSLO-STIL', W / 2, 28, '#ffe14a', 24, 'center', '#ff2bd6');
 }
 
 export function drawTitle(t: number, loading: boolean): void {
-  drawStartupBackdrop(t);
-  text('AN AUTOMAT VICTORIA ADVENTURE', W / 2, 60, '#2bf0ff', 6, 'center');
+  drawStartupBackdrop(t, true);
+  text('AN AUTOMAT VICTORIA ADVENTURE', W / 2, 80, '#2bf0ff', 6, 'center');
   drawGirl('friend', 130, GROUND, t, { ninja: false, idle: true });
   drawGirl('victoria', 152, GROUND, t + 0.5, { ninja: false, idle: true });
   drawMachine(184, GROUND - 4, t, 'idle', 2, true);
-  if (loading) text('LASTER SPILL …', W / 2, 84, '#fff', 6, 'center');
-  else if (Math.floor(t * 2) % 2) text('Trykk enter for å aktivere tekst-til-tale.', W / 2, 84, '#fff', 7, 'center');
+  const promptY = Math.round((80 + 6 + GROUND - 32 - 7) / 2);
+  if (loading) text('LASTER SPILL …', W / 2, promptY, '#fff', 6, 'center');
+  else if (Math.floor(t * 2) % 2) text('Trykk enter for å aktivere tekst-til-tale.', W / 2, promptY, '#fff', 7, 'center');
   text('SPACE/↑ HOPP·JUMP   ↓ SKLI·SLIDE   X SLÅ·HIT', W / 2, GROUND + 8, '#ccc', 5, 'center');
   text('C KAST·THROW   ←→ FLYTT·MOVE   P PAUSE   M MUSIKK·MUSIC', W / 2, GROUND + 18, '#ccc', 5, 'center');
 }
