@@ -2,6 +2,7 @@
 import sheetJson from '../assets/sprites/enemies.json';
 import propsJson from '../assets/sprites/props.json';
 import lampsJson from '../assets/sprites/lamps.json';
+import treesJson from '../assets/sprites/trees.json';
 import { NINJAS, THUGS, type NinjaKind, type ThugKind } from './ninjas';
 import { PASSENGERS, type PassengerKind } from './passengers';
 
@@ -9,7 +10,13 @@ export type LampKind = keyof typeof lampsJson;
 export const LAMPS = lampsJson;
 export const LAMP_CELL_W = 96, LAMP_CELL_H = 80;
 export const isLamp = (kind: EnemyKind): kind is LampKind => Object.hasOwn(LAMPS, kind);
-export const itemLayer = (kind: EnemyKind): number => kind === 'tram' ? 1 : isProp(kind) || isLamp(kind) ? 0 : 2;
+export const itemLayer = (kind: EnemyKind): number => kind === 'tram' ? 1 : isProp(kind) || isLamp(kind) || isTree(kind) ? 0 : 2;
+
+/** Trees (tools/sprites/trees.py): scenery behind the characters, not standable. */
+export type TreeKind = keyof typeof treesJson;
+export const TREES = treesJson;
+export const TREE_CELL_W = 100, TREE_CELL_H = 100;
+export const isTree = (kind: EnemyKind): kind is TreeKind => Object.hasOwn(TREES, kind);
 
 export type PropKind = keyof typeof propsJson;
 export const PROPS = propsJson;
@@ -18,7 +25,7 @@ export const isProp = (kind: EnemyKind): kind is PropKind => Object.hasOwn(PROPS
 
 export type EnemyKind =
   | 'suitcase' | 'snow' | 'pigeon' | 'ticket' | 'blob' | 'ninja' | 'drone' | 'gull'
-  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | PropKind | LampKind | NinjaKind | ThugKind | PassengerKind | 'tagger_spray';
+  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | PropKind | LampKind | NinjaKind | ThugKind | PassengerKind | 'tagger_spray' | TreeKind;
 
 /** One row of the enemy sprite sheet (assets/sprites/enemies.png, 32 × 32 bottom-centred cells). */
 export interface SheetRow {
@@ -32,7 +39,7 @@ export interface SheetRow {
   dy?: number;
 }
 /** Enemies and pickups use this sheet; trams and props have separate artwork. */
-export type SheetKind = Exclude<EnemyKind, 'tram' | PropKind | LampKind | Exclude<NinjaKind, 'ninja'> | ThugKind | PassengerKind | 'tagger_spray'>;
+export type SheetKind = Exclude<EnemyKind, 'tram' | PropKind | LampKind | Exclude<NinjaKind, 'ninja'> | ThugKind | PassengerKind | 'tagger_spray' | TreeKind>;
 export const SHEET: Record<SheetKind, SheetRow> = sheetJson;
 export const SHEET_CELL = 32;
 
@@ -67,6 +74,12 @@ export const TRAM_EDGE = 8;
 /** seconds of «!» warning before the nose enters the screen */
 export const TRAM_WARN = 1.2;
 
+/** Solid, harmless scenery types for every entry of a props/lamps/trees JSON table. */
+function scenery<K extends string>(table: Record<K, { w: number; h: number }>): Record<K, EnemyType> {
+  return Object.fromEntries((Object.entries(table) as [K, { w: number; h: number }][])
+    .map(([k, v]) => [k, { w: v.w, h: v.h, y: 0, hp: 0, own: 0, solid: true }])) as Record<K, EnemyType>;
+}
+
 /** Hitbox size (w, h) comes from the sprite's visible size in enemies.json. */
 const fromSheet = (k: SheetKind, rest: Omit<EnemyType, 'w' | 'h'>): EnemyType => ({ w: SHEET[k].w, h: SHEET[k].h, ...rest });
 
@@ -97,15 +110,8 @@ export const TYPES: Record<EnemyKind, EnemyType> = {
   coin: fromSheet('coin', { y: 38, hp: 0, own: 0, pickup: true }),
   shot: fromSheet('shot', { y: 6, hp: 1, own: 120 }),
   fireball: fromSheet('fireball', { y: 28, hp: 1, own: 120 }),
-  trash: { ...PROPS.trash, y: 0, hp: 0, own: 0, solid: true },
-  recycling: { ...PROPS.recycling, y: 0, hp: 0, own: 0, solid: true },
-  phonebooth: { ...PROPS.phonebooth, y: 0, hp: 0, own: 0, solid: true },
-  kiosk: { ...PROPS.kiosk, y: 0, hp: 0, own: 0, solid: true },
-  roadside: { ...LAMPS.roadside, y: 0, hp: 0, own: 0, solid: true },
-  roadside2: { ...LAMPS.roadside2, y: 0, hp: 0, own: 0, solid: true },
-  round: { ...LAMPS.round, y: 0, hp: 0, own: 0, solid: true },
-  vintage: { ...LAMPS.vintage, y: 0, hp: 0, own: 0, solid: true },
-  subway: { ...LAMPS.subway, y: 0, hp: 0, own: 0, solid: true },
+  // every prop, lamp and tree in its JSON becomes solid scenery (new art needs no code change)
+  ...scenery(PROPS), ...scenery(LAMPS), ...scenery(TREES),
 };
 
 export interface ScheduledEvent {

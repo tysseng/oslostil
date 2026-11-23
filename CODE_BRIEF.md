@@ -105,9 +105,13 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- Trees move at 90% of their authored speed for subtle background parallax, including existing editor drafts. Spawn timing and editor positioning use the same adjusted speed; saved `rel` remains the unscaled authored value.
+
+- Pigeons and gulls use `enemyHeight` for deterministic smooth flight: two blended sine waves seeded by authored arrival time and height, at 2.8–6 radians/second for visible swoops during short screen crossings. Height varies up to 48 px above the safe base, never below 24 px off the ground. Rendering, attacks, stomps, droppings and editor bounds share the same position; defeated birds use their separate falling animation.
+
 - Subway tagger runs in three seconds before the train stops and starts spraying one second before it stops. Shared timeline helpers drive his position and paint. Shooting him during either phase removes him and awards 300 base points with normal combo/PERFECT bonuses, once only. `taggerStoppedAt` freezes existing train-anchored paint and prevents further spraying; seek/restart resets it. He does not damage the player.
 
-- Seagulls drop at randomized intervals while onscreen (first 0.8–3 seconds, then 1.2–4 seconds). Droppings fall under gravity, scroll with the world and leave six-second ground splats. Airborne contact or stepping in a splat deals 0.25 health with normal damage invincibility; droplets survive their gull's defeat and reset on seek/restart.
+- Seagulls drop at randomized intervals while onscreen (first 0.2–0.6 seconds, then 0.45–1 second). Droppings fall under gravity, scroll with the world and leave six-second ground splats. Airborne contact or stepping in a splat deals 0.25 health with normal damage invincibility; droplets survive their gull's defeat and reset on seek/restart.
 
 - Lamps (`roadside`, `roadside2`, `round`, `vintage`, `subway`) are single one-way platform items using `lamps.json` and aligned 96 × 80 cells in `lamps.png` / `lamps-light.png`. Players can land on their metadata-defined `top` / `top_span`, ride and jump off, without side or underside collision. Posts render with scenery, then trams, then enemies/characters. Light uses screen blending over sprites with tram bounds excluded so it remains behind trams. The editor uses the same layering and previews both sheets as one item.
 

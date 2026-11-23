@@ -39,6 +39,7 @@ Sizes are in game pixels; the screen is 320 × 180. For a code-drawn asset the s
 | Victoria | ✅ | 24 × 32 frames | `assets/sprites/victoria.png` | idle ×2, run ×4, jump up/down, slide, attack; normal + ninja |
 | Friend | ✅ | 24 × 32 frames | `assets/sprites/friend.png` | same layout as Victoria |
 | Automat Victoria (companion) | ✅ | 24 × 32 frames | `assets/sprites/automat.png` (`tools/sprites/automat.py`) | idle0 idle1(blink) talk0 talk1 cheer0 cheer1 plain; talks when the lyrics are about her, cheers on the chorus calls and the win screen |
+| Celebration (ending): both girls in ninja outfits, Automat Victoria | 🎨 | 24 × 32 frames | `assets/sprites/celebrate.png` (rows Victoria, friend: turn ×3, front idle ×2, wave ×4, jump takeoff/rise/fall/land), `automat-celebrate.png` (front, wave ×4, jump ×4, blink) + `celebrate.json` (layout, fps, jump timing), from `tools/sprites/celebrate.py`; not wired in (no gameplay change) |
 | Kaos-trikken (boss) | ⬜ | 80 × 70 | `drawBoss` in `src/render/sprites.ts` | white hit flash; damage and explosion frames |
 
 ## Enemies and obstacles
@@ -103,7 +104,21 @@ Pixel sprites at girl scale, front view, in `assets/sprites/props.png` + `props.
 | Street lamp, vintage lantern | 🎨 | 17 × 46 | row 3; warm light |
 | Subway platform lamp, two rising arms | 🎨 | 55 × 74 | row 4; cool light |
 | Lamp light (smooth gradients: cones, radial glow, ground pool) | 🎨 | 96 × 80 cells | `lamps-light.png`, same grid as `lamps.png`; draw in front of the characters |
-| Tokyoslo variants, signs, lanterns | ⬜ | | not made yet |
+| Tokyoslo: red lacquer bin (`bin_tokyo`) | ✅ | 13 × 17 | `props.png`; one jump |
+| Tokyoslo: two vending machines (`vending`) | ✅ | 31 × 43 | lit fronts, cool glow in `props-light.png`; one jump |
+| Tokyoslo: lantern string between bamboo poles (`lanterns`) | ✅ | 92 × 51 | 2 frames sway/glow; warm-red glow; `top` 0 = not standable |
+| Tokyoslo: vertical neon sign (`neon`) | ✅ | 18 × 53 | 3 frames flicker (one glyph drops out); pink glow; invented glyphs; not standable |
+| Tokyoslo: ramen cart (`yatai`) | ✅ | 48 × 37 | 3 frames (noren flutter, steam); lantern glow + counter light; one jump |
+| Tokyoslo: konbini (`konbini`) | ✅ | 102 × 59 | bright windows, lit «KONBINI» band, two cool cones; double jump |
+| Tokyoslo lamp: vermilion post with red paper lantern (`tokyo_lamp`) | ✅ | 24 × 62 | `lamps.png` row 5; warm-red radial light |
+| Tokyoslo stone lantern (`toro`) | ✅ | 19 × 37 | `lamps.png` row 6; firelight sideways and down; flat top, one jump |
+| Park bench, European (`bench_park`) | ✅ | 38 × 18 | dark green cast-iron ends, wooden slats; one jump |
+| Station bench, Sandvika (`bench_station`) | ✅ | 43 × 17 | steel frame, light wood slats; one jump |
+| Fountain, classic Oslo (`fountain`) | ✅ | 64 × 42 | tiered stone; 4 frames of semi-transparent water; stand on the basin rim (`top` 13) |
+| Tea-house bench under a red parasol, Tokyoslo (`bench_asian`) | ✅ | 35 × 43 | red felt seat (`top` 13) |
+| Old wooden shop, Tokyoslo (`shop_wood`) | ✅ | 84 × 54 | tiled roof, lattice, indigo noren, paper lanterns; warm light |
+| Konbini light | ✅ | | sign band and light dimmed (Joakim: too bright) |
+| Trees: `oslo_bare`, `oslo_leafy`, `oslo_leafy2` (night), `sakura`, `sakura2` | ✅ | 88 × 88, 80 × 97, 79 × 86, 89 × 70, 74 × 63 | `assets/sprites/trees.png` + `.json` (`tools/sprites/trees.py`), 100 × 100 cells, trunk centred; scenery behind the characters, not standable |
 
 ## Vehicles
 
@@ -145,6 +160,7 @@ No company marks or logos on the vehicles. References are in `inspiration/vehicl
 | Tram, new (light blue) | 🎨 | `tram-new.svg` (5 sections), `tram-new-short.svg` (3) | in-game tram obstacle? |
 | Subway, new (light grey) | 🎨 | `subway-new.svg` (3 cars), `subway-new-2.svg` (2 cars) | |
 | Subway, old (red and blue) | 🎨 | `subway-old.svg` (3 cars), `subway-old-2.svg` (2 cars) | |
+| Tram, Tokyoslo (two identical green-and-cream cars, chained) | ✅ | `tram-tokyo.svg/.png` (`tools/vehicles/trams.py`, `tokyo_tram()`) | the tram obstacle for trams due after 1:42 (`drawTram`); same length and roof height as `tram-new`, so the physics are unchanged |
 | Tram, SL79 | ⬜ | | |
 | Tram, old | ⬜ | | |
 | Tram, Italian | ⬜ | | |

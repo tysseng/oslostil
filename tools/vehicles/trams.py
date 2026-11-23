@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Trams: the new light-blue Oslo tram (multi-section, low floor).
+"""Trams: the new light-blue Oslo tram (multi-section, low floor) and the two-car Tokyoslo tram.
 
 No company marks or logos. Front faces right.
 Usage: python3 tools/vehicles/trams.py  → assets/vehicles/hires/*.svg + .png
@@ -104,8 +104,81 @@ def new_tram(sections=5):
     return svg.doc(L, H, 'New Oslo tram (light blue)'), L
 
 
+JT = dict(green='#2f7a45', green_hi='#4a9a5e', green_lo='#1f5a32', cream='#efe0b0', cream_lo='#d4c08a',
+          roof='#2c5e3a', glass='#f2c25a', shine='#ffeab0', door='#2a6a3c', skirt='#1c2a22')
+
+
+def jcar(svg, x0, L, nose, top=70, bot=242):
+    """one car of the Tokyoslo tram: green and cream, rounded nose at the outer end (nose = 'L' or 'R')"""
+    xe = x0 + L
+    if nose == 'L':
+        d = (f'M{x0 + 64},{top} L{xe - 8},{top} Q{xe},{top} {xe},{top + 8} L{xe},{bot} L{x0 + 30},{bot} '
+             f'Q{x0 + 2},{bot} {x0 + 2},{bot - 30} L{x0 + 8},{top + 44} Q{x0 + 14},{top} {x0 + 64},{top} Z')
+    else:
+        d = (f'M{xe - 64},{top} L{x0 + 8},{top} Q{x0},{top} {x0},{top + 8} L{x0},{bot} L{xe - 30},{bot} '
+             f'Q{xe - 2},{bot} {xe - 2},{bot - 30} L{xe - 8},{top + 44} Q{xe - 14},{top} {xe - 64},{top} Z')
+    cid = svg.clip(d)
+    g = [f'<path d="{d}" fill="{JT["green"]}"/>', f'<g clip-path="url(#{cid})">']
+    g.append(rect(x0 - 20, top, L + 40, 22, JT['roof'], stroke=False))                 # roof band
+    g.append(rect(x0 - 20, top + 22, L + 40, 88, JT['cream'], stroke=False))           # cream window band
+    g.append(rect(x0 - 20, top + 102, L + 40, 8, JT['cream_lo'], stroke=False))
+    g.append(rect(x0 - 20, top + 110, L + 40, 6, JT['green_lo'], stroke=False))        # thin dark stripe
+    g.append(rect(x0 - 20, top + 118, L + 40, 5, JT['green_hi'], stroke=False))
+    g.append(rect(x0 - 20, bot - 14, L + 40, 20, JT['skirt'], stroke=False))
+    # mirrored layout for the right-hand car
+    doors_l, wins_l = [150, 520], [64, 240, 306, 372, 438, 610, 676]
+    if nose == 'L':
+        doors, wins = doors_l, wins_l
+    else:
+        doors, wins = [L - x - 80 for x in doors_l], [L - x - 56 for x in wins_l]
+    check_clear('tokyo tram', L, doors, 80, wins, 56)
+    for wx in wins:   # warm lit windows like the subways
+        g.append(window(x0 + wx, top + 32, 56, 64, glass=JT['glass'], shine=JT['shine'], rx=10))
+    for dx in doors:
+        x = x0 + dx
+        g.append(rect(x, top + 26, 80, bot - top - 30, JT['door'], 6, sw=4))
+        for lx in (x + 8, x + 44):
+            g.append(window(lx, top + 34, 28, 92, glass=JT['glass'], shine=JT['shine'], rx=6))
+        g.append(f'<line x1="{x + 40}" y1="{top + 30}" x2="{x + 40}" y2="{bot - 8}" stroke="{INK}" stroke-width="3"/>')
+    # the windscreen wrapping round the nose, a headlight and a destination sign
+    if nose == 'L':
+        g.append(f'<path d="M{x0 + 56},{top + 28} L{x0 + 16},{top + 28} Q{x0 + 8},{top + 30} {x0 + 6},{top + 46} L{x0 + 4},{top + 100} L{x0 + 56},{top + 100} Z" fill="{JT["glass"]}"/>')
+        g.append(f'<circle cx="{x0 + 22}" cy="{top + 140}" r="9" fill="#fff6d0" stroke="{INK}" stroke-width="3"/>')
+    else:
+        g.append(f'<path d="M{xe - 56},{top + 28} L{xe - 16},{top + 28} Q{xe - 8},{top + 30} {xe - 6},{top + 46} L{xe - 4},{top + 100} L{xe - 56},{top + 100} Z" fill="{JT["glass"]}"/>')
+        g.append(f'<circle cx="{xe - 22}" cy="{top + 140}" r="9" fill="#fff6d0" stroke="{INK}" stroke-width="3"/>')
+    g.append('</g>')
+    g.append(f'<path d="{d}" fill="none" stroke="{INK}" stroke-width="{SW + 1}" stroke-linejoin="round"/>')
+    svg.add(''.join(g))
+
+
+def tokyo_tram():
+    """Tokyoslo tram: two green-and-cream cars, inspired by inspiration/vehicles/Japanese tram.
+    Same length (30.3 m) and roof height as tram-new, so the game's tram physics fit unchanged. No pantograph."""
+    from common import bogie, bellows
+    svg = Svg()
+    L, gap = 750, 16
+    xs = [0, L + gap]
+    for x0 in xs:   # bogies behind the body
+        svg.add(bogie(x0 + 150, span=90))
+        svg.add(bogie(x0 + L - 150, span=90))
+    svg.add(bellows(L - 4, gap + 8, 96, 236))
+    jcar(svg, xs[0], L, 'L')
+    jcar(svg, xs[1], L, 'R')
+    for x0 in xs:   # small roof boxes (no pantograph)
+        svg.add(rect(x0 + 260, 56, 120, 16, JT['roof'], 5, sw=3))
+        svg.add(rect(x0 + L - 330, 58, 70, 14, '#5a6a5e', 4, sw=3))
+    # destination signs in the roof band at both ends
+    for sx in (40, 2 * L + gap - 160):
+        svg.add(rect(sx + 20, 74, 100, 18, '#14161a', 3, sw=3))
+        svg.add(f'<text x="{sx + 70}" y="88" font-family="monospace" font-weight="700" font-size="13" fill="#ffb21a" text-anchor="middle">1 TOKYOSLO</text>')
+    Lt = 2 * L + gap
+    return svg.doc(Lt, H, 'Tokyoslo tram (two cars, green and cream)'), Lt
+
+
 if __name__ == '__main__':
     render(HIRES, {
         'tram-new.svg': new_tram(5)[0],
         'tram-new-short.svg': new_tram(3)[0],
+        'tram-tokyo.svg': tokyo_tram()[0],
     })

@@ -73,6 +73,14 @@ When a PNG in `assets/` changes, the running dev server reloads it straight away
 - **The passengers** (they replace the ticket bot and its label) are ordinary people in normal clothes with **red glowing eyes**, like zombies or robots: an adult woman with yellow hair, a small child in a red cap, an old man with a rolled-up newspaper, and a teenager smoking a joint.
 - All are drawn by `tools/sprites/people.py` on the ninjas' skeleton (40 × 32 cells, facing left).
 
+### Tokyoslo tram (Joakim, 23 Nov)
+
+Green and cream like the Japanese references. **Identical cars chained** with a coupler (no bellows), **vertical end walls**, only small rounded corners, **single doors** split cream/green like the body. Two cars match `tram-new` in length and roof height. No pantograph.
+
+### Celebration sprites (ending)
+
+Front-facing frames for both girls in ninja outfits (turn from side to front, idle, a 4-frame wave, a jump: takeoff, rise, fall, land) and for Automat Victoria (her cheer frames raise both arms, so a one-arm wave and a squash/stretch jump were added). Separate sheets; existing frames and indices are unchanged.
+
 ### Ticket machines
 
 Automat Victoria and the platform machines are seen from the front. They have **plain blue edges and no white side light strip**: that strip is only visible from the side.
@@ -89,6 +97,8 @@ Automat Victoria and the platform machines are seen from the front. They have **
 - **Front view only**, flat 2D, in the girls' style: dark outlines tinted per material (not one flat black), 3–4 tone shading, rich colour.
 - **Hand anti-aliasing:** curves and corners get hand-placed in-between tones (opaque pixels), never a scaled-down or blurred image. This replaces the «no blended edge pixels» rule for props only.
 - **The kiosk is at dusk** (Joakim, 23 Nov): darker outside, lit windows and name plate, and a light cone each side of the centre. The light is in `props-light.png` (same grid as `props.png`), made like the lamp light.
+- **Tokyoslo props** (`tools/sprites/tokyo_props.py`, drawn into the same props sheet): lacquer red, black and gold, paper lanterns, neon in pink and cyan with invented glyphs (no real words). Props can now animate (one sheet column per frame, `frames`/`fps` in the JSON), and `top` 0 means not standable.
+- **Trees** (Joakim, 23 Nov): leaf trees in the dark for classic Oslo (one bare, two in leaf), cherry blossom trees for Tokyoslo.
 - **Heights relative to a girl (30 px):** round trash bin ≈ 55 % (17 px), recycling bin > girl (36 px), phone booth between recycling and kiosk (44 px), kiosk ≈ 2 × girl (61 px).
 - No real marks: the kiosk is a generic «KIOSK» (after narvesen 3, colours from the other kiosk photos); the textile bin is plain red with dots for writing, no Red Cross logo.
 
@@ -157,6 +167,8 @@ pip install pillow playwright && python -m playwright install chromium
 | `python3 tools/sprites/lamps.py` | street lamps + separate light sheet: roadside (1 and 2 arms), round globe, vintage lantern, subway |
 | `python3 tools/sprites/ninjas.py` | enemy ninjas sheet + JSON (three kinds, 14 frames each) |
 | `python3 tools/sprites/people.py` | thugs (+ tagger spray row) and zombie passengers, sheets + JSON |
+| `python3 tools/sprites/trees.py` | trees: three night trees for classic Oslo, two cherry trees for Tokyoslo |
+| `python3 tools/sprites/celebrate.py` | celebration sheets for the ending (girls in ninja outfits + Automat), from the girls' and Automat's own parts and palettes; never touches victoria.png/friend.png/automat.png |
 | `python3 tools/sprites/girls.py` | the girls' sheets (**overwrites** any hand edits to the PNGs) |
 
 All generators run from the repo root and write into `assets/`.

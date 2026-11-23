@@ -1,5 +1,5 @@
-import { GROUND, PLAYER_MAX_HP, PX, W } from './config';
-import { TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
+import { GROUND, PLAYER_MAX_HP, PX, W, rng } from './config';
+import { isTree, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 
@@ -93,11 +93,12 @@ export interface GameState {
 
 export const eventSpeed = (e: ScheduledEvent): number =>
   e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : 1);
+const movementSpeed = (e: ScheduledEvent): number => eventSpeed(e) * (isTree(e.type) ? 0.9 : 1);
 export const spawnTime = (e: ScheduledEvent): number =>
-  e.arr - (W + 100 - PX) / eventSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
+  e.arr - (W + 100 - PX) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
 
 export function createEnemy(e: ScheduledEvent): Enemy {
-  return { ...e, rel: eventSpeed(e), hp: TYPES[e.type].hp, y: e.y ?? TYPES[e.type].y };
+  return { ...e, rel: movementSpeed(e), hp: TYPES[e.type].hp, y: e.y ?? TYPES[e.type].y };
 }
 
 export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {
@@ -114,3 +115,15 @@ export function createState(events: ScheduledEvent[] = loadDefaultLevel()): Game
 
 /** Where an enemy is on screen at song time t. */
 export const enemyX = (e: Enemy, t: number): number => PX + (e.arr - t) * e.rel;
+
+/** Song-time flight, seeded from the authored position rather than frame/update order. */
+export function enemyHeight(e: Enemy, t: number): number {
+  if (e.dead || (e.type !== 'pigeon' && e.type !== 'gull')) return e.y;
+  const seed = Math.imul(Math.round(e.arr * 1000), 73856093) ^ Math.imul(Math.round(e.y * 1000), 19349663);
+  const random = rng(seed);
+  const phase1 = random() * Math.PI * 2, phase2 = random() * Math.PI * 2;
+  const speed1 = 2.8 + random() * 1.2, speed2 = 4.5 + random() * 1.5;
+  const wave = 0.65 * Math.sin((t - e.arr) * speed1 + phase1)
+    + 0.35 * Math.sin((t - e.arr) * speed2 + phase2);
+  return Math.max(24, Math.min(GROUND - TYPES[e.type].h - 52, e.y)) + 24 * (wave + 1);
+}

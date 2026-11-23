@@ -13,8 +13,9 @@ Props (visible height incl. outline):
 
 Sheet: one prop per row, one column per frame, CELL_W × CELL_H cells, each prop bottom-centred
 (base on the bottom row, centre on x = CELL_W // 2).
-Writes assets/sprites/props.png, assets/sprites/props-light.png (the same grid: light to draw in
-front of the characters; only the dusk kiosk has any) and assets/sprites/props.json
+Writes assets/sprites/props.png (one column per animation frame), assets/sprites/props-light.png
+(the same grid, column 0: light to draw in front of the characters) and assets/sprites/props.json.
+The Tokyoslo props are drawn in tools/sprites/tokyo_props.py. top 0 = not standable.
 ({name: {row, frames, fps, w, h, top}}; w × h is the visible size, top is the height of the
 walkable top surface above the base, in px).
 Usage: python3 tools/sprites/props.py
@@ -529,28 +530,72 @@ def trimmed(cv):
     return im.crop(im.getbbox())
 
 
+def field_image(A, col, blur=1.4):
+    """float alpha field → RGBA light: smooth gradient, blurred edges, brightest parts towards white"""
+    from PIL import ImageFilter
+    h, w = len(A), len(A[0])
+    a = Image.new('L', (w, h))
+    a.putdata([max(0, min(255, round(v * 255))) for row in A for v in row])
+    a = a.filter(ImageFilter.GaussianBlur(blur))
+    im = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    for y in range(h):
+        for x in range(w):
+            v = a.getpixel((x, y))
+            if v:
+                im.putpixel((x, y), mix(col, (255, 255, 255), min(0.6, v / 255 * 0.9)) + (v,))
+    return im
+
+
 if __name__ == '__main__':
+    import tokyo_props
+    import oslo_props
+    # (name, frames, fps, top, light image) for every prop; Tokyoslo props come from tokyo_props.py
+    entries = []
+    for name, fn in PROPS:
+        cv = fn()
+        full = cv.image()
+        entries.append((name, [full], 1, None, LIGHTS[name](full.width, full.height) if name in LIGHTS else None))
+    for name, fn, fps, top, lf in tokyo_props.TOKYO + oslo_props.OSLO:
+        frames = []
+        for cv in fn():
+            im = cv.image()
+            if hasattr(cv, 'steam'):
+                tokyo_props.yatai_steam(im, cv.steam)
+            if hasattr(cv, 'post'):
+                cv.post(im)
+            frames.append(im)
+        lit = None
+        if lf:
+            A, col = lf(frames[0].width, frames[0].height)
+            lit = field_image(A, col)
+        entries.append((name, frames, fps, top, lit))
+    cols = max(len(e[1]) for e in entries)
     root = Path(__file__).resolve().parents[2] / 'assets' / 'sprites'
-    sheet = Image.new('RGBA', (CELL_W, CELL_H * len(PROPS)), (0, 0, 0, 0))
+    sheet = Image.new('RGBA', (CELL_W * cols, CELL_H * len(entries)), (0, 0, 0, 0))
     light = Image.new('RGBA', sheet.size, (0, 0, 0, 0))
     meta = {}
-    for row, (name, fn) in enumerate(PROPS):
-        full = fn().image()
-        box = full.getbbox()
-        im = full.crop(box)
-        w, h = im.size
+    for row, (name, frames, fps, top, lit) in enumerate(entries):
+        boxes = [f.getbbox() for f in frames]
+        box = (min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes))
+        w, h = box[2] - box[0], box[3] - box[1]
         assert w <= CELL_W and h <= CELL_H, (name, w, h)
-        pos = (CELL_W // 2 - w // 2, row * CELL_H + CELL_H - h)
-        sheet.alpha_composite(im, pos)
-        if name in LIGHTS:   # same placement as the sprite, so both sheets share one grid
-            lit = LIGHTS[name](full.width, full.height)
+        ox, oy = CELL_W // 2 - w // 2 - box[0], CELL_H - h - box[1]   # same placement for every frame
+        for c, f in enumerate(frames):
             cell = Image.new('RGBA', (CELL_W, CELL_H), (0, 0, 0, 0))
-            cell.alpha_composite(lit, (pos[0] - box[0], CELL_H - h - box[1]))
+            cell.alpha_composite(f.crop(box), (ox + box[0], oy + box[1]))
+            sheet.alpha_composite(cell, (c * CELL_W, row * CELL_H))
+        if lit is not None:   # same placement as the sprite, so both sheets share one grid (light: column 0 only)
+            cell = Image.new('RGBA', (CELL_W, CELL_H), (0, 0, 0, 0))
+            lx, ly = ox, oy
+            src = lit
+            if lx < 0 or ly < 0:   # the light may reach outside the sprite's canvas edge: clip
+                src = lit.crop((max(0, -lx), max(0, -ly), lit.width, lit.height)); lx, ly = max(0, lx), max(0, ly)
+            cell.alpha_composite(src, (lx, ly))
             light.alpha_composite(cell, (0, row * CELL_H))
-        meta[name] = {'row': row, 'frames': 1, 'fps': 1, 'w': w, 'h': h, 'top': h}
+        meta[name] = {'row': row, 'frames': len(frames), 'fps': fps, 'w': w, 'h': h, 'top': h if top is None else top}
     sheet.save(root / 'props.png')
     light.save(root / 'props-light.png')
     (root / 'props.json').write_text(json.dumps(meta, indent=1) + '\n')
     print('wrote', root / 'props.png', sheet.size)
-    for n, _ in PROPS:
-        print(f"  {n:11s} {meta[n]['w']:3d} × {meta[n]['h']:2d}  top {meta[n]['top']}")
+    for n in meta:
+        print(f"  {n:11s} {meta[n]['w']:3d} × {meta[n]['h']:2d}  top {meta[n]['top']}  frames {meta[n]['frames']}")

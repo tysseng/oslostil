@@ -1,7 +1,7 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { GROUND, H, W } from '../config';
-import { LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
-import { enemyX, type Enemy } from '../state';
+import { TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { enemyHeight, enemyX, type Enemy } from '../state';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
 import { PASSENGER_CELL_W, PASSENGER_CELL_H, PASSENGERS, isPassenger, passengerColumn } from '../passengers';
 import { R, ctx, drawVehicle, loadImage, ready, text, meta, HIRES_PPM } from './draw';
@@ -17,7 +17,10 @@ import ninjasUrl from '../../assets/sprites/ninjas.png';
 import thugsUrl from '../../assets/sprites/thugs.png';
 import passengersUrl from '../../assets/sprites/passengers.png';
 import propLightsUrl from '../../assets/sprites/props-light.png';
+import treesUrl from '../../assets/sprites/trees.png';
 import tramUrl from '../../assets/vehicles/hires/tram-new.png';
+import tokyoTramUrl from '../../assets/vehicles/hires/tram-tokyo.png';
+import { COLOR_T } from '../timeline';
 import bossUrl from '../../assets/sprites/kaostrikken.png';
 import bossMeta from '../../assets/sprites/kaostrikken.json';
 
@@ -116,10 +119,12 @@ export function drawMachine(x: number, y: number, t: number, mood: Mood = 'idle'
  * x = leading end (left end), wheels on y.
  */
 const TRAM_IMG = loadImage(tramUrl);
+/** Tokyoslo's two-car green-and-cream tram (tools/vehicles/trams.py): same size, so the same physics. */
+const TOKYO_TRAM_IMG = loadImage(tokyoTramUrl);
 
-function drawTram(x: number, y: number, t: number): void {
+function drawTram(x: number, y: number, t: number, tokyo = false): void {
   if (x > W && Math.floor(t * 8) % 2) text('!', W - 12, GROUND - 52, '#ff4040', 16); // warning before it rolls in
-  drawVehicle(TRAM_IMG, x, y, TRAM_PPM);
+  drawVehicle(tokyo && ready(TOKYO_TRAM_IMG) ? TOKYO_TRAM_IMG : TRAM_IMG, x, y, TRAM_PPM);
 }
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */
@@ -143,7 +148,7 @@ export function drawLampLights(enemies: Enemy[], t: number): void {
   ctx.restore();
 }
 const NINJA_IMAGE = loadImage(ninjasUrl), THUG_IMAGE = loadImage(thugsUrl), PASSENGER_IMAGE = loadImage(passengersUrl);
-const PROP_LIGHT_IMAGE = loadImage(propLightsUrl);
+const PROP_LIGHT_IMAGE = loadImage(propLightsUrl), TREE_IMAGE = loadImage(treesUrl);
 
 /** Light from lamps and lit props (the dusk kiosk), drawn in front of the characters. */
 export function drawLampLight(e: Enemy, x: number): void {
@@ -171,8 +176,8 @@ export function drawEnemySprite(kind: SheetKind, x: number, y: number, t: number
 }
 
 export function drawEnemy(e: Enemy, x: number, t: number): void {
-  const y = GROUND - e.y;
-  if (e.type === 'tram') { drawTram(x, y, t); return; }
+  const y = GROUND - enemyHeight(e, t);
+  if (e.type === 'tram') { drawTram(x, y, t, e.arr >= COLOR_T); return; } // trams due after 1:42 are Tokyoslo trams
   if (isLamp(e.type)) {
     if (ready(LAMP_IMAGE)) ctx.drawImage(LAMP_IMAGE, 0, LAMPS[e.type].row * LAMP_CELL_H, LAMP_CELL_W, LAMP_CELL_H,
       Math.round(x - LAMP_CELL_W / 2), Math.round(y - LAMP_CELL_H), LAMP_CELL_W, LAMP_CELL_H);
@@ -202,8 +207,14 @@ export function drawEnemy(e: Enemy, x: number, t: number): void {
     drawEnemySprite('gull', x, y + (SHEET.gull.dy ?? 0), t + (e.arr * 0.37) % 1);
     return;
   }
-  if (isProp(e.type)) {
-    if (ready(PROP_IMAGE)) ctx.drawImage(PROP_IMAGE, 0, PROPS[e.type].row * PROP_CELL_H, PROP_CELL_W, PROP_CELL_H,
+  if (isTree(e.type)) {
+    if (ready(TREE_IMAGE)) ctx.drawImage(TREE_IMAGE, 0, TREES[e.type].row * TREE_CELL_H, TREE_CELL_W, TREE_CELL_H,
+      Math.round(x - TREE_CELL_W / 2), Math.round(y - TREE_CELL_H), TREE_CELL_W, TREE_CELL_H);
+    return;
+  }
+  if (isProp(e.type)) { // animated props (lanterns, neon, steam) have one column per frame
+    const pr = PROPS[e.type], f = Math.floor(t * pr.fps + e.arr * 3) % pr.frames;
+    if (ready(PROP_IMAGE)) ctx.drawImage(PROP_IMAGE, f * PROP_CELL_W, pr.row * PROP_CELL_H, PROP_CELL_W, PROP_CELL_H,
       Math.round(x - PROP_CELL_W / 2), Math.round(y - PROP_CELL_H), PROP_CELL_W, PROP_CELL_H);
     return;
   }

@@ -8,7 +8,9 @@ per material, 3–4 tone shading, hand-placed in-between tones on curves. Refere
   roadside2  the same pole with two arms ........................................ ≈ 2 × girl
   round      milky globe on an ornate black pole ................................ a bit lower
   vintage    lantern on a dark green cast-iron pole with a ladder bar ........... ≈ phone booth
-  subway     T-bane platform lamp, two rising arms, seen from the front   ......... taller than roadside
+  subway     T-bane platform lamp, two rising arms, seen from the front  
+  tokyo_lamp Tokyoslo: vermilion lacquer post, red paper lantern on a curved arm .. ≈ 2 × girl
+  toro       Tokyoslo: stone lantern (tōrō), lit fire box, flat top ............. 36 px, one jump ......... taller than roadside
 
 Two sheets with the SAME grid (CELL_W × CELL_H, one lamp per row):
   assets/sprites/lamps.png        the lamps (opaque pixels). Draw behind the characters.
@@ -212,6 +214,62 @@ def subway():
     return L, 72, (-1, 1)
 
 
+# --------------------------------------------------------------------------- Tokyoslo
+import tokyo_props  # noqa: E402,F401  (registers the lacquer, gold, paper and stone ramps)
+
+
+def tokyo_lamp():
+    """vermilion lacquer post with a curved arm and a red paper lantern, a little pagoda cap on top"""
+    L = Lamp()
+    L.r(-4, 0, 4, 1, 'lblk', 2); L.r(-3, 2, 3, 4, 'lblk', 3); L.r(-3, 2, -3, 4, 'lblk', 4)
+    L.pole(5, 54, 'lacq', 3)
+    for h in (9, 30, 48):
+        L.r(-2, h, 2, h, 'tgold', 4); L.r(2, h, 2, h, 'tgold', 2)
+    # pagoda cap with upturned eaves, flat on top
+    L.r(-5, 55, 5, 55, 'lblk', 3); L.p(-6, 56, 'lblk', 3); L.p(6, 56, 'lblk', 2)
+    L.r(-4, 56, 4, 56, 'lblk', 4); L.r(-2, 57, 2, 58, 'lblk', 3); L.r(-2, 58, 0, 58, 'lblk', 4)
+    L.p(0, 59, 'tgold', 5)
+    # curved arm to the left with the lantern hanging from its tip
+    L.path([(-1, 50), (-3, 52), (-6, 53), (-10, 53), (-12, 52)], 'lacq', [4, 2])
+    L.r(-12, 49, -12, 50, 'lblk', 3)
+    L.r(-14, 48, -10, 48, 'tgold', 3)
+    for j, half in enumerate((2, 3, 3, 3, 3, 3, 3, 2)):
+        h = 47 - j
+        for dx in range(-half, half + 1):
+            rel = (dx + half) / (2 * half)
+            t = 5 if abs(dx) <= 1 and 2 <= j <= 5 else 4 if rel < 0.6 else 3 if rel < 0.85 else 2
+            L.p(-12 + dx, h, 'paperR', t)
+        if j in (1, 3, 5):
+            L.p(-12 - half, h, 'paperR', 1)
+    L.r(-14, 39, -10, 39, 'tgold', 3); L.p(-12, 38, 'tgold', 4)
+    L.heads.append((-12, 43))
+    L.finish()
+    return L, 59, (-4, 4)
+
+
+def toro():
+    """a stone lantern (tōrō): stepped base, pillar, lit fire box, wide roof with upturned corners, flat top"""
+    L = Lamp()
+    L.r(-6, 0, 6, 2, 'stone', 2); L.r(-6, 2, 6, 2, 'stone', 3)
+    L.r(-5, 3, 5, 4, 'stone', 3); L.r(-5, 4, 5, 4, 'stone', 4)
+    L.pole(5, 16, 'stone', 5)
+    L.r(-3, 10, 3, 10, 'stone', 4)
+    L.r(-5, 17, 5, 18, 'stone', 3); L.r(-5, 18, 5, 18, 'stone', 4)
+    L.r(-4, 19, 4, 26, 'stone', 3); L.r(-4, 19, -4, 26, 'stone', 4); L.r(4, 19, 4, 26, 'stone', 2)
+    L.r(-2, 20, 2, 25, 'lampW', 3); L.r(-1, 21, 1, 24, 'lampW', 5); L.r(0, 20, 0, 25, 'stone', 2)
+    L.p(-1, 22, 'lampW', 5); L.p(1, 23, 'lampW', 4)
+    L.r(-7, 27, 7, 28, 'stone', 2); L.r(-7, 28, 7, 28, 'stone', 3)
+    L.p(-8, 29, 'stone', 4); L.p(8, 29, 'stone', 3)
+    L.r(-6, 29, 6, 30, 'stone', 3); L.r(-6, 30, 6, 30, 'stone', 4)
+    L.r(-4, 31, 4, 32, 'stone', 4)
+    L.r(-3, 33, 3, 34, 'stone', 3); L.r(-3, 34, 3, 34, 'stone', 5)
+    for dx, h in ((-5, 3), (4, 4), (-6, 29), (5, 30), (-3, 17)):
+        L.p(dx, h, 'green', 3)                                # moss
+    L.heads.append((0, 23))
+    L.finish()
+    return L, 35, (-4, 4)
+
+
 # --------------------------------------------------------------------------- light
 def _field():
     return [[0.0] * CELL_W for _ in range(CELL_H)]
@@ -312,6 +370,22 @@ def light_for(name, L):
         cone(A, hx, hy + 3, 16, power=0.32, top_w=5)
         pool(A, hx, 18, 0.4)
         return render_light(A, WARM, 1.4)
+    if name == 'tokyo_lamp':
+        # the paper lantern glows all round, strongest downwards
+        (dx, h), = L.heads
+        hx, hy = at(dx, h)
+        radial(A, hx, hy, 30, 0.5, up=0.4, side=0.55, down=1.0)
+        radial(A, hx, hy, 8, 0.7)
+        cone(A, hx, hy, 18, power=0.36, top_w=5)
+        pool(A, hx, 20, 0.4)
+        return render_light(A, rgb('#ff8a5a'), 1.6)
+    if name == 'toro':
+        # firelight through the small window: sideways and down, the stone roof stops it going up
+        (dx, h), = L.heads
+        hx, hy = at(dx, h)
+        radial(A, hx, hy, 18, 0.5, up=0.3, side=0.9, down=1.0, roof=at(0, 27)[1])
+        pool(A, hx, 13, 0.32)
+        return render_light(A, rgb('#ffb060'), 1.4)
     raise ValueError(name)
 
 
@@ -321,6 +395,8 @@ LAMPS = [
     ('round',     round_lamp,              WARM, 13),
     ('vintage',   vintage,                 WARM, 11),
     ('subway',    subway,                  COOL, 13),
+    ('tokyo_lamp', tokyo_lamp,             WARM, 13),
+    ('toro',      toro,                    WARM, 11),
 ]
 
 if __name__ == '__main__':

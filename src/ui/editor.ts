@@ -6,8 +6,8 @@ import { drawScene } from '../render/scenes';
 import { drawEnemy, drawLampLights } from '../render/sprites';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
 import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
-import { LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, itemLayer, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
-import { createEnemy, enemyX, eventSpeed } from '../state';
+import { TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, itemLayer, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
+import { createEnemy, enemyHeight, enemyX, eventSpeed } from '../state';
 import { sectionAt } from '../timeline';
 import { fmtTime } from './devpanel';
 import enemiesUrl from '../../assets/sprites/enemies.png';
@@ -17,6 +17,7 @@ import lampsUrl from '../../assets/sprites/lamps.png';
 import lightsUrl from '../../assets/sprites/lamps-light.png';
 import ninjasUrl from '../../assets/sprites/ninjas.png';
 import thugsUrl from '../../assets/sprites/thugs.png';
+import treesUrl from '../../assets/sprites/trees.png';
 import passengersUrl from '../../assets/sprites/passengers.png';
 import './editor.css';
 
@@ -153,7 +154,8 @@ export class LevelEditor {
     props.src = propsUrl;
     const lamps = new Image(), lights = new Image(), ninjas = new Image();
     ninjas.src = ninjasUrl;
-    const thugs = new Image(), passengers = new Image();
+    const thugs = new Image(), passengers = new Image(), trees = new Image();
+    trees.src = treesUrl;
     thugs.src = thugsUrl; passengers.src = passengersUrl;
     lamps.src = lampsUrl; lights.src = lightsUrl;
     for (const kind of kinds) {
@@ -163,6 +165,17 @@ export class LevelEditor {
         img.src = tramUrl;
         img.alt = '';
         button.prepend(img);
+      } else if (isTree(kind)) {
+        const preview = document.createElement('canvas');
+        preview.width = 64; preview.height = 40;
+        const draw = () => {
+          const c = preview.getContext('2d')!;
+          c.imageSmoothingEnabled = false;
+          c.drawImage(trees, 0, TREES[kind].row * TREE_CELL_H, TREE_CELL_W, TREE_CELL_H, 12, 0, 40, 40);
+        };
+        if (trees.complete && trees.naturalWidth) draw();
+        else trees.addEventListener('load', draw, { once: true });
+        button.prepend(preview);
       } else if (isLamp(kind)) {
         const preview = document.createElement('canvas');
         preview.width = 64; preview.height = 40;
@@ -283,7 +296,7 @@ export class LevelEditor {
     const type = TYPES[e.type];
     return {
       x: enemyX(createEnemy(e), this.game.s.lastT) - (e.type === 'tram' ? 0 : isLamp(e.type) ? LAMP_CELL_W / 2 : type.w / 2),
-      y: GROUND - (e.y ?? type.y) - type.h,
+      y: GROUND - enemyHeight(createEnemy(e), this.game.s.lastT) - type.h,
       w: isLamp(e.type) ? LAMP_CELL_W : type.w, h: type.h,
     };
   }
@@ -301,7 +314,7 @@ export class LevelEditor {
 
   private position(e: ScheduledEvent, x: number, base: number): void {
     e.rel = eventSpeed(e);
-    e.arr = this.game.s.lastT + (x - PX) / e.rel;
+    e.arr = this.game.s.lastT + (x - PX) / createEnemy(e).rel;
     e.y = Math.round(Math.max(0, Math.min(GROUND - TYPES[e.type].h, GROUND - base)));
   }
 

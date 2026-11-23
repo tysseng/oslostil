@@ -30,5 +30,93 @@
   "w": 106,
   "h": 61,
   "top": 61
+ },
+ "bin_tokyo": {
+  "row": 4,
+  "frames": 1,
+  "fps": 1,
+  "w": 13,
+  "h": 17,
+  "top": 17
+ },
+ "vending": {
+  "row": 5,
+  "frames": 1,
+  "fps": 1,
+  "w": 31,
+  "h": 43,
+  "top": 43
+ },
+ "lanterns": {
+  "row": 6,
+  "frames": 2,
+  "fps": 2,
+  "w": 92,
+  "h": 51,
+  "top": 0
+ },
+ "neon": {
+  "row": 7,
+  "frames": 3,
+  "fps": 6,
+  "w": 18,
+  "h": 53,
+  "top": 0
+ },
+ "yatai": {
+  "row": 8,
+  "frames": 3,
+  "fps": 6,
+  "w": 48,
+  "h": 37,
+  "top": 37
+ },
+ "konbini": {
+  "row": 9,
+  "frames": 1,
+  "fps": 1,
+  "w": 102,
+  "h": 59,
+  "top": 59
+ },
+ "bench_asian": {
+  "row": 10,
+  "frames": 1,
+  "fps": 1,
+  "w": 35,
+  "h": 43,
+  "top": 13
+ },
+ "shop_wood": {
+  "row": 11,
+  "frames": 1,
+  "fps": 1,
+  "w": 84,
+  "h": 54,
+  "top": 54
+ },
+ "bench_park": {
+  "row": 12,
+  "frames": 1,
+  "fps": 1,
+  "w": 38,
+  "h": 18,
+  "top": 18
+ },
+ "bench_station": {
+  "row": 13,
+  "frames": 1,
+  "fps": 1,
+  "w": 43,
+  "h": 17,
+  "top": 17
+ },
+ "fountain": {
+  "row": 14,
+  "frames": 4,
+  "fps": 6,
+  "w": 64,
+  "h": 42,
+  "top": 13
  }
 }

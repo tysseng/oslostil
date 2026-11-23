@@ -1,9 +1,9 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
-import { LAMPS, PROPS, isLamp, isProp, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
+import { LAMPS, PROPS, isLamp, isProp, isTree, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
 import { loadDefaultLevel } from './level';
-import { createEnemy, createState, enemyX, spawnTime, type Enemy, type GameState } from './state';
+import { createEnemy, createState, enemyHeight, enemyX, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX, victoriaBob, victoriaLift } from './timeline';
@@ -112,7 +112,7 @@ export class Game {
     for (const e of s.enemies) {
       const ty = TYPES[e.type];
       if (e.dead || ty.pickup || ty.solid) continue;
-      const ex = enemyX(e, s.lastT), ey = GROUND - e.y;
+      const ex = enemyX(e, s.lastT), ey = GROUND - enemyHeight(e, s.lastT);
       if (ex > p.x - 4 && ex < p.x + reach + 8 && Math.abs(ey - ty.h / 2 - (p.y - 12)) < 26) this.hitEnemy(e, ex, ey, 2);
     }
   }
@@ -231,6 +231,7 @@ export class Game {
     for (const e of s.enemies) {
       if (e.dead || (!isProp(e.type) && !isLamp(e.type))) continue;
       const surface = isLamp(e.type) ? LAMPS[e.type] : PROPS[e.type];
+      if (!surface.top) continue; // lantern strings, neon signs: nothing to stand on
       const top = GROUND - e.y - surface.top, x = enemyX(e, t);
       const [left, right] = isLamp(e.type) ? LAMPS[e.type].top_span : [-TYPES[e.type].w / 2, TYPES[e.type].w / 2];
       if (p.x + 4 <= x + left || p.x - 4 >= x + right
@@ -385,19 +386,20 @@ export class Game {
     for (const e of s.enemies) {
       if (e.dead) continue;
       if (isFighter(e.type)) { e.y0 ??= e.y; e.y = e.y0 + ninjaJump(e.type, t - e.arr).lift; }
-      const ty = TYPES[e.type], x = enemyX(e, t), ey = GROUND - e.y;
+      const ty = TYPES[e.type], x = enemyX(e, t), ey = GROUND - enemyHeight(e, t);
       if (e.type === 'gull' && x >= 0 && x <= W) {
-        e.dropIn = (e.dropIn ?? (0.8 + Math.random() * 2.2)) - dt;
+        e.dropIn = (e.dropIn ?? (0.2 + Math.random() * 0.4)) - dt;
         if (e.dropIn <= 0) {
           s.droppings.push({ x, y: ey, vy: 30, life: 6, landed: false });
-          e.dropIn = 1.2 + Math.random() * 2.8;
+          e.dropIn = 0.45 + Math.random() * 0.55;
         }
       }
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
-      if (e.type === 'tram' || isProp(e.type) || isLamp(e.type)) continue; // scenery has no side damage
+      if (e.type === 'tram' || isProp(e.type) || isLamp(e.type) || isTree(e.type)) continue; // scenery has no side damage
       const top = ey - ty.h;
-      if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase') && s.down <= 0 && p.vy > 0 && prevY <= top && p.y >= top) {
-        const crossing = (top - prevY) / (p.y - prevY);
+      const previousTop = GROUND - enemyHeight(e, prevT) - ty.h;
+      if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase') && s.down <= 0 && p.vy > 0 && prevY <= previousTop && p.y >= top) {
+        const crossing = (previousTop - prevY) / ((p.y - prevY) - (top - previousTop));
         const playerX = prevX + (p.x - prevX) * crossing;
         const ex = enemyX(e, prevT) + (x - enemyX(e, prevT)) * crossing;
         if (Math.abs(ex - playerX) < ty.w / 2 + 4) {
