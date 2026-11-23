@@ -7,7 +7,7 @@ import { createEnemy, createState, enemyX, spawnTime, type Enemy, type GameState
 import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, victoriaBob, victoriaLift } from './timeline';
 
 /** seconds she is gone after losing her last heart */
-const DEATH_TIME = 0.55;
+const DEATH_TIME = 0.85;
 /** seconds of white flashing (and invincibility) after she drops back in */
 const RESPAWN_FLASH = 1.2;
 /** she drops back in from this height (screen y of her feet) */

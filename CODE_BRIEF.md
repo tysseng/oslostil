@@ -210,7 +210,7 @@ Where they live:
 ## Dying and respawning
 
 - `hurt()` takes a heart; at 0 it calls `die()`. A tram side hit calls `die()` directly.
-- `die()`: `s.down = DEATH_TIME` (0.55 s), hearts 0, combo reset, −1000 points (pop-up), continue counted, burst particles, `sfx('die')` (falling arpeggio). While `s.down > 0` she is not drawn, has no control and can't collide.
+- `die()`: `s.down = DEATH_TIME` (0.85 s), hearts 0, combo reset, −1000 points (pop-up), continue counted, burst particles, `sfx('die')` (falling arpeggio). While `s.down > 0` she has no control and can't collide; tram deaths show the tumbling sprite before counting down the respawn delay.
 - `respawn()`: x = max(x, `PX`), feet at `DROP_Y` (100 px up), 3 hearts, `s.inv = s.respawn = RESPAWN_FLASH` (1.2 s), `sfx('respawn')` (rising sparkle). Normal physics land her on the ground or a tram roof. `screens.ts` draws her as a white silhouette every other 1/8 s while `s.respawn > 0` (`Pose.white`, `whiteSheet` in `sprites.ts`).
 - With no input, a tram death at the beat lands her on that tram's roof about 1.2 s later.
 
