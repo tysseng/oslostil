@@ -3,13 +3,16 @@ import type { Game } from '../game';
 import { loadDefaultLevel, parseLevel } from '../level';
 import { canvas, ctx, resetTransform } from '../render/draw';
 import { drawScene } from '../render/scenes';
-import { drawEnemy } from '../render/sprites';
-import { SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
+import { drawEnemy, drawLampLight } from '../render/sprites';
+import { LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, itemLayer, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
 import { createEnemy, enemyX, eventSpeed } from '../state';
 import { sectionAt } from '../timeline';
 import { fmtTime } from './devpanel';
 import enemiesUrl from '../../assets/sprites/enemies.png';
 import tramUrl from '../../assets/vehicles/hires/tram-new.png';
+import propsUrl from '../../assets/sprites/props.png';
+import lampsUrl from '../../assets/sprites/lamps.png';
+import lightsUrl from '../../assets/sprites/lamps-light.png';
 import './editor.css';
 
 const STORAGE_KEY = 'oslostil-level-v1';
@@ -141,6 +144,10 @@ export class LevelEditor {
     addTool('Move', null);
     const sheet = new Image();
     sheet.src = enemiesUrl;
+    const props = new Image();
+    props.src = propsUrl;
+    const lamps = new Image(), lights = new Image();
+    lamps.src = lampsUrl; lights.src = lightsUrl;
     for (const kind of kinds) {
       const button = addTool(kind[0].toUpperCase() + kind.slice(1), kind);
       if (kind === 'tram') {
@@ -148,6 +155,33 @@ export class LevelEditor {
         img.src = tramUrl;
         img.alt = '';
         button.prepend(img);
+      } else if (isLamp(kind)) {
+        const preview = document.createElement('canvas');
+        preview.width = 64; preview.height = 40;
+        const draw = () => {
+          const c = preview.getContext('2d')!;
+          c.clearRect(0, 0, 64, 40);
+          c.imageSmoothingEnabled = false;
+          for (const image of [lamps, lights]) {
+            if (image.complete && image.naturalWidth) c.drawImage(image, 0, LAMPS[kind].row * LAMP_CELL_H,
+              LAMP_CELL_W, LAMP_CELL_H, 8, 0, 48, 40);
+          }
+        };
+        lamps.addEventListener('load', draw, { once: true });
+        lights.addEventListener('load', draw, { once: true });
+        draw();
+        button.prepend(preview);
+      } else if (isProp(kind)) {
+        const preview = document.createElement('canvas');
+        preview.width = 64; preview.height = 40;
+        const draw = () => {
+          const c = preview.getContext('2d')!;
+          c.imageSmoothingEnabled = false;
+          c.drawImage(props, 0, PROPS[kind].row * PROP_CELL_H, PROP_CELL_W, PROP_CELL_H, 4, 4, 56, 32);
+        };
+        if (props.complete && props.naturalWidth) draw();
+        else props.addEventListener('load', draw, { once: true });
+        button.prepend(preview);
       } else {
         const preview = document.createElement('canvas');
         preview.width = 64;
@@ -224,14 +258,18 @@ export class LevelEditor {
   private bounds(e: ScheduledEvent): { x: number; y: number; w: number; h: number } {
     const type = TYPES[e.type];
     return {
-      x: enemyX(createEnemy(e), this.game.s.lastT) - (e.type === 'tram' ? 0 : type.w / 2),
+      x: enemyX(createEnemy(e), this.game.s.lastT) - (e.type === 'tram' ? 0 : isLamp(e.type) ? LAMP_CELL_W / 2 : type.w / 2),
       y: GROUND - (e.y ?? type.y) - type.h,
-      w: type.w, h: type.h,
+      w: isLamp(e.type) ? LAMP_CELL_W : type.w, h: type.h,
     };
   }
 
+  private layeredEvents(): ScheduledEvent[] {
+    return this.game.level.slice().sort((a, b) => itemLayer(a.type) - itemLayer(b.type));
+  }
+
   private hit(x: number, y: number): ScheduledEvent | null {
-    return this.game.level.slice().reverse().find((e) => {
+    return this.layeredEvents().reverse().find((e) => {
       const b = this.bounds(e);
       return x >= b.x - 2 && x <= b.x + b.w + 2 && y >= b.y - 2 && y <= b.y + b.h + 2;
     }) ?? null;
@@ -312,11 +350,28 @@ export class LevelEditor {
     const t = this.game.s.lastT;
     resetTransform();
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0);
-    for (const event of this.game.level) {
+    const events = this.layeredEvents();
+    for (const event of events) {
+      if (event.type === 'tram') continue;
       const b = this.bounds(event);
       if (b.x > W || b.x + b.w < 0) continue;
       const enemy = createEnemy(event);
       drawEnemy(enemy, enemyX(enemy, t), t);
+    }
+    for (const event of events) {
+      if (!isLamp(event.type)) continue;
+      const enemy = createEnemy(event);
+      drawLampLight(enemy, enemyX(enemy, t));
+    }
+    for (const event of events) {
+      if (event.type === 'tram') {
+        const enemy = createEnemy(event);
+        drawEnemy(enemy, enemyX(enemy, t), t);
+      }
+    }
+    for (const event of events) {
+      const b = this.bounds(event);
+      if (b.x > W || b.x + b.w < 0) continue;
       ctx.strokeStyle = event === this.drag?.event || event === this.hovered ? '#ffe14a' : '#2bf0ff88';
       ctx.lineWidth = 0.5;
       ctx.strokeRect(b.x - 1, b.y - 1, b.w + 2, b.h + 2);

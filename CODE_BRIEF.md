@@ -105,6 +105,12 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- Lamps (`roadside`, `roadside2`, `round`, `vintage`, `subway`) are single one-way platform items using `lamps.json` and aligned 96 × 80 cells in `lamps.png` / `lamps-light.png`. Players can land on their metadata-defined `top` / `top_span`, ride and jump off, without side or underside collision. Posts render with scenery, light uses screen blending over characters, and trams render afterward in front of both. The editor previews both sheets and moves/saves them together.
+
+- Props render behind trams and other enemies in gameplay and the editor; editor hit-testing selects the visually frontmost item.
+
+- The palette includes `trash`, `recycling`, `phonebooth` and `kiosk` from `assets/sprites/props.png` (112 × 64 cells, geometry in `props.json`). Props are indestructible one-way platforms: descending players can stand/walk/jump on top, while sides and undersides never block or hurt them. `Player.propRide` provides scrolling carry; landing resets jumps and bounce chains. Props use the existing level JSON import/export and browser-draft paths.
+
 - The title-screen **Level editor** button enters `editor` mode. Its own song-position slider changes the frozen scene without running physics or playing audio.
 - `Game.level` holds the editable schedule. `seek` and `start` always use it. `editor.ts` saves it under `oslostil-level-v1` in local storage and validates it on load; failures appear in the editor status.
 - `level.ts` validates imported JSON and loads the complete schedule from `src/level.json` as a fresh copy. There is no runtime level generator or `null` fallback; `[]` is an empty level. Download level exports that same array format as `level.json`; replace the repository file and rebuild/deploy to publish it. Import level validates before asking to replace the draft. Browser drafts override the bundled default until Use default level discards them.

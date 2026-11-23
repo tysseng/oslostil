@@ -2,10 +2,11 @@
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { enemyX } from '../state';
+import { itemLayer } from '../schedule';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
-import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawMachine, type Mood } from './sprites';
+import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawLampLight, drawMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
@@ -25,7 +26,9 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
       : ph < 0.4 ? ['attack', ph / 0.4] as const : ['idle', ((t * 4) % 4) / 4] as const;
     drawBoss(bossX(t), s.boss.hit > 0, s.boss.hp, s.boss.max, anim, at);
   }
-  for (const e of s.enemies) if (!e.dead) drawEnemy(e, enemyX(e, t), t);
+  for (const layer of [0, 1]) {
+    for (const e of s.enemies) if (!e.dead && itemLayer(e.type) === layer) drawEnemy(e, enemyX(e, t), t);
+  }
   for (const q of s.knocked) {
     ctx.save();
     if (q.squash !== undefined) {
@@ -66,6 +69,8 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   for (const q of s.parts) R(q.x, q.y, 2, 2, q.c);
+  for (const e of s.enemies) if (!e.dead) drawLampLight(e, enemyX(e, t));
+  for (const e of s.enemies) if (!e.dead && e.type === 'tram') drawEnemy(e, enemyX(e, t), t);
   for (const q of s.pops) text(q.txt, q.x, q.y, q.c, 6, 'center');
   resetTransform();
 

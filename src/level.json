@@ -1,1568 +1,1788 @@
 [
   {
+    "type": "ticket",
     "arr": 2.2511147540983605,
-    "type": "ticket",
     "y": 36
   },
   {
+    "type": "ticket",
     "arr": 2.497016393442623,
-    "type": "ticket",
     "y": 46
   },
   {
+    "type": "ticket",
     "arr": 2.7429180327868847,
-    "type": "ticket",
     "y": 56
   },
   {
-    "arr": 3.9724262295081965,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 3.9724262295081965
   },
   {
+    "type": "ticket",
     "arr": 4.464229508196721,
-    "type": "ticket",
     "y": 36
   },
   {
+    "type": "ticket",
     "arr": 4.7101311475409835,
-    "type": "ticket",
     "y": 46
   },
   {
-    "arr": 4.956032786885245,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 4.956032786885245
   },
   {
-    "arr": 4.956032786885245,
     "type": "ticket",
+    "arr": 4.956032786885245,
     "y": 56
   },
   {
-    "arr": 5.939639344262295,
-    "type": "snow"
+    "type": "snow",
+    "arr": 5.939639344262295
   },
   {
+    "type": "ticket",
     "arr": 6.4314426229508195,
-    "type": "ticket",
     "y": 66
   },
   {
+    "type": "ticket",
     "arr": 6.677344262295081,
-    "type": "ticket",
     "y": 70
   },
   {
-    "arr": 6.923245901639344,
-    "type": "snow"
+    "type": "snow",
+    "arr": 6.923245901639344
   },
   {
-    "arr": 7.9068524590163936,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 7.9068524590163936
   },
   {
+    "type": "ticket",
     "arr": 8.398655737704917,
-    "type": "ticket",
     "y": 66
   },
   {
-    "arr": 8.64455737704918,
+    "type": "suitcase",
+    "arr": 8.126573185881686,
+    "y": 0,
+    "rel": 110
+  },
+  {
+    "type": "snow",
+    "arr": 9.874065573770492
+  },
+  {
     "type": "ticket",
-    "y": 70
-  },
-  {
-    "arr": 8.890459016393443,
-    "type": "suitcase"
-  },
-  {
-    "arr": 9.874065573770492,
-    "type": "snow"
-  },
-  {
     "arr": 10.119967213114755,
-    "type": "ticket",
     "y": 14
   },
   {
+    "type": "ticket",
     "arr": 10.365868852459016,
-    "type": "ticket",
     "y": 30
   },
   {
+    "type": "ticket",
     "arr": 10.611770491803279,
-    "type": "ticket",
     "y": 40
   },
   {
-    "arr": 10.857672131147542,
-    "type": "snow"
+    "type": "snow",
+    "arr": 10.857672131147542
   },
   {
-    "arr": 10.857672131147542,
     "type": "ticket",
+    "arr": 10.857672131147542,
     "y": 30
   },
   {
+    "type": "ticket",
     "arr": 11.103573770491804,
-    "type": "ticket",
     "y": 14
   },
   {
-    "arr": 11.84127868852459,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 11.84127868852459
   },
   {
+    "type": "ticket",
     "arr": 12.087180327868852,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 12.333081967213113,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 12.578983606557376,
-    "type": "ticket",
     "y": 12
   },
   {
-    "arr": 12.824885245901639,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 12.824885245901639
   },
   {
-    "arr": 12.824885245901639,
     "type": "ticket",
+    "arr": 12.824885245901639,
     "y": 12
   },
   {
-    "arr": 13.808491803278688,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 13.808491803278688
   },
   {
+    "type": "ticket",
     "arr": 14.300295081967212,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 14.546196721311475,
-    "type": "ticket",
     "y": 26
   },
   {
-    "arr": 14.792098360655737,
-    "type": "snow"
+    "type": "snow",
+    "arr": 14.792098360655737
   },
   {
-    "arr": 14.792098360655737,
     "type": "ticket",
+    "arr": 14.792098360655737,
     "y": 26
   },
   {
-    "arr": 15.775704918032787,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 15.775704918032787
   },
   {
+    "type": "ticket",
     "arr": 16.021606557377048,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 16.267508196721312,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 16.513409836065573,
-    "type": "ticket",
     "y": 12
   },
   {
-    "arr": 16.759311475409834,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 16.759311475409834
   },
   {
-    "arr": 16.759311475409834,
     "type": "ticket",
+    "arr": 16.759311475409834,
     "y": 12
   },
   {
-    "arr": 17.742918032786886,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 17.742918032786886
   },
   {
+    "type": "ticket",
     "arr": 18.23472131147541,
-    "type": "ticket",
     "y": 36
   },
   {
-    "arr": 18.480622950819672,
     "type": "ticket",
+    "arr": 18.480622950819672,
     "y": 46
   },
   {
-    "arr": 18.726524590163933,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 18.726524590163933
   },
   {
-    "arr": 18.726524590163933,
     "type": "ticket",
+    "arr": 18.726524590163933,
     "y": 56
   },
   {
-    "arr": 20.20193442622951,
     "type": "ticket",
+    "arr": 20.20193442622951,
     "y": 14
   },
   {
-    "arr": 20.44783606557377,
     "type": "ticket",
+    "arr": 20.44783606557377,
     "y": 30
   },
   {
-    "arr": 20.693737704918032,
     "type": "ticket",
+    "arr": 20.693737704918032,
     "y": 40
   },
   {
-    "arr": 20.939639344262297,
     "type": "ticket",
+    "arr": 20.939639344262297,
     "y": 30
   },
   {
-    "arr": 21.185540983606558,
     "type": "ticket",
+    "arr": 21.185540983606558,
     "y": 14
   },
   {
-    "arr": 21.677344262295083,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 21.677344262295083
   },
   {
+    "type": "ticket",
     "arr": 21.923245901639344,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 22.16914754098361,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 22.41504918032787,
-    "type": "ticket",
     "y": 26
   },
   {
-    "arr": 22.66095081967213,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 22.66095081967213
   },
   {
+    "type": "ticket",
     "arr": 24.136360655737704,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 24.382262295081965,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 24.628163934426226,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 25.857672131147538,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 26.103573770491803,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 26.349475409836064,
-    "type": "ticket",
     "y": 26
   },
   {
-    "arr": 27.578983606557376,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 27.578983606557376
   },
   {
-    "arr": 28.0707868852459,
     "type": "ticket",
+    "arr": 28.0707868852459,
     "y": 36
   },
   {
-    "arr": 28.316688524590163,
     "type": "ticket",
+    "arr": 28.316688524590163,
     "y": 46
   },
   {
-    "arr": 28.562590163934424,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 28.739710190161052,
+    "y": 43,
+    "rel": 160
   },
   {
-    "arr": 28.562590163934424,
     "type": "ticket",
-    "y": 56
+    "arr": 28.507023114838173,
+    "y": 56,
+    "rel": 120
   },
   {
-    "arr": 29.546196721311475,
-    "type": "snow"
+    "type": "snow",
+    "arr": 29.546196721311475
   },
   {
+    "type": "ticket",
     "arr": 30.038,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 30.28390163934426,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 30.529803278688522,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 30.775704918032787,
-    "type": "ticket",
     "y": 12
   },
   {
-    "arr": 31.513409836065573,
-    "type": "snow"
+    "type": "snow",
+    "arr": 31.513409836065573
   },
   {
+    "type": "ticket",
     "arr": 32.0052131147541,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 32.25111475409836,
-    "type": "ticket",
     "y": 26
   },
   {
-    "arr": 32.49701639344262,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 32.49701639344262
   },
   {
-    "arr": 32.49701639344262,
     "type": "ticket",
+    "arr": 32.49701639344262,
     "y": 26
   },
   {
-    "arr": 33.480622950819665,
-    "type": "suitcase"
-  },
-  {
+    "type": "ticket",
     "arr": 33.726524590163926,
-    "type": "ticket",
     "y": 66
   },
   {
-    "arr": 33.97242622950819,
     "type": "ticket",
+    "arr": 33.97242622950819,
     "y": 70
   },
   {
-    "arr": 35.44783606557377,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 35.44783606557377
   },
   {
+    "type": "ticket",
     "arr": 35.93963934426229,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 36.18554098360656,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 36.43144262295082,
-    "type": "ticket",
     "y": 26
   },
   {
-    "arr": 37.41504918032786,
-    "type": "snow"
+    "type": "snow",
+    "arr": 37.41504918032786
   },
   {
+    "type": "ticket",
     "arr": 37.660950819672124,
-    "type": "ticket",
     "y": 36
   },
   {
+    "type": "ticket",
     "arr": 37.906852459016385,
-    "type": "ticket",
     "y": 46
   },
   {
-    "arr": 38.15275409836065,
     "type": "ticket",
+    "arr": 38.15275409836065,
     "y": 56
   },
   {
-    "arr": 38.398655737704914,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 38.398655737704914
   },
   {
-    "arr": 39.382262295081965,
-    "type": "snow"
+    "type": "snow",
+    "arr": 39.382262295081965
   },
   {
+    "type": "ticket",
     "arr": 39.628163934426226,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 39.87406557377049,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 40.119967213114755,
-    "type": "ticket",
     "y": 12
   },
   {
-    "arr": 40.365868852459016,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 40.365868852459016
   },
   {
-    "arr": 40.365868852459016,
     "type": "ticket",
+    "arr": 40.365868852459016,
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 41.84127868852458,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 42.08718032786885,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 42.33308196721311,
-    "type": "ticket",
     "y": 26
   },
   {
-    "arr": 43.31668852459016,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 43.31668852459016
   },
   {
-    "arr": 43.56259016393442,
     "type": "ticket",
+    "arr": 43.56259016393442,
     "y": 36
   },
   {
-    "arr": 43.808491803278685,
     "type": "ticket",
+    "arr": 43.808491803278685,
     "y": 46
   },
   {
-    "arr": 44.05439344262295,
     "type": "ticket",
+    "arr": 44.05439344262295,
     "y": 56
   },
   {
-    "arr": 44.300295081967214,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 44.300295081967214
   },
   {
+    "type": "ticket",
     "arr": 45.52980327868852,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 45.77570491803278,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 46.02160655737705,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 46.26750819672131,
-    "type": "ticket",
     "y": 12
   },
   {
+    "type": "ticket",
     "arr": 47.742918032786875,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 47.98881967213114,
-    "type": "ticket",
     "y": 26
   },
   {
+    "type": "ticket",
     "arr": 48.234721311475404,
-    "type": "ticket",
     "y": 26
   },
   {
-    "arr": 49.218327868852455,
-    "type": "blob"
+    "type": "blob",
+    "arr": 49.218327868852455
   },
   {
-    "arr": 49.71013114754098,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 49.71013114754098
   },
   {
-    "arr": 50.201934426229506,
-    "type": "blob"
+    "type": "blob",
+    "arr": 50.201934426229506
   },
   {
-    "arr": 50.69373770491803,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 50.69373770491803
   },
   {
-    "arr": 51.18554098360655,
-    "type": "blob"
+    "type": "blob",
+    "arr": 51.18554098360655
   },
   {
-    "arr": 52.1691475409836,
-    "type": "blob"
+    "type": "blob",
+    "arr": 52.1691475409836
   },
   {
-    "arr": 53.15275409836065,
-    "type": "blob"
+    "type": "blob",
+    "arr": 53.15275409836065
   },
   {
-    "arr": 53.644557377049175,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 53.644557377049175
   },
   {
-    "arr": 54.136360655737704,
-    "type": "blob"
+    "type": "blob",
+    "arr": 54.136360655737704
   },
   {
-    "arr": 55.11996721311475,
-    "type": "blob"
+    "type": "blob",
+    "arr": 55.11996721311475
   },
   {
-    "arr": 56.1035737704918,
-    "type": "blob"
+    "type": "blob",
+    "arr": 56.1035737704918
   },
   {
-    "arr": 56.59537704918032,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 56.59537704918032
   },
   {
-    "arr": 57.08718032786885,
-    "type": "blob"
+    "type": "blob",
+    "arr": 57.08718032786885
   },
   {
-    "arr": 58.0707868852459,
-    "type": "blob"
+    "type": "blob",
+    "arr": 58.0707868852459
   },
   {
-    "arr": 58.56259016393442,
-    "type": "pigeon"
+    "type": "pigeon",
+    "arr": 58.56259016393442
   },
   {
-    "arr": 59.054393442622946,
-    "type": "blob"
+    "type": "blob",
+    "arr": 59.054393442622946
   },
   {
-    "arr": 60.038,
-    "type": "blob"
+    "type": "blob",
+    "arr": 60.038
   },
   {
-    "arr": 61.02160655737705,
-    "type": "suitcase"
+    "type": "suitcase",
+    "arr": 61.02160655737705
   },
   {
-    "arr": 64.95603278688525,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 64.95603278688525
   },
   {
-    "arr": 65.44783606557377,
-    "type": "drone"
+    "type": "drone",
+    "arr": 65.44783606557377
   },
   {
-    "arr": 65.93963934426229,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 65.93963934426229
   },
   {
+    "type": "coin",
     "arr": 66.18554098360656,
-    "type": "coin",
     "y": 40
   },
   {
-    "arr": 66.43144262295083,
-    "type": "drone"
+    "type": "drone",
+    "arr": 66.43144262295083
   },
   {
-    "arr": 66.92324590163933,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 66.92324590163933
   },
   {
-    "arr": 67.41504918032786,
-    "type": "drone"
+    "type": "drone",
+    "arr": 67.41504918032786
   },
   {
-    "arr": 67.90685245901638,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 67.90685245901638
   },
   {
+    "type": "coin",
     "arr": 68.15275409836065,
-    "type": "coin",
     "y": 40
   },
   {
-    "arr": 68.39865573770491,
-    "type": "drone"
+    "type": "drone",
+    "arr": 68.39865573770491
   },
   {
-    "arr": 68.89045901639344,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 68.89045901639344
   },
   {
-    "arr": 69.38226229508196,
-    "type": "drone"
+    "type": "drone",
+    "arr": 69.38226229508196
   },
   {
-    "arr": 69.87406557377048,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 69.87406557377048
   },
   {
-    "arr": 69.87406557377048,
-    "type": "tram"
+    "type": "tram",
+    "arr": 69.87406557377048
   },
   {
+    "type": "coin",
     "arr": 70.11996721311475,
-    "type": "coin",
     "y": 40
   },
   {
-    "arr": 70.36586885245902,
-    "type": "drone"
+    "type": "drone",
+    "arr": 70.36586885245902
   },
   {
-    "arr": 70.85767213114754,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 70.85767213114754
   },
   {
-    "arr": 71.34947540983606,
-    "type": "drone"
+    "type": "drone",
+    "arr": 71.34947540983606
   },
   {
-    "arr": 71.84127868852458,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 71.84127868852458
   },
   {
+    "type": "coin",
     "arr": 72.08718032786885,
-    "type": "coin",
     "y": 40
   },
   {
-    "arr": 72.33308196721312,
-    "type": "drone"
+    "type": "drone",
+    "arr": 72.33308196721312
   },
   {
-    "arr": 72.82488524590164,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 72.82488524590164
   },
   {
-    "arr": 73.31668852459016,
-    "type": "drone"
+    "type": "drone",
+    "arr": 73.31668852459016
   },
   {
-    "arr": 73.80849180327868,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 73.80849180327868
   },
   {
-    "arr": 74.30029508196722,
-    "type": "drone"
+    "type": "drone",
+    "arr": 74.30029508196722
   },
   {
-    "arr": 74.79209836065573,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 74.79209836065573
   },
   {
-    "arr": 75.28390163934425,
-    "type": "drone"
+    "type": "drone",
+    "arr": 75.28390163934425
   },
   {
-    "arr": 75.77570491803277,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 75.77570491803277
   },
   {
+    "type": "coin",
     "arr": 76.02160655737704,
-    "type": "coin",
     "y": 40
   },
   {
-    "arr": 76.26750819672131,
-    "type": "drone"
+    "type": "drone",
+    "arr": 76.26750819672131
   },
   {
-    "arr": 76.75931147540983,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 76.75931147540983
   },
   {
-    "arr": 77.25111475409835,
-    "type": "drone"
+    "type": "drone",
+    "arr": 77.25111475409835
   },
   {
-    "arr": 77.74291803278687,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 77.74291803278687
   },
   {
-    "arr": 77.74291803278687,
-    "type": "tram"
+    "type": "tram",
+    "arr": 77.74291803278687
   },
   {
+    "type": "coin",
     "arr": 77.98881967213114,
-    "type": "coin",
     "y": 40
   },
   {
-    "arr": 78.23472131147541,
-    "type": "drone"
+    "type": "drone",
+    "arr": 78.23472131147541
   },
   {
-    "arr": 78.72652459016393,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 78.72652459016393
   },
   {
-    "arr": 79.21832786885246,
-    "type": "drone"
+    "type": "drone",
+    "arr": 79.21832786885246
   },
   {
-    "arr": 79.71013114754098,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 79.71013114754098
   },
   {
+    "type": "coin",
     "arr": 79.95603278688525,
-    "type": "coin",
     "y": 40
   },
   {
-    "arr": 80.20193442622951,
-    "type": "drone"
+    "type": "drone",
+    "arr": 80.20193442622951
   },
   {
-    "arr": 80.69373770491802,
     "type": "bot",
+    "arr": 80.69373770491802,
     "label": "STUDENT"
   },
   {
-    "arr": 82.66095081967212,
     "type": "bot",
+    "arr": 82.66095081967212,
     "label": "SENIOR"
   },
   {
-    "arr": 83.64455737704917,
     "type": "bot",
+    "arr": 83.64455737704917,
     "label": "ADULT"
   },
   {
-    "arr": 84.1363606557377,
-    "type": "drone"
+    "type": "drone",
+    "arr": 84.1363606557377
   },
   {
-    "arr": 84.62816393442623,
     "type": "bot",
+    "arr": 84.62816393442623,
     "label": "CHILD"
   },
   {
-    "arr": 85.11996721311475,
     "type": "coin",
+    "arr": 85.11996721311475,
     "y": 34.66147461067885
   },
   {
-    "arr": 85.61177049180327,
     "type": "bot",
+    "arr": 85.61177049180327,
     "label": "STUDENT"
   },
   {
-    "arr": 86.1035737704918,
     "type": "coin",
+    "arr": 86.1035737704918,
     "y": 43.78005451802164
   },
   {
-    "arr": 86.59537704918033,
     "type": "bot",
+    "arr": 86.59537704918033,
     "label": "ADULT"
   },
   {
-    "arr": 87.57898360655737,
     "type": "bot",
+    "arr": 87.57898360655737,
     "label": "SENIOR"
   },
   {
-    "arr": 88.07078688524591,
-    "type": "drone"
+    "type": "drone",
+    "arr": 88.07078688524591
   },
   {
-    "arr": 88.56259016393442,
     "type": "bot",
+    "arr": 88.56259016393442,
     "label": "STUDENT"
   },
   {
-    "arr": 89.05439344262294,
-    "type": "coin",
-    "y": 37.780979790724814
+    "type": "drone",
+    "arr": 90.038
   },
   {
-    "arr": 89.54619672131146,
-    "type": "coin",
-    "y": 37.364287751726806
-  },
-  {
-    "arr": 90.038,
-    "type": "drone"
-  },
-  {
-    "arr": 90.52980327868852,
     "type": "bot",
+    "arr": 90.52980327868852,
     "label": "SENIOR"
   },
   {
-    "arr": 90.52980327868852,
-    "type": "tram"
+    "type": "tram",
+    "arr": 90.52980327868852
   },
   {
-    "arr": 91.51340983606556,
     "type": "bot",
+    "arr": 91.51340983606556,
     "label": "ADULT"
   },
   {
-    "arr": 92.49701639344262,
     "type": "bot",
+    "arr": 92.49701639344262,
     "label": "CHILD"
   },
   {
-    "arr": 93.48062295081967,
     "type": "bot",
+    "arr": 93.48062295081967,
     "label": "STUDENT"
   },
   {
-    "arr": 94.46422950819671,
     "type": "bot",
+    "arr": 94.46422950819671,
     "label": "ADULT"
   },
   {
-    "arr": 95.44783606557375,
-    "type": "terminal"
+    "type": "terminal",
+    "arr": 95.44783606557375
   },
   {
-    "arr": 95.93963934426229,
-    "type": "drone"
+    "type": "drone",
+    "arr": 95.93963934426229
   },
   {
-    "arr": 96.43144262295081,
     "type": "bot",
+    "arr": 96.43144262295081,
     "label": "STUDENT"
   },
   {
-    "arr": 97.41504918032786,
     "type": "coin",
+    "arr": 97.41504918032786,
     "y": 38.0358229232952
   },
   {
-    "arr": 97.90685245901639,
-    "type": "drone"
+    "type": "drone",
+    "arr": 97.90685245901639
   },
   {
-    "arr": 98.39865573770491,
     "type": "bot",
+    "arr": 98.39865573770491,
     "label": "SENIOR"
   },
   {
-    "arr": 99.38226229508196,
     "type": "bot",
+    "arr": 99.38226229508196,
     "label": "ADULT"
   },
   {
-    "arr": 99.8740655737705,
-    "type": "drone"
+    "type": "drone",
+    "arr": 99.8740655737705
   },
   {
-    "arr": 100.36586885245902,
     "type": "bot",
+    "arr": 100.36586885245902,
     "label": "CHILD"
   },
   {
-    "arr": 101.34947540983606,
     "type": "bot",
+    "arr": 101.34947540983606,
     "label": "STUDENT"
   },
   {
-    "arr": 101.8412786885246,
-    "type": "drone"
+    "type": "drone",
+    "arr": 101.8412786885246
   },
   {
-    "arr": 102.3330819672131,
     "type": "bot",
+    "arr": 102.3330819672131,
     "label": "ADULT"
   },
   {
-    "arr": 103.31668852459015,
     "type": "bot",
+    "arr": 103.31668852459015,
     "label": "SENIOR"
   },
   {
-    "arr": 103.80849180327868,
-    "type": "drone"
+    "type": "drone",
+    "arr": 103.80849180327868
   },
   {
-    "arr": 104.3002950819672,
     "type": "bot",
+    "arr": 104.3002950819672,
     "label": "STUDENT"
   },
   {
-    "arr": 104.79209836065573,
     "type": "coin",
+    "arr": 104.79209836065573,
     "y": 42.14558161981404
   },
   {
-    "arr": 105.28390163934425,
-    "type": "tram"
+    "type": "tram",
+    "arr": 105.28390163934425
   },
   {
-    "arr": 105.77570491803279,
-    "type": "drone"
+    "type": "drone",
+    "arr": 105.77570491803279
   },
   {
-    "arr": 106.26750819672131,
     "type": "bot",
+    "arr": 106.26750819672131,
     "label": "SENIOR"
   },
   {
-    "arr": 106.75931147540983,
     "type": "coin",
+    "arr": 106.75931147540983,
     "y": 44.46502605918795
   },
   {
-    "arr": 107.74291803278689,
     "type": "coin",
+    "arr": 107.74291803278689,
     "y": 37.4713627146557
   },
   {
-    "arr": 108.23472131147541,
     "type": "bot",
+    "arr": 108.23472131147541,
     "label": "CHILD"
   },
   {
-    "arr": 109.71013114754099,
-    "type": "drone"
+    "type": "drone",
+    "arr": 109.71013114754099
   },
   {
-    "arr": 110.2019344262295,
     "type": "bot",
+    "arr": 110.2019344262295,
     "label": "ADULT"
   },
   {
-    "arr": 111.18554098360654,
     "type": "bot",
+    "arr": 111.18554098360654,
     "label": "SENIOR"
   },
   {
-    "arr": 111.67734426229508,
-    "type": "drone"
+    "type": "drone",
+    "arr": 111.67734426229508
   },
   {
-    "arr": 112.1691475409836,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 112.1691475409836
   },
   {
-    "arr": 112.66095081967212,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 112.66095081967212
   },
   {
-    "arr": 112.90685245901639,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 112.90685245901639
   },
   {
-    "arr": 113.15275409836065,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 113.15275409836065
   },
   {
-    "arr": 113.39865573770491,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 113.39865573770491
   },
   {
-    "arr": 113.64455737704918,
-    "type": "drone"
+    "type": "drone",
+    "arr": 113.64455737704918
   },
   {
-    "arr": 113.89045901639345,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 113.89045901639345
   },
   {
-    "arr": 114.1363606557377,
-    "type": "fire"
+    "type": "fire",
+    "arr": 114.1363606557377
   },
   {
-    "arr": 114.38226229508197,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 114.38226229508197
   },
   {
-    "arr": 114.62816393442623,
-    "type": "drone"
+    "type": "drone",
+    "arr": 114.62816393442623
   },
   {
-    "arr": 114.8740655737705,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 114.8740655737705
   },
   {
-    "arr": 115.11996721311475,
-    "type": "fire"
+    "type": "fire",
+    "arr": 115.11996721311475
   },
   {
-    "arr": 115.61177049180328,
-    "type": "drone"
+    "type": "drone",
+    "arr": 115.61177049180328
   },
   {
-    "arr": 115.85767213114755,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 115.85767213114755
   },
   {
-    "arr": 116.10357377049179,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 116.10357377049179
   },
   {
-    "arr": 116.34947540983606,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 116.34947540983606
   },
   {
-    "arr": 116.59537704918031,
-    "type": "drone"
+    "type": "drone",
+    "arr": 116.59537704918031
   },
   {
-    "arr": 116.84127868852458,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 116.84127868852458
   },
   {
-    "arr": 117.08718032786884,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 117.08718032786884
   },
   {
-    "arr": 117.08718032786884,
-    "type": "tram"
+    "type": "tram",
+    "arr": 117.08718032786884
   },
   {
-    "arr": 117.3330819672131,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 117.3330819672131
   },
   {
-    "arr": 117.57898360655737,
-    "type": "drone"
+    "type": "drone",
+    "arr": 117.57898360655737
   },
   {
-    "arr": 118.0707868852459,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 118.0707868852459
   },
   {
-    "arr": 118.56259016393442,
-    "type": "drone"
+    "type": "drone",
+    "arr": 118.56259016393442
   },
   {
-    "arr": 119.05439344262294,
-    "type": "fire"
+    "type": "fire",
+    "arr": 119.05439344262294
   },
   {
-    "arr": 119.54619672131147,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 119.54619672131147
   },
   {
-    "arr": 120.038,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 120.038
   },
   {
-    "arr": 120.28390163934426,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 120.28390163934426
   },
   {
-    "arr": 120.52980327868852,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 120.52980327868852
   },
   {
-    "arr": 121.02160655737704,
-    "type": "fire"
+    "type": "fire",
+    "arr": 121.02160655737704
   },
   {
-    "arr": 121.51340983606558,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 121.51340983606558
   },
   {
-    "arr": 122.0052131147541,
-    "type": "fire"
+    "type": "fire",
+    "arr": 122.0052131147541
   },
   {
-    "arr": 122.49701639344262,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 122.49701639344262
   },
   {
-    "arr": 122.98881967213114,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 122.98881967213114
   },
   {
-    "arr": 123.48062295081968,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 123.48062295081968
   },
   {
-    "arr": 123.97242622950819,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 123.97242622950819
   },
   {
-    "arr": 124.46422950819671,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 124.46422950819671
   },
   {
-    "arr": 124.95603278688523,
-    "type": "fire"
+    "type": "fire",
+    "arr": 124.95603278688523
   },
   {
-    "arr": 124.95603278688523,
-    "type": "tram"
+    "type": "tram",
+    "arr": 124.95603278688523
   },
   {
-    "arr": 125.44783606557377,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 125.44783606557377
   },
   {
-    "arr": 125.69373770491804,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 125.69373770491804
   },
   {
-    "arr": 125.93963934426229,
-    "type": "fire"
+    "type": "fire",
+    "arr": 125.93963934426229
   },
   {
-    "arr": 126.43144262295081,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 126.43144262295081
   },
   {
-    "arr": 126.92324590163933,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 126.92324590163933
   },
   {
-    "arr": 127.41504918032787,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 127.41504918032787
   },
   {
-    "arr": 127.66095081967214,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 127.66095081967214
   },
   {
+    "type": "ninja",
     "arr": 127.90685245901639,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 128.15275409836065,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 128.15275409836065
   },
   {
+    "type": "bot",
     "arr": 128.39865573770493,
-    "type": "bot",
     "label": "KAOS"
   },
   {
-    "arr": 128.64455737704918,
-    "type": "drone"
+    "type": "drone",
+    "arr": 128.64455737704918
   },
   {
+    "type": "ninja",
     "arr": 128.89045901639344,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 129.1363606557377,
-    "type": "drone"
+    "type": "drone",
+    "arr": 129.1363606557377
   },
   {
+    "type": "ninja",
     "arr": 129.38226229508197,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 129.62816393442623,
-    "type": "drone"
+    "type": "drone",
+    "arr": 129.62816393442623
   },
   {
+    "type": "bot",
     "arr": 129.8740655737705,
-    "type": "bot",
     "label": "KAOS"
   },
   {
-    "arr": 130.11996721311476,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 130.11996721311476
   },
   {
+    "type": "ninja",
     "arr": 130.36586885245904,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 130.6117704918033,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 130.6117704918033
   },
   {
+    "type": "bot",
     "arr": 130.85767213114755,
-    "type": "bot",
     "label": "KAOS"
   },
   {
-    "arr": 131.1035737704918,
-    "type": "drone"
+    "type": "drone",
+    "arr": 131.1035737704918
   },
   {
+    "type": "bot",
     "arr": 131.3494754098361,
-    "type": "bot",
     "label": "KAOS"
   },
   {
-    "arr": 131.59537704918034,
-    "type": "drone"
+    "type": "drone",
+    "arr": 131.59537704918034
   },
   {
+    "type": "bot",
     "arr": 131.8412786885246,
-    "type": "bot",
     "label": "KAOS"
   },
   {
-    "arr": 132.08718032786885,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 132.08718032786885
   },
   {
+    "type": "ninja",
     "arr": 132.33308196721313,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 132.5789836065574,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 132.5789836065574
   },
   {
-    "arr": 132.82488524590164,
     "type": "ninja",
+    "arr": 132.82488524590164,
     "label": "KAOS"
   },
   {
-    "arr": 132.82488524590164,
-    "type": "tram"
+    "type": "tram",
+    "arr": 132.82488524590164
   },
   {
-    "arr": 133.0707868852459,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 133.0707868852459
   },
   {
+    "type": "ninja",
     "arr": 133.31668852459018,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 133.56259016393443,
-    "type": "drone"
+    "type": "drone",
+    "arr": 133.56259016393443
   },
   {
+    "type": "ninja",
     "arr": 133.80849180327868,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 134.05439344262294,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 134.05439344262294
   },
   {
+    "type": "ninja",
     "arr": 134.30029508196722,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 134.54619672131147,
-    "type": "drone"
+    "type": "drone",
+    "arr": 134.54619672131147
   },
   {
+    "type": "ninja",
     "arr": 134.79209836065573,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 135.03799999999998,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 135.03799999999998
   },
   {
+    "type": "ninja",
     "arr": 135.28390163934426,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 135.52980327868852,
-    "type": "drone"
+    "type": "drone",
+    "arr": 135.52980327868852
   },
   {
+    "type": "bot",
     "arr": 135.7757049180328,
-    "type": "bot",
     "label": "KAOS"
   },
   {
+    "type": "shot",
     "arr": 135.89865573770493,
-    "type": "shot",
     "fromBoss": true
   },
   {
-    "arr": 136.02160655737705,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 136.02160655737705
   },
   {
+    "type": "bot",
     "arr": 136.26750819672134,
-    "type": "bot",
     "label": "KAOS"
   },
   {
-    "arr": 136.5134098360656,
-    "type": "drone"
+    "type": "drone",
+    "arr": 136.5134098360656
   },
   {
+    "type": "ninja",
     "arr": 136.75931147540985,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
+    "type": "fireball",
     "arr": 136.88226229508197,
-    "type": "fireball",
     "fromBoss": true
   },
   {
-    "arr": 137.0052131147541,
-    "type": "drone"
+    "type": "drone",
+    "arr": 137.0052131147541
   },
   {
+    "type": "ninja",
     "arr": 137.25111475409838,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 137.49701639344264,
-    "type": "drone"
+    "type": "drone",
+    "arr": 137.49701639344264
   },
   {
+    "type": "ninja",
     "arr": 137.7429180327869,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
+    "type": "shot",
     "arr": 137.86586885245902,
-    "type": "shot",
     "fromBoss": true
   },
   {
-    "arr": 137.98881967213114,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 137.98881967213114
   },
   {
+    "type": "ninja",
     "arr": 138.23472131147543,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 138.48062295081968,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 138.48062295081968
   },
   {
+    "type": "bot",
     "arr": 138.72652459016393,
-    "type": "bot",
     "label": "KAOS"
   },
   {
+    "type": "fireball",
     "arr": 138.84947540983606,
-    "type": "fireball",
     "fromBoss": true
   },
   {
-    "arr": 138.9724262295082,
-    "type": "drone"
+    "type": "drone",
+    "arr": 138.9724262295082
   },
   {
+    "type": "ninja",
     "arr": 139.21832786885247,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 139.46422950819672,
-    "type": "drone"
+    "type": "drone",
+    "arr": 139.46422950819672
   },
   {
+    "type": "ninja",
     "arr": 139.710131147541,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
+    "type": "shot",
     "arr": 139.83308196721313,
-    "type": "shot",
     "fromBoss": true
   },
   {
-    "arr": 139.95603278688526,
-    "type": "ninja"
+    "type": "ninja",
+    "arr": 139.95603278688526
   },
   {
+    "type": "ninja",
     "arr": 140.20193442622954,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 140.4478360655738,
-    "type": "drone"
+    "type": "drone",
+    "arr": 140.4478360655738
   },
   {
+    "type": "ninja",
     "arr": 140.69373770491805,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
+    "type": "fireball",
     "arr": 140.81668852459018,
-    "type": "fireball",
     "fromBoss": true
   },
   {
-    "arr": 140.9396393442623,
-    "type": "drone"
+    "type": "drone",
+    "arr": 140.9396393442623
   },
   {
+    "type": "ninja",
     "arr": 141.1855409836066,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 141.43144262295084,
-    "type": "drone"
+    "type": "drone",
+    "arr": 141.43144262295084
   },
   {
+    "type": "ninja",
     "arr": 141.6773442622951,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
+    "type": "shot",
     "arr": 141.80029508196722,
-    "type": "shot",
     "fromBoss": true
   },
   {
-    "arr": 141.92324590163935,
-    "type": "drone"
+    "type": "drone",
+    "arr": 141.92324590163935
   },
   {
+    "type": "ninja",
     "arr": 142.16914754098363,
-    "type": "ninja",
     "label": "KAOS"
   },
   {
-    "arr": 142.41504918032788,
-    "type": "drone"
+    "type": "drone",
+    "arr": 142.41504918032788
   },
   {
-    "arr": 142.66095081967214,
     "type": "bot",
+    "arr": 142.66095081967214,
     "label": "KAOS"
   },
   {
+    "type": "fireball",
     "arr": 142.78390163934426,
-    "type": "fireball",
     "fromBoss": true
   },
   {
-    "arr": 142.9068524590164,
-    "type": "drone"
+    "type": "drone",
+    "arr": 142.9068524590164
   },
   {
-    "arr": 143.15275409836067,
     "type": "ninja",
+    "arr": 143.15275409836067,
     "label": "KAOS"
   },
   {
-    "arr": 143.39865573770493,
-    "type": "drone"
+    "type": "drone",
+    "arr": 143.39865573770493
   },
   {
+    "type": "shot",
     "arr": 143.64455737704918,
-    "type": "shot",
     "fromBoss": true
   },
   {
-    "arr": 143.89045901639344,
-    "type": "drone"
+    "type": "drone",
+    "arr": 143.89045901639344
   },
   {
+    "type": "fireball",
     "arr": 144.13636065573772,
-    "type": "fireball",
     "fromBoss": true
   },
   {
-    "arr": 144.38226229508197,
-    "type": "drone"
+    "type": "drone",
+    "arr": 144.38226229508197
   },
   {
+    "type": "shot",
     "arr": 144.62816393442623,
-    "type": "shot",
     "fromBoss": true
   },
   {
-    "arr": 144.87406557377048,
-    "type": "drone"
+    "type": "drone",
+    "arr": 144.87406557377048
   },
   {
+    "type": "fireball",
     "arr": 145.11996721311476,
-    "type": "fireball",
     "fromBoss": true
   },
   {
-    "arr": 145.36586885245902,
-    "type": "drone"
+    "type": "drone",
+    "arr": 145.36586885245902
   },
   {
+    "type": "shot",
     "arr": 145.6117704918033,
-    "type": "shot",
     "fromBoss": true
   },
   {
-    "arr": 145.85767213114755,
-    "type": "drone"
+    "type": "drone",
+    "arr": 145.85767213114755
   },
   {
+    "type": "fireball",
     "arr": 146.10357377049183,
-    "type": "fireball",
     "fromBoss": true
   },
   {
-    "arr": 146.3494754098361,
-    "type": "drone"
+    "type": "drone",
+    "arr": 146.3494754098361
   },
   {
-    "arr": 146.59537704918034,
     "type": "shot",
+    "arr": 146.59537704918034,
     "fromBoss": true
   },
   {
-    "arr": 146.8412786885246,
-    "type": "drone"
+    "type": "drone",
+    "arr": 146.8412786885246
   },
   {
-    "arr": 147.08718032786888,
     "type": "fireball",
+    "arr": 147.08718032786888,
     "fromBoss": true
   },
   {
-    "arr": 147.33308196721313,
-    "type": "drone"
+    "type": "drone",
+    "arr": 147.33308196721313
+  },
+  {
+    "type": "ticket",
+    "arr": 8.614804928815312,
+    "y": 71,
+    "rel": 110
+  },
+  {
+    "type": "ticket",
+    "arr": 20.67582010351968,
+    "y": 97,
+    "rel": 120
+  },
+  {
+    "type": "ticket",
+    "arr": 20.772729245520104,
+    "y": 107,
+    "rel": 120
+  },
+  {
+    "type": "ticket",
+    "arr": 20.885780448775055,
+    "y": 110,
+    "rel": 120
+  },
+  {
+    "type": "ticket",
+    "arr": 20.98730155013599,
+    "y": 111,
+    "rel": 120
+  },
+  {
+    "type": "ticket",
+    "arr": 21.117633966979575,
+    "y": 105,
+    "rel": 120
+  },
+  {
+    "type": "ticket",
+    "arr": 21.208764118780596,
+    "y": 97,
+    "rel": 120
+  },
+  {
+    "type": "recycling",
+    "arr": 6.161171177142956,
+    "y": 0,
+    "rel": 110
+  },
+  {
+    "type": "recycling",
+    "arr": 6.402130255293718,
+    "y": 0,
+    "rel": 110
+  },
+  {
+    "type": "kiosk",
+    "arr": 33.33227099355537,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "trash",
+    "arr": 32.754373194571805,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "kiosk",
+    "arr": 89.32510153746061,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "phonebooth",
+    "arr": 88.77901118276137,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "trash",
+    "arr": 88.27775788414141,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "trash",
+    "arr": 83.96974679816736,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "phonebooth",
+    "arr": 90.47486336107082,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "trash",
+    "arr": 90.32770645254126,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "recycling",
+    "arr": 28.66034053458289,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "recycling",
+    "arr": 28.8853872207803,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "trash",
+    "arr": 28.475579915738056,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "subway",
+    "arr": 82.72034764747336,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "subway",
+    "arr": 84.57114525853093,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "subway",
+    "arr": 86.4172198301881,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "round",
+    "arr": 89.9201816521048,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "round",
+    "arr": 91.12026953196421,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "round",
+    "arr": 92.87076192039753,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "vintage",
+    "arr": 97.792915945887,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "vintage",
+    "arr": 98.77587848330097,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "vintage",
+    "arr": 99.8647081823653,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "vintage",
+    "arr": 101.06527763399497,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "phonebooth",
+    "arr": 101.24430401060695,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "round",
+    "arr": 102.26865427592531,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "round",
+    "arr": 94.80800687719426,
+    "y": 0,
+    "rel": 145
+  },
+  {
+    "type": "roadside2",
+    "arr": 20.088831421185414,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "roadside2",
+    "arr": 37.8347526343192,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "roadside2",
+    "arr": 42.401105567738526,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "roadside2",
+    "arr": 47.58616868056095,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "roadside",
+    "arr": 24.282853706463793,
+    "y": 0,
+    "rel": 120
+  },
+  {
+    "type": "roadside",
+    "arr": 29.194617763082235,
+    "y": 0,
+    "rel": 120
   }
 ]

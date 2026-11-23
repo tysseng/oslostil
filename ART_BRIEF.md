@@ -99,6 +99,14 @@ Automat Victoria and the platform machines are seen from the front. They have **
 - **JSON:** `{name: {row, frames, fps, w, h, top}}`. `w × h` is the visible size; `top` is the walkable top surface above the base, in px.
 - **Jumps:** a single jump reaches about 50 px, a double about 85 px. Keep `top` ≤ 45 for one-jump props; the kiosk (61) needs a double jump.
 
+### Street lamps (`assets/sprites/lamps.png` + `lamps-light.png` + `lamps.json`)
+
+- **Made by** `python3 tools/sprites/lamps.py` (imports the drawing helpers from `props.py`). Same scale and style as the props, front view.
+- **Two sheets with the same grid:** the lamps (draw *behind* the characters) and their light (semi-transparent cones, head glow and a ground pool; draw *in front* at the same position). The light is a **smooth gradient with softly blurred edges, no dither or bands** (Joakim, 23 Nov): roadside and subway lamps cast downward cones; the round globe shines radially, strongest downwards; the vintage lantern shines sideways and down from its yellow panes, and its roof stops the light going up.
+- **Cells:** 96 × 80, one lamp per row. The **pole** (not the bounding box) is centred on x = 48, base on the bottom row.
+- **JSON:** `{name: {row, frames, fps, w, h, top, top_span, heads}}`. `top_span` = `[dx0, dx1]` of the walkable lamp head relative to the pole; `heads` = `[[dx, height], …]` light sources relative to the pole base.
+- **Heights (girl 30):** roadside 62 (≈ 2 ×), round 58, vintage 46 (≈ phone booth), subway 74. All tops need a double jump.
+
 ### Sprite sheets for characters
 
 - **Grid:** fixed-size frames with no padding between them.
@@ -133,6 +141,7 @@ pip install pillow playwright && python -m playwright install chromium
 | `python3 tools/sprites/enemies.py` | enemy/obstacle/pickup sheet + JSON (rows, frames, fps, visible size) |
 | `python3 tools/sprites/automat.py` | Automat Victoria sheet (7 frames of 24 × 32; the last is the plain platform machine) |
 | `python3 tools/sprites/props.py` | street props sheet + JSON: trash bin, recycling bin, phone booth, kiosk |
+| `python3 tools/sprites/lamps.py` | street lamps + separate light sheet: roadside (1 and 2 arms), round globe, vintage lantern, subway |
 | `python3 tools/sprites/girls.py` | the girls' sheets (**overwrites** any hand edits to the PNGs) |
 
 All generators run from the repo root and write into `assets/`.

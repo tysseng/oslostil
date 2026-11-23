@@ -1,7 +1,7 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
-import { TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
+import { LAMPS, PROPS, isLamp, isProp, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
 import { loadDefaultLevel } from './level';
 import { createEnemy, createState, enemyX, spawnTime, type Enemy, type GameState } from './state';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, victoriaBob, victoriaLift } from './timeline';
@@ -93,7 +93,7 @@ export class Game {
       if (p.jumps < 2) { p.vy = p.jumps ? -250 : -300; p.jumps++; p.slide = 0; this.audio.sfx('jump'); }
     }
     if (c === 'ArrowDown' || c === 'KeyS') {
-      if (p.y >= GROUND || p.ride || p.machineRide !== undefined) {
+      if (p.y >= GROUND || p.ride || p.propRide || p.machineRide !== undefined) {
         p.slide = 0.45;
         p.slideDirection = this.keys.has('ArrowLeft') || this.keys.has('KeyA') ? -1 : 1;
       } else p.vy = 340;
@@ -173,7 +173,7 @@ export class Game {
     if (tramHit) s.deathFlight = { x: p.x, y: p.y, vx: -520, vy: -240, angle: 0 };
     for (const c of ['#fff', '#ff3b6b', '#ffd84a', '#2bf0ff']) this.burst(p.x, p.y - 14, c, 8);
     s.pops.push({ x: p.x, y: p.y - 30, txt: '-1000', life: 0.9, c: '#ff3b6b' });
-    p.ride = undefined; p.machineRide = undefined; p.vy = 0; p.slide = 0; p.atk = 0;
+    p.ride = undefined; p.propRide = undefined; p.machineRide = undefined; p.vy = 0; p.slide = 0; p.atk = 0;
   }
 
   /** She drops in from above (onto a tram roof if one is passing) and flashes white while invincible. */
@@ -213,11 +213,30 @@ export class Game {
   private machines(t: number, prevY: number): void {
     const { s } = this, p = s.p, roof = GROUND - MACHINE_HEIGHT;
     p.machineRide = undefined;
-    if (s.down > 0 || p.ride || p.vy < 0 || prevY > roof + 0.5 || p.y < roof) return;
+    if (s.down > 0 || p.ride || p.propRide || p.vy < 0 || prevY > roof + 0.5 || p.y < roof) return;
     for (const k of platformMachines(t)) {
       if (Math.abs(p.x - machineCenter(t, k)) >= MACHINE_WIDTH / 2 + 4) continue;
       p.y = roof; p.vy = 0; p.jumps = 0; p.machineRide = k; s.bounceChain = 0;
       break;
+    }
+  }
+
+  private props(t: number, prevY: number): void {
+    const { s } = this, p = s.p;
+    p.propRide = undefined;
+    if (s.down > 0 || p.ride || p.vy < 0) return;
+    let highest = Infinity;
+    for (const e of s.enemies) {
+      if (e.dead || (!isProp(e.type) && !isLamp(e.type))) continue;
+      const surface = isLamp(e.type) ? LAMPS[e.type] : PROPS[e.type];
+      const top = GROUND - e.y - surface.top, x = enemyX(e, t);
+      const [left, right] = isLamp(e.type) ? LAMPS[e.type].top_span : [-TYPES[e.type].w / 2, TYPES[e.type].w / 2];
+      if (p.x + 4 <= x + left || p.x - 4 >= x + right
+        || prevY > top + 0.5 || p.y < top || top >= highest) continue;
+      highest = top; p.propRide = e;
+    }
+    if (p.propRide) {
+      p.y = highest; p.vy = 0; p.jumps = 0; p.machineRide = undefined; s.bounceChain = 0;
     }
   }
 
@@ -260,6 +279,7 @@ export class Game {
     } else {
       // a tram roof carries her back towards the left edge
       if (p.ride) p.x = Math.max(TRAM_EDGE, p.x - p.ride.rel * dt);
+      if (p.propRide && p.vy >= 0) p.x = Math.max(TRAM_EDGE, p.x - p.propRide.rel * dt);
       if (p.machineRide !== undefined && p.vy >= 0 && platformMachines(t).includes(p.machineRide)) {
         p.x = Math.max(TRAM_EDGE, p.x - STATION_VX * dt);
       }
@@ -271,6 +291,7 @@ export class Game {
       if (p.slide > 0 && p.x !== prevX) p.slideDirection = p.x < prevX ? -1 : 1;
       p.vy += 900 * dt; p.y += p.vy * dt;
       this.tram(t, prevY);
+      this.props(t, prevY);
       this.machines(t, prevY);
     }
     if (s.deathFlight) {
@@ -333,7 +354,7 @@ export class Game {
       if (e.dead) continue;
       const ty = TYPES[e.type], x = enemyX(e, t), ey = GROUND - e.y;
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
-      if (e.type === 'tram') continue; // handled in tram()
+      if (e.type === 'tram' || isProp(e.type) || isLamp(e.type)) continue; // scenery has no side damage
       const top = ey - ty.h;
       if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'suitcase') && s.down <= 0 && p.vy > 0 && prevY <= top && p.y >= top) {
         const crossing = (top - prevY) / (p.y - prevY);
@@ -346,7 +367,7 @@ export class Game {
           } else {
             s.knocked.push({ enemy: e, x, y: ey, vx: -e.rel, vy: 90, splash: true });
           }
-          p.y = top; p.vy = -300; p.jumps = 1; p.slide = 0; p.ride = undefined; p.machineRide = undefined;
+          p.y = top; p.vy = -300; p.jumps = 1; p.slide = 0; p.ride = undefined; p.propRide = undefined; p.machineRide = undefined;
           this.audio.sfx('jump');
           this.award(x, top, 100, ++s.bounceChain);
           continue;

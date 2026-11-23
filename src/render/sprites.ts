@@ -1,6 +1,6 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { GROUND, W } from '../config';
-import { SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
 import type { Enemy } from '../state';
 import { R, ctx, drawVehicle, loadImage, ready, text } from './draw';
 
@@ -8,6 +8,9 @@ import friendUrl from '../../assets/sprites/friend.png';
 import victoriaUrl from '../../assets/sprites/victoria.png';
 import automatUrl from '../../assets/sprites/automat.png';
 import enemiesUrl from '../../assets/sprites/enemies.png';
+import propsUrl from '../../assets/sprites/props.png';
+import lampsUrl from '../../assets/sprites/lamps.png';
+import lightsUrl from '../../assets/sprites/lamps-light.png';
 import tramUrl from '../../assets/vehicles/hires/tram-new.png';
 import bossUrl from '../../assets/sprites/kaostrikken.png';
 import bossMeta from '../../assets/sprites/kaostrikken.json';
@@ -115,6 +118,17 @@ function drawTram(x: number, y: number, t: number): void {
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */
 const ENEMIES = loadImage(enemiesUrl);
+const PROP_IMAGE = loadImage(propsUrl);
+const LAMP_IMAGE = loadImage(lampsUrl), LIGHT_IMAGE = loadImage(lightsUrl);
+
+export function drawLampLight(e: Enemy, x: number): void {
+  if (!isLamp(e.type) || !ready(LIGHT_IMAGE)) return;
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  ctx.drawImage(LIGHT_IMAGE, 0, LAMPS[e.type].row * LAMP_CELL_H, LAMP_CELL_W, LAMP_CELL_H,
+    Math.round(x - LAMP_CELL_W / 2), Math.round(GROUND - e.y - LAMP_CELL_H), LAMP_CELL_W, LAMP_CELL_H);
+  ctx.restore();
+}
 
 /** Draw one frame of an enemy-sheet sprite with its base at (x, y) (also used for the HUD ticket icon). */
 export function drawEnemySprite(kind: SheetKind, x: number, y: number, t: number): void {
@@ -126,6 +140,16 @@ export function drawEnemySprite(kind: SheetKind, x: number, y: number, t: number
 export function drawEnemy(e: Enemy, x: number, t: number): void {
   const y = GROUND - e.y;
   if (e.type === 'tram') { drawTram(x, y, t); return; }
+  if (isLamp(e.type)) {
+    if (ready(LAMP_IMAGE)) ctx.drawImage(LAMP_IMAGE, 0, LAMPS[e.type].row * LAMP_CELL_H, LAMP_CELL_W, LAMP_CELL_H,
+      Math.round(x - LAMP_CELL_W / 2), Math.round(y - LAMP_CELL_H), LAMP_CELL_W, LAMP_CELL_H);
+    return;
+  }
+  if (isProp(e.type)) {
+    if (ready(PROP_IMAGE)) ctx.drawImage(PROP_IMAGE, 0, PROPS[e.type].row * PROP_CELL_H, PROP_CELL_W, PROP_CELL_H,
+      Math.round(x - PROP_CELL_W / 2), Math.round(y - PROP_CELL_H), PROP_CELL_W, PROP_CELL_H);
+    return;
+  }
   if (e.type === 'ticket') { // tickets spin out of step with each other and bob gently
     drawEnemySprite('ticket', x, y + Math.round(Math.sin(t * 4 + e.arr * 3)), t + (e.arr * 1.7) % 1);
     return;

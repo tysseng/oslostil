@@ -1,9 +1,22 @@
 // Enemy and pickup types for the layout in level.json.
 import sheetJson from '../assets/sprites/enemies.json';
+import propsJson from '../assets/sprites/props.json';
+import lampsJson from '../assets/sprites/lamps.json';
+
+export type LampKind = keyof typeof lampsJson;
+export const LAMPS = lampsJson;
+export const LAMP_CELL_W = 96, LAMP_CELL_H = 80;
+export const isLamp = (kind: EnemyKind): kind is LampKind => Object.hasOwn(LAMPS, kind);
+export const itemLayer = (kind: EnemyKind): number => kind === 'tram' ? 2 : isProp(kind) || isLamp(kind) ? 0 : 1;
+
+export type PropKind = keyof typeof propsJson;
+export const PROPS = propsJson;
+export const PROP_CELL_W = 112, PROP_CELL_H = 64;
+export const isProp = (kind: EnemyKind): kind is PropKind => Object.hasOwn(PROPS, kind);
 
 export type EnemyKind =
   | 'suitcase' | 'snow' | 'pigeon' | 'ticket' | 'blob' | 'ninja' | 'drone'
-  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball';
+  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | PropKind | LampKind;
 
 /** One row of the enemy sprite sheet (assets/sprites/enemies.png, 32 × 32 bottom-centred cells). */
 export interface SheetRow {
@@ -14,8 +27,8 @@ export interface SheetRow {
   w: number;
   h: number;
 }
-/** Every kind except the tram (still drawn in code) has a row in the sheet. */
-export type SheetKind = Exclude<EnemyKind, 'tram'>;
+/** Enemies and pickups use this sheet; trams and props have separate artwork. */
+export type SheetKind = Exclude<EnemyKind, 'tram' | PropKind | LampKind>;
 export const SHEET: Record<SheetKind, SheetRow> = sheetJson;
 export const SHEET_CELL = 32;
 
@@ -68,6 +81,15 @@ export const TYPES: Record<EnemyKind, EnemyType> = {
   coin: fromSheet('coin', { y: 38, hp: 0, own: 0, pickup: true }),
   shot: fromSheet('shot', { y: 6, hp: 1, own: 120 }),
   fireball: fromSheet('fireball', { y: 28, hp: 1, own: 120 }),
+  trash: { ...PROPS.trash, y: 0, hp: 0, own: 0, solid: true },
+  recycling: { ...PROPS.recycling, y: 0, hp: 0, own: 0, solid: true },
+  phonebooth: { ...PROPS.phonebooth, y: 0, hp: 0, own: 0, solid: true },
+  kiosk: { ...PROPS.kiosk, y: 0, hp: 0, own: 0, solid: true },
+  roadside: { ...LAMPS.roadside, y: 0, hp: 0, own: 0, solid: true },
+  roadside2: { ...LAMPS.roadside2, y: 0, hp: 0, own: 0, solid: true },
+  round: { ...LAMPS.round, y: 0, hp: 0, own: 0, solid: true },
+  vintage: { ...LAMPS.vintage, y: 0, hp: 0, own: 0, solid: true },
+  subway: { ...LAMPS.subway, y: 0, hp: 0, own: 0, solid: true },
 };
 
 export interface ScheduledEvent {
