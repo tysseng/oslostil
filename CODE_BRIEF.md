@@ -105,6 +105,12 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 - Manual positioning stores `arr`, height `y`, and fixed relative speed `rel`, so dragging across a section boundary does not change the item's screen position. `eventSpeed`, `createEnemy` and `spawnTime` in `state.ts` are shared with gameplay; spawn order is based on entry time, not arrival time.
 - Trams can also be raised: rendering and ride/side-hit collision both use their edited height. Scripted scenery, companions and the boss are not editable.
 
+### Highscores
+
+- Seven seconds on the win screen (or Enter) advances to `highscore` mode. `Game.tickWin` uses wall-clock time; gameplay and dev shortcuts do not handle keys during initials entry.
+- `ui/highscores.ts` collects exactly three A-Z letters, stores the top ten scores descending under `oslostil-highscores-v1`, and renders an HTML table below the canvas OSLO-STIL logo placeholder. Storage errors are shown explicitly.
+- Entry has no timeout. After submission the table remains for seven seconds before returning to startup; the Startup button returns immediately. The win screen's existing BEST value remains separate for compatibility.
+
 ## Story beats already built
 
 | Time | What happens | Where in code |

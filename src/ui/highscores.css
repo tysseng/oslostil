@@ -1,0 +1,32 @@
+.highscores {
+  position: absolute; inset: 30% 4px 4px; line-height: 1.6; text-align: center;
+  font-size: clamp(7px, 1.2vw, 14px); overflow-y: auto; padding: 0 8%;
+  background: #0a0614; box-sizing: border-box;
+}
+.highscores h2 { color: var(--cyan); font-size: 1.2em; margin: 0 0 .6em; }
+.highscores label { display: block; font-size: .75em; color: var(--muted); }
+.score-entry { display: flex; justify-content: center; align-items: center; gap: 1em; margin: .5em 0 1em; }
+.highscores input, .highscores button {
+  font: inherit; color: var(--fg); background: var(--frame); border: 1px solid var(--cyan); padding: .5em;
+}
+.highscores input { width: 3.6em; text-align: center; text-transform: uppercase; letter-spacing: .2em; }
+.arcade-initials { position: relative; }
+.highscores .arcade-initials input { color: transparent; caret-color: transparent; }
+.initials-letters { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; gap: .2em; pointer-events: none; }
+.initials-letters span { width: 1em; color: #ffe14a; }
+.arcade-initials:focus-within .active-letter { animation: initials-flash .8s steps(2, jump-none) infinite; }
+#initials-help { color: var(--muted); font-size: .65em; margin-bottom: 1em; }
+@keyframes initials-flash { to { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) {
+  .arcade-initials:focus-within .active-letter { animation: none; text-decoration: underline; }
+}
+.highscores button { cursor: pointer; font-size: .75em; }
+.highscores :focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
+.highscores table { border-collapse: collapse; width: 75%; margin: 0 auto; }
+.highscores th { color: var(--muted); font-size: .75em; padding-bottom: .5em; }
+.highscores td { padding: .16em 0; }
+.highscores th:first-child, .highscores td:first-child { text-align: left; }
+.highscores th:last-child, .highscores td:last-child { text-align: right; }
+.highscores .new-score { color: #ffe14a; }
+.highscores p { font-size: .65em; color: var(--muted); line-height: 1.8; }
+body.showing-highscores .devpanel, body.showing-highscores .note { display: none; }

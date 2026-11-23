@@ -76,6 +76,10 @@ The panel and its shortcuts are available only in `pnpm dev` and the dev build, 
 | 2 | mark the current time with the dev panel enabled (dev builds only) |
 | 3 / 4 | nudge the audio/visual sync -/+50 ms, saved in the browser (dev builds only) |
 
+The startup prompt reads “Trykk enter for å aktivere tekst-til-tale.” After seven seconds on the win screen (or Enter), the highscore screen asks for three player initials. Save to show the top ten browser-local scores beneath the OSLO-STIL logo placeholder. The game returns to startup seven seconds after submission, or immediately with the Startup button. Initials entry has no timeout; storage failures are shown on screen.
+
+Initials start as **AAA**, with the first letter selected and flashing. Enter initials by typing, or use **↑ / ↓** to cycle A–Z and **← / →** to move between the three slots. **Enter** saves. Arrow entry fills unused slots with A, and cycling wraps in both directions.
+
 ## Level editor
 
 Click **Level editor** on the title screen to edit the bundled layout. Scrub **Song position** to reach any part of the level; the scene stays frozen while editing.
@@ -110,6 +114,7 @@ src/render/screens.ts      game frame + HUD, title, pause and win screens
 src/ui/subtitles.ts        HTML lyric layer over the canvas
 src/ui/devpanel.ts         dev mode panel
 src/ui/editor.ts           level editor, item palette and browser-local layout saving
+src/ui/highscores.ts       three-letter initials entry and browser-local top ten scores
 assets/oslostil.mp3        the song (final mix v8, first 150 s, 128 kbps)
 assets/sprites/            pixel-art sprite sheets (girls, automat, enemies.png + enemies.json)
 tools/sprites/girls.py     generator for the girls' sprite sheets

@@ -4,11 +4,12 @@ import { AudioEngine } from './audio';
 import { H, W } from './config';
 import { Game } from './game';
 import { canvas, resetTransform } from './render/draw';
-import { drawGame, drawPause, drawTitle, drawWin } from './render/screens';
+import { drawGame, drawHighscore, drawPause, drawTitle, drawWin } from './render/screens';
 import { lyricAt } from './timeline';
 import { DevPanel } from './ui/devpanel';
 import { Subtitles } from './ui/subtitles';
 import { LevelEditor } from './ui/editor';
+import { Highscores } from './ui/highscores';
 import './style.css';
 
 const audio = new AudioEngine();
@@ -22,6 +23,7 @@ screen.append(canvas);
 const subtitles = new Subtitles(screen);
 const dev = new DevPanel(game, screen, canvas, __DEV_MODE_DEFAULT__);
 const editor = new LevelEditor(game, screen);
+const highscores = new Highscores(game, screen);
 if (__DEV_MODE_DEFAULT__) {
   const help = document.createElement('span');
   help.innerHTML = ' · <b>1</b> dev panel · <b>2</b> mark time · <b>3 / 4</b> sync';
@@ -29,6 +31,7 @@ if (__DEV_MODE_DEFAULT__) {
 }
 
 addEventListener('keydown', (e) => {
+  if (game.mode === 'highscore') return;
   if (e.target instanceof HTMLElement && (e.target.isContentEditable || e.target.closest('textarea, input:not([type="range"])'))) return;
   if (dev.keyDown(e)) return;
   if (editor.keyDown(e)) return;
@@ -51,9 +54,12 @@ let last = performance.now();
 function frame(now: number): void {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
+  game.tickWin(now);
+  highscores.tick(now);
   resetTransform();
   if (game.mode === 'loading' || game.mode === 'title') { subtitles.set(null); drawTitle(now / 1000, game.mode === 'loading'); }
   else if (game.mode === 'win') { subtitles.set(null); drawWin(game, now / 1000); }
+  else if (game.mode === 'highscore') { subtitles.set(null); drawHighscore(); }
   else if (game.mode === 'editor') { subtitles.set(null); editor.draw(); }
   else {
     if (game.mode === 'play') game.update(audio.time(), dt);

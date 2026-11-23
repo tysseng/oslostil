@@ -4,15 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Moved built in level code to same format as custom changes.">
-      <change afterPath="$PROJECT_DIR$/src/level.json" afterDir="false" />
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added highscore screen (untested)">
+      <change afterPath="$PROJECT_DIR$/src/ui/highscores.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ui/highscores.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NEXT_CHANGES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/default-level.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,23 +30,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0988378469155302" />
-      <entry key="MS500" value="2.3640686277272063" />
-      <entry key="S2" value="6.1223009029858835" />
-      <entry key="S5" value="10.98400907664939" />
-      <entry key="S10" value="14.701339903631652" />
-      <entry key="S30" value="18.503223463729523" />
-      <entry key="S60" value="19.69266981687422" />
-      <entry key="M2" value="20.33078607320745" />
-      <entry key="M5" value="20.73109191157269" />
-      <entry key="M10" value="20.98904292016055" />
-      <entry key="M15" value="21.3703535008833" />
-      <entry key="M30" value="23.06918088783882" />
-      <entry key="H1" value="28.351356515451037" />
-      <entry key="H2" value="38.60312520433567" />
-      <entry key="H4" value="62.408144603481496" />
-      <entry key="D1" value="394.2466281756323" />
-      <entry key="W1" value="642.5714268331714" />
+      <entry key="MS100" value="1.0235211093995227" />
+      <entry key="MS500" value="1.5966659156337983" />
+      <entry key="S2" value="3.8082335965809064" />
+      <entry key="S5" value="5.726772218070163" />
+      <entry key="S10" value="6.726793722809385" />
+      <entry key="S30" value="7.540595830998851" />
+      <entry key="S60" value="7.765594591090495" />
+      <entry key="M2" value="7.8857511287571995" />
+      <entry key="M5" value="8.645538144468638" />
+      <entry key="M10" value="11.814154383211799" />
+      <entry key="M15" value="14.868833091289954" />
+      <entry key="M30" value="21.08598307979368" />
+      <entry key="H1" value="29.355615017555362" />
+      <entry key="H2" value="41.5047417757235" />
+      <entry key="H4" value="66.14182366294936" />
+      <entry key="D1" value="397.62212125618623" />
+      <entry key="W1" value="649.4892247786103" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -67,23 +68,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0761963154659768" />
-      <entry key="MS500" value="2.353241318241647" />
-      <entry key="S2" value="6.111096594098696" />
-      <entry key="S5" value="10.97246043464037" />
-      <entry key="S10" value="14.692770316610472" />
-      <entry key="S30" value="18.49943339233314" />
-      <entry key="S60" value="19.690631242560812" />
-      <entry key="M2" value="20.32972852886366" />
-      <entry key="M5" value="20.73064757595129" />
-      <entry key="M10" value="20.98854383944493" />
-      <entry key="M15" value="21.369528437027192" />
-      <entry key="M30" value="23.06787568844085" />
-      <entry key="H1" value="28.350143419530248" />
-      <entry key="H2" value="38.602291157257355" />
-      <entry key="H4" value="62.407648871071075" />
-      <entry key="D1" value="394.2465089968306" />
-      <entry key="W1" value="642.571406631741" />
+      <entry key="MS100" value="1.0024562114895728" />
+      <entry key="MS500" value="1.560380175262591" />
+      <entry key="S2" value="3.6801538516388153" />
+      <entry key="S5" value="5.633583622124338" />
+      <entry key="S10" value="6.669724226692544" />
+      <entry key="S30" value="7.5188000690307" />
+      <entry key="S60" value="7.754318466296566" />
+      <entry key="M2" value="7.880015753018754" />
+      <entry key="M5" value="8.643205588188351" />
+      <entry key="M10" value="11.812900305360762" />
+      <entry key="M15" value="14.867791190599752" />
+      <entry key="M30" value="21.08485376537938" />
+      <entry key="H1" value="29.354506728847422" />
+      <entry key="H2" value="41.50392063420338" />
+      <entry key="H4" value="66.14131320203472" />
+      <entry key="D1" value="397.62199537273017" />
+      <entry key="W1" value="649.4892034536681" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -165,6 +166,8 @@
     <MESSAGE value="Added first background graphics" />
     <MESSAGE value="Lots of backgrounds. New trams, added subway" />
     <MESSAGE value="Added level editor" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added level editor" />
+    <MESSAGE value="Moved built in level code to same format as custom changes." />
+    <MESSAGE value="Added highscore screen (untested)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added highscore screen (untested)" />
   </component>
 </project>

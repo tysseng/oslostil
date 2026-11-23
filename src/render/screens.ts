@@ -118,7 +118,7 @@ export function drawTitle(t: number, loading: boolean): void {
   drawGirl('victoria', 152, GROUND, t + 0.5, { ninja: false, idle: true });
   drawMachine(184, GROUND - 4, t);
   if (loading) text('LASTER LÅTEN … LOADING', W / 2, 84, '#fff', 6, 'center');
-  else if (Math.floor(t * 2) % 2) text('TRYKK ENTER · PRESS ENTER', W / 2, 84, '#fff', 8, 'center');
+  else if (Math.floor(t * 2) % 2) text('Trykk enter for å aktivere tekst-til-tale.', W / 2, 84, '#fff', 7, 'center');
   text('SPACE/↑ HOPP·JUMP   ↓ SKLI·SLIDE   X SLÅ·HIT', W / 2, 104, '#ccc', 5, 'center');
   text('C KAST·THROW   ←→ FLYTT·MOVE   P PAUSE   M MUSIKK·MUSIC', W / 2, 114, '#ccc', 5, 'center');
 }
@@ -142,5 +142,11 @@ export function drawWin(g: Game, t: number): void {
   drawGirl('friend', 140, GROUND, t, { ninja: true, idle: true });
   drawGirl('victoria', 162, GROUND, t + 0.2, { ninja: true, idle: true, atk: Math.floor(t * 2) % 2 === 1 });
   drawMachine(196, GROUND - 4, t, 'cheer');
-  if (Math.floor(t * 2) % 2) text('ENTER: SPILL IGJEN · PLAY AGAIN', W / 2, 166, '#fff', 5, 'center');
+  if (Math.floor(t * 2) % 2) text('ENTER: HIGHSCORE', W / 2, 166, '#fff', 5, 'center');
+}
+
+export function drawHighscore(): void {
+  sky(SKY.neon);
+  R(0, 54, W, H - 54, '#0a0614');
+  text('OSLO-STIL', W / 2, 16, '#ffe14a', 24, 'center', '#ff2bd6');
 }

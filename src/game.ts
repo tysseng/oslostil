@@ -13,13 +13,14 @@ const RESPAWN_FLASH = 1.2;
 /** she drops back in from this height (screen y of her feet) */
 const DROP_Y = GROUND - 100;
 
-export type Mode = 'loading' | 'title' | 'play' | 'pause' | 'win' | 'editor';
+export type Mode = 'loading' | 'title' | 'play' | 'pause' | 'win' | 'editor' | 'highscore';
 const BEST_KEY = 'oslostil-best';
 
 export class Game {
   level = loadDefaultLevel();
   s: GameState = createState(this.level);
   mode: Mode = 'loading';
+  private winReturnAt = 0;
   readonly keys = new Set<string>();
   /** seconds left of the on-screen sync readout */
   syncToast = 0;
@@ -31,6 +32,13 @@ export class Game {
   constructor(readonly audio: AudioEngine) {}
 
   start(): void { this.seek(0); }
+
+  tickWin(now: number): void {
+    if (this.mode !== 'win' || now < this.winReturnAt) return;
+    this.audio.pause();
+    this.keys.clear();
+    this.mode = 'highscore';
+  }
 
   /** Jump the song and the game to time t (also used by the debug panel). */
   seek(t: number): void {
@@ -61,7 +69,12 @@ export class Game {
     this.keys.add(e.code);
     const c = e.code;
     if (this.mode === 'title' && (c === 'Enter' || c === 'Space')) return this.start();
-    if (this.mode === 'win' && c === 'Enter') return this.start();
+    if (this.mode === 'win' && c === 'Enter') {
+      this.audio.pause();
+      this.keys.clear();
+      this.mode = 'highscore';
+      return;
+    }
     if (c === 'KeyM') { this.audio.toggleMusic(); this.musicToast = 1.5; }
     if (this.mode === 'play' && (c === 'KeyP' || c === 'Escape')) return this.pause();
     if (this.mode === 'pause' && (c === 'KeyP' || c === 'Escape' || c === 'Enter')) return this.resume();
@@ -267,6 +280,7 @@ export class Game {
     }
     if (t >= WIN_AT && !s.won) {
       s.won = true; this.mode = 'win';
+      this.winReturnAt = performance.now() + 7000;
       try { s.best = Math.max(Number(localStorage.getItem(BEST_KEY)) || 0, s.score); localStorage.setItem(BEST_KEY, String(s.best)); }
       catch { s.best = s.score; }
     }
