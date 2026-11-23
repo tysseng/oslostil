@@ -6,6 +6,8 @@ import { sectionAt } from './timeline';
 /** Throws you start with, before collecting any tickets. */
 export const START_AMMO = 3;
 
+export interface DeathFlight { x: number; y: number; vx: number; vy: number; angle: number }
+
 export interface Enemy extends ScheduledEvent {
   /** speed relative to the player */
   rel: number;
@@ -69,7 +71,9 @@ export interface GameState {
   shake: number;
   /** triple-throw power-up active until this time */
   power: number;
-  /** seconds left of being dead (invisible, no control) after losing the last heart */
+  /** Tram-hit party animation, independent of the respawn positions. */
+  deathFlight?: DeathFlight & { friend?: DeathFlight; machine?: DeathFlight };
+  /** seconds before respawning after death (counted after any death flight exits) */
   down: number;
   /** seconds left of the white respawn flashing (also invincible) */
   respawn: number;

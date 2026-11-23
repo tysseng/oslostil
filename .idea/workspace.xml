@@ -4,19 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Should fix highscore screen.&#10;Multiplier when jumping on things&#10;Backwards move is now faster than scroll">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So many nice fixes!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/NEXT_CHANGES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/timeline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/timeline.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/highscores.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/highscores.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/highscores.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/highscores.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,23 +29,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000022427054" />
-      <entry key="MS500" value="1.0312814125287757" />
-      <entry key="S2" value="2.1734454632844447" />
-      <entry key="S5" value="3.7401268570810613" />
-      <entry key="S10" value="4.963140667016769" />
-      <entry key="S30" value="11.493753964455095" />
-      <entry key="S60" value="20.471230192080558" />
-      <entry key="M2" value="30.338120031346055" />
-      <entry key="M5" value="43.32611433734362" />
-      <entry key="M10" value="53.30250571674703" />
-      <entry key="M15" value="59.734870466826635" />
-      <entry key="M30" value="77.78057489942255" />
-      <entry key="H1" value="109.74771664510246" />
-      <entry key="H2" value="150.65276162395253" />
-      <entry key="H4" value="197.71218896526798" />
-      <entry key="D1" value="547.8103403501229" />
-      <entry key="W1" value="827.37354570329" />
+      <entry key="MS100" value="1.0000379240276094" />
+      <entry key="MS500" value="1.1866038184284167" />
+      <entry key="S2" value="2.6879594956383293" />
+      <entry key="S5" value="5.004094268148179" />
+      <entry key="S10" value="7.238277751348894" />
+      <entry key="S30" value="9.968401504192554" />
+      <entry key="S60" value="10.914103207535586" />
+      <entry key="M2" value="11.563653165385862" />
+      <entry key="M5" value="14.200086027226952" />
+      <entry key="M10" value="18.61451248577954" />
+      <entry key="M15" value="22.266954420814667" />
+      <entry key="M30" value="35.57359291774792" />
+      <entry key="H1" value="67.99042570990039" />
+      <entry key="H2" value="120.38862099268248" />
+      <entry key="H4" value="183.63127800261296" />
+      <entry key="D1" value="555.5538052381515" />
+      <entry key="W1" value="852.495816583479" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -71,23 +67,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9726549495790882" />
-      <entry key="MS500" value="1.0255546422306905" />
-      <entry key="S2" value="2.1703701087451166" />
-      <entry key="S5" value="3.7380312138700376" />
-      <entry key="S10" value="4.961771301908738" />
-      <entry key="S30" value="11.49277064753341" />
-      <entry key="S60" value="20.470370427843008" />
-      <entry key="M2" value="30.337484396102194" />
-      <entry key="M5" value="43.32575074898868" />
-      <entry key="M10" value="53.30227657836961" />
-      <entry key="M15" value="59.734679457683434" />
-      <entry key="M30" value="77.78034565492254" />
-      <entry key="H1" value="109.74730261071471" />
-      <entry key="H2" value="150.65221557077618" />
-      <entry key="H4" value="197.7117106160388" />
-      <entry key="D1" value="547.8101877705352" />
-      <entry key="W1" value="827.3735191522053" />
+      <entry key="MS100" value="0.965973215908309" />
+      <entry key="MS500" value="1.1786407951570992" />
+      <entry key="S2" value="2.683673513844934" />
+      <entry key="S5" value="5.000849869669802" />
+      <entry key="S10" value="7.23589700954029" />
+      <entry key="S30" value="9.967295419601859" />
+      <entry key="S60" value="10.91349575431018" />
+      <entry key="M2" value="11.563329955862049" />
+      <entry key="M5" value="14.199919983091338" />
+      <entry key="M10" value="18.61439830207524" />
+      <entry key="M15" value="22.26686236440391" />
+      <entry key="M30" value="35.57350817759393" />
+      <entry key="H1" value="67.99024243984093" />
+      <entry key="H2" value="120.38827258774786" />
+      <entry key="H4" value="183.63089654036406" />
+      <entry key="D1" value="555.5536574648597" />
+      <entry key="W1" value="852.4957899936387" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -173,6 +169,7 @@
     <MESSAGE value="Added highscore screen (untested)" />
     <MESSAGE value="Updated level titles" />
     <MESSAGE value="Should fix highscore screen.&#10;Multiplier when jumping on things&#10;Backwards move is now faster than scroll" />
-    <option name="LAST_COMMIT_MESSAGE" value="Should fix highscore screen.&#10;Multiplier when jumping on things&#10;Backwards move is now faster than scroll" />
+    <MESSAGE value="So many nice fixes!" />
+    <option name="LAST_COMMIT_MESSAGE" value="So many nice fixes!" />
   </component>
 </project>

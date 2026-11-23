@@ -65,6 +65,14 @@ export const WAKE_HOP_COUNT = 3;
 /** … then rises to her floating height, overshooting a little, as she starts to follow (seconds). */
 export const WAKE_RISE = 0.9;
 
+export function victoriaLift(t: number): number {
+  const since = t - VICTORIA_WAKE_T;
+  if (since < WAKE_HOPS) return Math.abs(Math.sin((since / WAKE_HOPS) * Math.PI * WAKE_HOP_COUNT)) * 5;
+  const k = Math.min(1, (since - WAKE_HOPS) / WAKE_RISE), c = 3.2;
+  return 30 * (1 + (c + 1) * (k - 1) ** 3 + c * (k - 1) ** 2);
+}
+export const victoriaBob = (t: number): number => 2 * Math.min(1, Math.max(0, (t - VICTORIA_WAKE_T - WAKE_HOPS) / WAKE_RISE));
+
 /** «Plutselig er vi ninjaer i et coin-op spill» */
 export const NINJA_T = lineT(54);
 /** «skjermen skifter farge» – the screen colour change (1:42, set by ear) */
@@ -152,7 +160,11 @@ export const BANNER_TIME = 2.6;
 /** The boss (Kaos-trikken) rolls in at bar 70 and is destroyed by the final hit. */
 export const BOSS_AT = barT(70);
 export const bossVisible = (t: number): boolean => t >= BOSS_AT && t < FINAL_HIT + 0.05;
-export const bossX = (t: number): number => W + 60 - Math.min(1, (t - BOSS_AT) / BAR) * 120;
+export const bossX = (t: number): number => {
+  const since = Math.max(0, t - BOSS_AT);
+  if (since < BAR) return W + 60 + (256 - W - 60) * (since / BAR);
+  return 224 + 32 * Math.cos((since - BAR) * Math.PI / (2 * BAR));
+};
 
 /** Debug jump points. */
 export const JUMPS: [string, number][] = [

@@ -3,6 +3,8 @@ Important before the 3rd
 - pixelate vehicles
 - drones -> seagulls
 - replace sound effects with automat sounds.
+- Cheers in the ending, the scrolling stops and the girls wave to the camera
+- More textures behind the players in oslo classuc and tokyoslo
 
 - Larger enemy sprites to match player sprites, especially ninjas
 

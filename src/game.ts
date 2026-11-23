@@ -4,7 +4,7 @@ import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PX, W, WIN_AT, barT } from './conf
 import { TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
 import { loadDefaultLevel } from './level';
 import { createEnemy, createState, enemyX, spawnTime, type Enemy, type GameState } from './state';
-import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt } from './timeline';
+import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, victoriaBob, victoriaLift } from './timeline';
 
 /** seconds she is gone after losing her last heart */
 const DEATH_TIME = 0.55;
@@ -154,13 +154,14 @@ export class Game {
     this.burst(s.p.x, s.p.y - 12, '#f44', 12);
   }
 
-  /** Last heart lost (or hit by a tram): she bursts and is gone for DEATH_TIME, then respawn() drops her back in. */
-  private die(): void {
+  /** Tram hits fling her offscreen before the ordinary respawn delay. */
+  private die(tramHit = false): void {
     const { s } = this, p = s.p;
     s.bounceChain = 0;
     s.hp = 0; s.down = DEATH_TIME; s.combo = 0; s.shake = 0.35; s.continues++;
     s.score = Math.max(0, s.score - 1000);
     this.audio.sfx('die');
+    if (tramHit) s.deathFlight = { x: p.x, y: p.y, vx: -520, vy: -240, angle: 0 };
     for (const c of ['#fff', '#ff3b6b', '#ffd84a', '#2bf0ff']) this.burst(p.x, p.y - 14, c, 8);
     s.pops.push({ x: p.x, y: p.y - 30, txt: '-1000', life: 0.9, c: '#ff3b6b' });
     p.ride = undefined; p.machineRide = undefined; p.vy = 0; p.slide = 0; p.atk = 0;
@@ -170,6 +171,13 @@ export class Game {
   private respawn(): void {
     const { s } = this, p = s.p;
     p.x = Math.max(p.x, PX); p.y = DROP_Y; p.vy = 0; p.jumps = 1;
+    if (s.deathFlight) {
+      if (s.deathFlight.friend) {
+        s.fx = p.x - 22; s.friend.yHist = [DROP_Y]; s.friend.atk = 0;
+      }
+      if (s.deathFlight.machine) s.mx = p.x - 46;
+      s.deathFlight = undefined;
+    }
     s.hp = 3; s.inv = s.respawn = RESPAWN_FLASH;
     this.audio.sfx('respawn');
   }
@@ -187,7 +195,7 @@ export class Game {
       const x = enemyX(e, t), base = GROUND - e.y, roof = base - TRAM_ROOF;
       if (p.x + 4 < x || p.x - 4 > x + TRAM_LEN) continue;
       if (p.vy >= 0 && prevY <= roof + 0.5 && p.y >= roof) ride = e; // feet came down on (or stayed on) the roof
-      else if (p.y > roof + 2 && p.y - (p.slide > 0 ? 10 : 24) < base && s.inv <= 0) { this.die(); return; } // hit by the side
+      else if (p.y > roof + 2 && p.y - (p.slide > 0 ? 10 : 24) < base && s.inv <= 0) { this.die(true); return; } // hit by the side
     }
     if (ride) { p.y = GROUND - ride.y - TRAM_ROOF; p.vy = 0; p.jumps = 0; s.bounceChain = 0; }
     p.ride = ride;
@@ -225,8 +233,21 @@ export class Game {
 
     // player: gone for a moment after dying, then dropped back in
     if (s.down > 0) {
-      s.down -= dt;
-      if (s.down <= 0) this.respawn();
+      if (s.deathFlight) {
+        const flight = s.deathFlight;
+        for (const member of [flight, flight.friend, flight.machine]) {
+          if (!member) continue;
+          member.x += member.vx * dt;
+          member.vy += 500 * dt;
+          member.y += member.vy * dt;
+          member.angle -= dt * 12;
+        }
+      }
+      const flight = s.deathFlight;
+      if (!flight || [flight, flight.friend, flight.machine].every(member => !member || member.x < -32)) {
+        s.down -= dt;
+        if (s.down <= 0) this.respawn();
+      }
     } else {
       // a tram roof carries her back towards the left edge
       if (p.ride) p.x = Math.max(TRAM_EDGE, p.x - p.ride.rel * dt);
@@ -243,6 +264,21 @@ export class Game {
       this.tram(t, prevY);
       this.machines(t, prevY);
     }
+    if (s.deathFlight) {
+      const companions = [
+        { key: 'friend' as const, x: s.fx, y: s.friend.yHist[0] ?? GROUND, active: true },
+        { key: 'machine' as const, x: s.mx, y: Math.round(GROUND - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t)), active: t >= VICTORIA_WAKE_T },
+      ];
+      for (const companion of companions) {
+        if (!companion.active || s.deathFlight[companion.key]) continue;
+        if (s.enemies.some(e => {
+          if (e.type !== 'tram' || e.dead) return false;
+          const nose = enemyX(e, t), previousNose = enemyX(e, prevT), base = GROUND - e.y;
+          return nose <= companion.x + 4 && previousNose >= companion.x - 4
+            && companion.y > base - TRAM_ROOF + 2 && companion.y - 24 < base;
+        })) s.deathFlight[companion.key] = { x: companion.x, y: companion.y, vx: -520, vy: -240, angle: 0 };
+      }
+    }
     s.fx += (p.x - 22 - s.fx) * Math.min(1, dt * 4);
     // Automat Victoria stands on the platform until the girls reach her, then follows them
     if (t < VICTORIA_WAKE_T + WAKE_HOPS) s.mx = machineCenter(t); // stays put while she wakes up and hops
@@ -253,7 +289,9 @@ export class Game {
 
     // friend follows with a delay and helps from chorus 1
     const f = s.friend;
-    f.yHist.push(s.down > 0 ? GROUND : p.y); if (f.yHist.length > 9) f.yHist.shift();
+    if (!s.deathFlight) {
+      f.yHist.push(s.down > 0 ? GROUND : p.y); if (f.yHist.length > 9) f.yHist.shift();
+    }
     f.cd -= dt; f.atk = dec(f.atk);
 
     for (const st of s.stars) { st.x += st.vx * dt; st.y += st.vy * dt; st.a += dt * 20; }
@@ -319,7 +357,7 @@ export class Game {
         }
       }
       if (e.dead) continue;
-      if (t > barT(34) && f.cd <= 0 && !ty.pickup && !ty.solid && x > s.fx - 8 && x < s.fx + 16 && e.y === 0) {
+      if (!s.deathFlight?.friend && t > barT(34) && f.cd <= 0 && !ty.pickup && !ty.solid && x > s.fx - 8 && x < s.fx + 16 && e.y === 0) {
         f.cd = 1.1; f.atk = 0.18; e.dead = true; this.award(x, ey - 8, 75);
       }
       if (e.dead) continue;
@@ -343,8 +381,8 @@ export class Game {
     if (bossVisible(t)) {
       const bx = bossX(t);
       for (const st of s.stars) {
-        if (!st.gone && st.x > bx - 42 && st.y > GROUND - 124) { // the robot's body
-          st.gone = true; s.boss.hp = Math.max(0, s.boss.hp - 1); s.boss.hit = 0.1; s.score += 30; this.burst(st.x, st.y, '#ff0', 5);
+        if (!st.gone && st.x > bx - 42 && st.x < bx + 42 && st.y > GROUND - 124 && st.y < GROUND) { // the robot's body
+          st.gone = true; s.boss.hp = Math.max(0, s.boss.hp - 2); s.boss.hit = 0.1; s.score += 30; this.burst(st.x, st.y, '#ff0', 5);
         }
       }
       s.boss.hit = dec(s.boss.hit);

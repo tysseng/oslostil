@@ -142,11 +142,23 @@ export function drawEnemy(e: Enemy, x: number, t: number): void {
 const BOSS = loadImage(bossUrl);
 export type BossAnim = keyof typeof bossMeta.anims;
 
+// Upper-body offsets baked into each frame by tools/sprites/boss.py.
+const BOSS_HEAD_OFFSETS: Record<BossAnim, readonly (readonly [number, number])[]> = {
+  walk: [[0, -1], [0, 0], [0, 0], [0, -1], [0, 0], [0, 0]],
+  idle: [[0, 0], [0, 0], [0, 1], [0, 1]],
+  attack: [[1, 0], [2, 0], [3, 0], [1, 0]],
+  hit: [[3, 0], [2, 1]],
+};
+
 export function drawBoss(x: number, hit: boolean, hp: number, max: number, anim: BossAnim = 'idle', at = 0): void {
   const y = GROUND, shake = hit ? Math.round((Math.random() - 0.5) * 3) : 0;
-  const { w, h, anchorX } = bossMeta, a = bossMeta.anims[hit ? 'hit' : anim];
-  const f = a.start + Math.min(a.count - 1, Math.max(0, Math.floor(at * a.count)));
+  const pose = hit ? 'hit' : anim;
+  const { w, h, anchorX } = bossMeta, a = bossMeta.anims[pose];
+  const frame = Math.min(a.count - 1, Math.max(0, Math.floor(at * a.count)));
+  const f = a.start + frame, [headX, headY] = BOSS_HEAD_OFFSETS[pose][frame];
   if (ready(BOSS)) ctx.drawImage(BOSS, f * w, 0, w, h, Math.round(x) - anchorX + shake, y - h, w, h);
-  text('KAOS-TRIKKEN', x, y - h - 6, '#ff4f6b', 4, 'center');
-  R(W / 2 - 60, 22, 120, 5, '#300'); R(W / 2 - 60, 22, (120 * hp) / max, 5, '#ff3366');
+  const center = Math.round(x) + shake - 9 + headX, barY = y - h - 7 + headY, barWidth = 64;
+  R(center - barWidth / 2 - 1, barY, barWidth + 2, 7, '#64b8f2');
+  R(center - barWidth / 2, barY + 1, barWidth, 5, '#300');
+  R(center - barWidth / 2, barY + 1, barWidth * Math.max(0, Math.min(1, hp / max)), 5, '#ff3366');
 }

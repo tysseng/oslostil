@@ -2,7 +2,7 @@
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { enemyX } from '../state';
-import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOP_COUNT, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt } from '../timeline';
+import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
 import { R, ctx, flash, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
 import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawMachine, type Mood } from './sprites';
@@ -34,12 +34,25 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   // companions
-  if (t >= VICTORIA_WAKE_T) drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
+  if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
   const ninja = isNinja(t), f = s.friend, fy = f.yHist.length ? f.yHist[0] : GROUND;
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
-  drawGirl('friend', s.fx, fy, t + 0.13, { ninja, air: fy < GROUND, rising: fRising, atk: f.atk > 0 });
+  if (!s.deathFlight?.friend) drawGirl('friend', s.fx, fy, t + 0.13, { ninja, air: fy < GROUND, rising: fRising, atk: f.atk > 0 });
   // gone while dead; after respawning she flashes white, after an ordinary hit she blinks
   const white = s.respawn > 0 && Math.floor(s.respawn * 8) % 2 === 1;
+  if (s.deathFlight) {
+    const flight = s.deathFlight;
+    for (const member of ['victoria', 'friend', 'machine'] as const) {
+      const motion = member === 'victoria' ? flight : flight[member];
+      if (!motion) continue;
+      ctx.save();
+      ctx.translate(motion.x, motion.y - 16);
+      ctx.rotate(motion.angle);
+      if (member === 'machine') drawMachine(0, 16, t, machineMood(t), 0);
+      else drawGirl(member, 0, 16, t, { ninja, air: true });
+      ctx.restore();
+    }
+  }
   if (s.down <= 0 && (s.respawn > 0 || !(s.inv > 0 && Math.floor(t * 20) % 2))) {
     drawGirl('victoria', s.p.x, s.p.y, t, { white, ninja, air: s.p.y < GROUND, rising: s.p.vy < 0, slide: s.p.slide > 0, atk: s.p.atk > 0 });
   }
@@ -87,20 +100,6 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   }
 }
 
-/**
- * How high Automat Victoria floats above the platform: when she wakes she hops a few times on the spot,
- * then rises to 30 px as she starts to follow, overshooting a little before settling.
- */
-function victoriaLift(t: number): number {
-  const since = t - VICTORIA_WAKE_T;
-  if (since < WAKE_HOPS) return Math.abs(Math.sin((since / WAKE_HOPS) * Math.PI * WAKE_HOP_COUNT)) * 5; // little hops
-  const k = Math.min(1, (since - WAKE_HOPS) / WAKE_RISE);
-  const c = 3.2; // «back» easing: shoots past the target, then settles
-  return 30 * (1 + (c + 1) * (k - 1) ** 3 + c * (k - 1) ** 2);
-}
-/** No floating bob while she is still standing on the platform; it fades in as she rises. */
-const victoriaBob = (t: number): number => 2 * Math.min(1, Math.max(0, (t - VICTORIA_WAKE_T - WAKE_HOPS) / WAKE_RISE));
-
 /** Automat Victoria talks when the lyrics are about her, and cheers on the chorus «OSLOSTIL!» calls and the final hit. */
 function machineMood(t: number): Mood {
   if (t >= FINAL_HIT) return 'cheer';
@@ -131,7 +130,7 @@ export function drawTitle(t: number, loading: boolean): void {
   drawGirl('friend', 130, GROUND, t, { ninja: false, idle: true });
   drawGirl('victoria', 152, GROUND, t + 0.5, { ninja: false, idle: true });
   drawMachine(184, GROUND - 4, t, 'idle', 2, true);
-  if (loading) text('LASTER LÅTEN … LOADING', W / 2, 84, '#fff', 6, 'center');
+  if (loading) text('LASTER SPILL …', W / 2, 84, '#fff', 6, 'center');
   else if (Math.floor(t * 2) % 2) text('Trykk enter for å aktivere tekst-til-tale.', W / 2, 84, '#fff', 7, 'center');
   text('SPACE/↑ HOPP·JUMP   ↓ SKLI·SLIDE   X SLÅ·HIT', W / 2, GROUND + 8, '#ccc', 5, 'center');
   text('C KAST·THROW   ←→ FLYTT·MOVE   P PAUSE   M MUSIKK·MUSIC', W / 2, GROUND + 18, '#ccc', 5, 'center');
@@ -151,11 +150,11 @@ export function drawWin(g: Game, t: number, place: number): void {
     ['PERFECT', s.perfect], ['CONTINUES', s.continues], ['BEST', s.best ?? s.score],
   ];
   rows.forEach(([k, v], i) => { text(k, 70, 58 + i * 11, '#ccc', 6); text(String(v), 250, 58 + i * 11, '#fff', 6, 'right'); });
-  const rank = s.continues === 0 && s.score > 30000 ? 'OSLOSTIL-MESTER' : s.continues <= 1 ? 'TIGERSTADEN-NINJA' : 'TRIKKE-TURIST';
+  const rank = s.continues === 0 && s.score > 30000 ? 'OSLOSTIL-MESTER' : s.continues <= 1 ? 'TIGERSTADEN-NINJA' : 'TRIKKETURIST';
   text(rank, W / 2, 128, '#ff2bd6', 8, 'center');
-  drawGirl('friend', 140, GROUND, t, { ninja: true, idle: true });
-  drawGirl('victoria', 162, GROUND, t + 0.2, { ninja: true, idle: true, atk: Math.floor(t * 2) % 2 === 1 });
-  drawMachine(196, GROUND - 4, t, 'cheer', 2, true);
+  drawGirl('friend', 16, GROUND, t, { ninja: true, idle: true });
+  drawGirl('victoria', 42, GROUND, t + 0.2, { ninja: true, idle: true, atk: Math.floor(t * 2) % 2 === 1 });
+  drawMachine(286, GROUND - 4, t, 'cheer', 2, true);
   text(place > 10 ? 'GAME OVER' : place === 1 ? 'NEW HIGHSCORE!' : `YOU PLACED #${place}`, W / 2, 154, place === 1 ? '#ffe14a' : '#ccc', 6, 'center');
   if (Math.floor(t * 2) % 2) text('ENTER: HIGHSCORE', W / 2, 166, '#fff', 5, 'center');
 }
