@@ -48,7 +48,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
    - measured lyric times (`LYRICS_RAW`), `NINJA_T`, `COLOR_T` and `BANNERS`;
    - the Sandvika ticket machines and Victoria's wake-up (`MACHINES_T`, `machineCenter`, `VICTORIA_WAKE_T`, `WAKE_HOPS`, `WAKE_RISE`);
    - the boss timing and the dev `JUMPS`.
-4. `src/schedule.ts`: enemy types (`TYPES`: size, height above ground, hp, own speed, pickup/solid), the enemy sprite sheet layout (`SHEET`, imported from `assets/sprites/enemies.json`; hitbox `w`/`h` come from it) and `buildSchedule()`. Every enemy is scheduled to arrive at the player's spot exactly on a beat.
+4. `src/schedule.ts`: enemy types (`TYPES`: size, height above ground, hp, own speed, pickup/solid) and the enemy sprite sheet layout (`SHEET`, imported from `assets/sprites/enemies.json`; hitbox `w`/`h` come from it). `src/level.json` contains the complete default schedule, materialized from the original generator without changing its timings or order.
 5. `src/state.ts`: `GameState`, `createState()`, `enemyX(e, t)`.
 6. `src/game.ts`: the rules:
    - `seek`, pause and resume, keyboard;
@@ -101,7 +101,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 - The title-screen **Level editor** button enters `editor` mode. Its own song-position slider changes the frozen scene without running physics or playing audio.
 - `Game.level` holds the editable schedule. `seek` and `start` always use it. `editor.ts` saves it under `oslostil-level-v1` in local storage and validates it on load; failures appear in the editor status.
-- `level.ts` validates imported JSON and loads `src/default-level.json`: `null` uses the generator, an array replaces it. Download level exports that same array format; replace the repository file and rebuild/deploy to publish it. Import level validates before asking to replace the draft. Browser drafts override the bundled default until Use default level discards them.
+- `level.ts` validates imported JSON and loads the complete schedule from `src/level.json` as a fresh copy. There is no runtime level generator or `null` fallback; `[]` is an empty level. Download level exports that same array format as `level.json`; replace the repository file and rebuild/deploy to publish it. Import level validates before asking to replace the draft. Browser drafts override the bundled default until Use default level discards them.
 - Manual positioning stores `arr`, height `y`, and fixed relative speed `rel`, so dragging across a section boundary does not change the item's screen position. `eventSpeed`, `createEnemy` and `spawnTime` in `state.ts` are shared with gameplay; spawn order is based on entry time, not arrival time.
 - Trams can also be raised: rendering and ride/side-hit collision both use their edited height. Scripted scenery, companions and the boss are not editable.
 

@@ -4,31 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Lots of backgrounds. New trams, added subway">
-      <change afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/backgrounds/oslo-classic-buildings.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/backgrounds/tokyoslo-v2-buildings.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/fire.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/fire.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-burning.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-burning.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-burning.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/backgrounds/karljohan.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/fire.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/vehicles/burning_tram.py" afterDir="false" />
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Moved built in level code to same format as custom changes.">
+      <change afterPath="$PROJECT_DIR$/src/level.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/STAGE_DESIGN.md" beforeDir="false" afterPath="$PROJECT_DIR$/STAGE_DESIGN.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/draw.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/draw.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/default-level.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/devpanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/devpanel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,23 +29,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000465779083245" />
-      <entry key="MS500" value="1.1519575084956482" />
-      <entry key="S2" value="2.4528607656438006" />
-      <entry key="S5" value="3.9238972525589664" />
-      <entry key="S10" value="4.7961241309370966" />
-      <entry key="S30" value="5.554058718690216" />
-      <entry key="S60" value="5.770870306692595" />
-      <entry key="M2" value="5.88400036991822" />
-      <entry key="M5" value="6.153456616324777" />
-      <entry key="M10" value="8.46322390786882" />
-      <entry key="M15" value="11.862251951693478" />
-      <entry key="M30" value="20.045553139643882" />
-      <entry key="H1" value="27.823798448887093" />
-      <entry key="H2" value="34.04706776624925" />
-      <entry key="H4" value="58.16059016207904" />
-      <entry key="D1" value="397.42328030403553" />
-      <entry key="W1" value="622.5397621305025" />
+      <entry key="MS100" value="1.0988378469155302" />
+      <entry key="MS500" value="2.3640686277272063" />
+      <entry key="S2" value="6.1223009029858835" />
+      <entry key="S5" value="10.98400907664939" />
+      <entry key="S10" value="14.701339903631652" />
+      <entry key="S30" value="18.503223463729523" />
+      <entry key="S60" value="19.69266981687422" />
+      <entry key="M2" value="20.33078607320745" />
+      <entry key="M5" value="20.73109191157269" />
+      <entry key="M10" value="20.98904292016055" />
+      <entry key="M15" value="21.3703535008833" />
+      <entry key="M30" value="23.06918088783882" />
+      <entry key="H1" value="28.351356515451037" />
+      <entry key="H2" value="38.60312520433567" />
+      <entry key="H4" value="62.408144603481496" />
+      <entry key="D1" value="394.2466281756323" />
+      <entry key="W1" value="642.5714268331714" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -83,23 +67,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9593087998403225" />
-      <entry key="MS500" value="1.1423905206789948" />
-      <entry key="S2" value="2.4473344344119914" />
-      <entry key="S5" value="3.9201955231567616" />
-      <entry key="S10" value="4.793828086728997" />
-      <entry key="S30" value="5.55316427671425" />
-      <entry key="S60" value="5.770404618970099" />
-      <entry key="M2" value="5.883762710030761" />
-      <entry key="M5" value="6.153357820865369" />
-      <entry key="M10" value="8.463159886425164" />
-      <entry key="M15" value="11.862195093425468" />
-      <entry key="M30" value="20.04550778510571" />
-      <entry key="H1" value="27.82376777632751" />
-      <entry key="H2" value="34.047049033708625" />
-      <entry key="H4" value="58.16057131558362" />
-      <entry key="D1" value="397.4232509273353" />
-      <entry key="W1" value="622.5397552994136" />
+      <entry key="MS100" value="1.0761963154659768" />
+      <entry key="MS500" value="2.353241318241647" />
+      <entry key="S2" value="6.111096594098696" />
+      <entry key="S5" value="10.97246043464037" />
+      <entry key="S10" value="14.692770316610472" />
+      <entry key="S30" value="18.49943339233314" />
+      <entry key="S60" value="19.690631242560812" />
+      <entry key="M2" value="20.32972852886366" />
+      <entry key="M5" value="20.73064757595129" />
+      <entry key="M10" value="20.98854383944493" />
+      <entry key="M15" value="21.369528437027192" />
+      <entry key="M30" value="23.06787568844085" />
+      <entry key="H1" value="28.350143419530248" />
+      <entry key="H2" value="38.602291157257355" />
+      <entry key="H4" value="62.407648871071075" />
+      <entry key="D1" value="394.2465089968306" />
+      <entry key="W1" value="642.571406631741" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -180,6 +164,7 @@
     <MESSAGE value="Added github pages" />
     <MESSAGE value="Added first background graphics" />
     <MESSAGE value="Lots of backgrounds. New trams, added subway" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lots of backgrounds. New trams, added subway" />
+    <MESSAGE value="Added level editor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added level editor" />
   </component>
 </project>

@@ -4,7 +4,7 @@ import { loadDefaultLevel, parseLevel } from '../level';
 import { canvas, ctx, resetTransform } from '../render/draw';
 import { drawScene } from '../render/scenes';
 import { drawEnemy } from '../render/sprites';
-import { buildSchedule, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
+import { SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
 import { createEnemy, enemyX, eventSpeed } from '../state';
 import { sectionAt } from '../timeline';
 import { fmtTime } from './devpanel';
@@ -56,7 +56,6 @@ export class LevelEditor {
         <button type="button" data-action="import">Import level</button>
         <input type="file" accept=".json,application/json" hidden aria-label="Import level JSON">
         <button type="button" data-action="default">Use default level</button>
-        <button type="button" data-action="reset">Reset generated layout</button>
         <output class="editor-status" role="status"></output>
       </div>
       <div class="editor-row">
@@ -65,7 +64,7 @@ export class LevelEditor {
         <output class="editor-time"></output>
       </div>
       <div class="editor-palette" role="group" aria-label="Items"></div>
-      <p>To publish this layout as the default: download it, replace src/default-level.json with the downloaded file, then rebuild/deploy. Use default level discards the browser draft.</p>
+      <p>To publish this layout as the default: download it, replace src/level.json with the downloaded file, then rebuild/deploy. Use default level discards the browser draft.</p>
       <p>Drag any item to move it. Right-click an item to delete it. Select an item below, then click empty space to place copies. Move / Esc stops placing.</p>`;
     this.entry.after(this.panel);
     this.slider = this.panel.querySelector('input[type="range"]')!;
@@ -90,23 +89,16 @@ export class LevelEditor {
       canvas.focus();
       this.tick();
     });
-    this.panel.querySelector('[data-action="reset"]')!.addEventListener('click', () => {
-      if (!confirm('Replace all manual edits with the generated layout?')) return;
-      game.level = buildSchedule();
-      this.hovered = null;
-      game.edit();
-      this.save();
-    });
     this.panel.querySelector('[data-action="download"]')!.addEventListener('click', () => {
       const url = URL.createObjectURL(new Blob([JSON.stringify(game.level, null, 2) + '\n'], { type: 'application/json' }));
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'default-level.json';
+      link.download = 'level.json';
       document.body.append(link);
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
-      this.status.textContent = 'Download requested: default-level.json';
+      this.status.textContent = 'Download requested: level.json';
     });
     const fileInput = this.panel.querySelector<HTMLInputElement>('input[type="file"]')!;
     this.panel.querySelector('[data-action="import"]')!.addEventListener('click', () => fileInput.click());

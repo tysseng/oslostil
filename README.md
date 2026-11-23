@@ -78,14 +78,14 @@ The panel and its shortcuts are available only in `pnpm dev` and the dev build, 
 
 ## Level editor
 
-Click **Level editor** on the title screen to edit the generated layout. Scrub **Song position** to reach any part of the level; the scene stays frozen while editing.
+Click **Level editor** on the title screen to edit the bundled layout. Scrub **Song position** to reach any part of the level; the scene stays frozen while editing.
 
 - Drag an existing item to move it, or right-click it to delete it.
 - Select a sprite in the visual palette, then click empty space to place copies. The selected tool stays active; **Move** or **Esc** stops placing. Existing items remain draggable with any tool selected.
 - **Play level** starts the edited level from the beginning. **Back to editor** returns to the editing position.
-- Changes save automatically in this browser and are used for subsequent games, including after reload. They do not change the repository or other browsers. **Reset generated layout** restores the original generated items after confirmation.
-- **Download level** exports the current layout as `default-level.json`. **Import level** opens a previously downloaded JSON layout, validates it, and asks before replacing your draft.
-- To make a downloaded layout the default for everyone, replace **`src/default-level.json`** with that file, then rebuild/deploy. The file ships bundled with both builds (no server needed). Its initial value, `null`, uses the generator; a JSON array replaces the generator, including `[]` for an empty level.
+- Changes save automatically in this browser and are used for subsequent games, including after reload. They do not change the repository or other browsers.
+- **Download level** exports the current layout as `level.json`. **Import level** opens a previously downloaded JSON layout, validates it, and asks before replacing your draft.
+- To make a downloaded layout the default for everyone, replace **`src/level.json`** with that file, then rebuild/deploy. The file contains all 350 original items with their exact timings and ships bundled with both builds (no server needed). The layout is a JSON array; `[]` means an empty level.
 - **Use default level** discards your browser-local draft and loads the bundled default. Use this after publishing a new default if your browser still has an older draft; existing drafts otherwise take precedence.
 
 The editor covers enemies, pickups, hazards and rideable trams, not background scenery, companions or the scripted boss.
@@ -97,9 +97,9 @@ index.html                 page shell
 src/main.ts                entry: wiring, frame loop, resume-after-reload
 src/config.ts              screen size, tempo, bar grid, seeded RNG
 src/timeline.ts            song sections, lyric timings, banners, ninja/colour-change moments, boss timing
-src/schedule.ts            enemy types and the beat-synced spawn schedule
+src/schedule.ts            enemy types and sprite metadata
 src/level.ts               shared level validation and bundled-default loading
-src/default-level.json     published layout (null = generated)
+src/level.json             complete published level layout
 src/state.ts               game state types
 src/game.ts                rules: physics, combat, scoring, keyboard
 src/audio.ts               song playback (the master clock) and sound effects

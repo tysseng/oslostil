@@ -1,6 +1,6 @@
 import { GROUND } from './config';
-import defaultLevel from './default-level.json';
-import { buildSchedule, TYPES, type ScheduledEvent } from './schedule';
+import defaultLevel from './level.json';
+import { TYPES, type ScheduledEvent } from './schedule';
 
 function isEvent(value: unknown): value is ScheduledEvent {
   if (!value || typeof value !== 'object') return false;
@@ -21,7 +21,7 @@ export function parseLevel(value: unknown): ScheduledEvent[] {
   return value.map(({ type, arr, y, rel, label, fromBoss }) => ({ type, arr, y, rel, label, fromBoss }));
 }
 
-/** null keeps the generated layout; an array (including []) replaces it. */
+/** Each load returns a fresh copy of the bundled layout. */
 export function loadDefaultLevel(): ScheduledEvent[] {
-  return defaultLevel === null ? buildSchedule() : parseLevel(defaultLevel);
+  return parseLevel(defaultLevel);
 }
