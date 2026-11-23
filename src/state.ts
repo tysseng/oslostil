@@ -1,5 +1,7 @@
-import { GROUND, PX } from './config';
-import { buildSchedule, type ScheduledEvent } from './schedule';
+import { GROUND, PX, W } from './config';
+import { TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
+import { loadDefaultLevel } from './level';
+import { sectionAt } from './timeline';
 
 /** Throws you start with, before collecting any tickets. */
 export const START_AMMO = 3;
@@ -70,9 +72,17 @@ export interface GameState {
   best?: number;
 }
 
-export function createState(): GameState {
+export const eventSpeed = (e: ScheduledEvent): number => e.rel ?? sectionAt(e.arr).speed + TYPES[e.type].own;
+export const spawnTime = (e: ScheduledEvent): number =>
+  e.arr - (W + 100 - PX) / eventSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
+
+export function createEnemy(e: ScheduledEvent): Enemy {
+  return { ...e, rel: eventSpeed(e), hp: TYPES[e.type].hp, y: e.y ?? TYPES[e.type].y };
+}
+
+export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {
   return {
-    ev: buildSchedule(), ei: 0, enemies: [], stars: [], parts: [], pops: [],
+    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [],
     score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0,
     hp: 5, inv: 0, fx: PX - 22, mx: PX - 46,
     p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, atk: 0, cd: 0, star: 0 },

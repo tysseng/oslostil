@@ -1,11 +1,8 @@
-// Dev mode: seek slider, jump buttons and time marks under the game. Toggle with the key left of «1».
+// Development-only seek slider, jump buttons and time marks.
 import { BAR, BEAT, PH, WIN_AT } from '../config';
 import type { Game } from '../game';
 import { JUMPS } from '../timeline';
 import './devpanel.css';
-
-/** The key left of «1»: `Backquote` on US/Windows layouts, `IntlBackslash` (§) on Nordic Mac keyboards. */
-export const DEV_KEYS = ['Backquote', 'IntlBackslash'];
 
 export const fmtTime = (t: number): string => {
   const m = Math.floor(t / 60);
@@ -32,19 +29,20 @@ export class DevPanel {
         <input type="range" min="0" max="${(WIN_AT - 0.5).toFixed(1)}" step="0.05" value="0" aria-label="Song position">
         <span class="time">0:00.00 · bar 1.1</span></div>
       <div class="row jumps"></div>
-      <div class="row"><span>T = mark time · § / \` = dev mode on/off</span><span class="marks"></span></div>`;
+      <div class="row"><span>1 = dev panel · 2 = mark time · 3 / 4 = sync - / +50 ms</span><span class="marks"></span></div>`;
     after.after(this.el);
     this.slider = this.el.querySelector('input')!;
     this.time = this.el.querySelector('.time')!;
     this.marksEl = this.el.querySelector('.marks')!;
     const refocus = () => { (document.activeElement as HTMLElement | null)?.blur(); focusTarget.focus(); };
     this.slider.addEventListener('input', () => { this.dragging = true; this.showTime(+this.slider.value); });
-    this.slider.addEventListener('change', () => { this.dragging = false; game.seek(+this.slider.value); refocus(); });
+    const seek = (t: number) => game.mode === 'editor' ? game.edit(t) : game.seek(t);
+    this.slider.addEventListener('change', () => { this.dragging = false; seek(+this.slider.value); refocus(); });
     const jumps = this.el.querySelector('.jumps')!;
     for (const [name, t] of JUMPS) {
       const b = document.createElement('button');
       b.textContent = name;
-      b.addEventListener('click', () => { game.seek(t); refocus(); });
+      b.addEventListener('click', () => { seek(t); refocus(); });
       jumps.append(b);
     }
     game.onMark = (t) => {
@@ -56,13 +54,33 @@ export class DevPanel {
     this.el.hidden = !enabled;
   }
 
-  toggle(): void { this.enabled = !this.enabled; this.el.hidden = !this.enabled; }
+  toggle(): void {
+    if (!__DEV_MODE_DEFAULT__) return;
+    this.enabled = !this.enabled;
+    this.el.hidden = !this.enabled;
+  }
+
+  keyDown(e: KeyboardEvent): boolean {
+    if (!__DEV_MODE_DEFAULT__ || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return false;
+    const key = e.key;
+    if (!['1', '2', '3', '4'].includes(key)) return false;
+    e.preventDefault();
+    if (e.repeat) return true;
+    if (key === '1') this.toggle();
+    else if (key === '2') {
+      if (this.game.mode === 'play' || this.game.mode === 'pause' || this.game.mode === 'editor') this.game.onMark(this.game.s.lastT);
+    } else {
+      this.game.audio.nudgeSync(key === '4' ? 0.05 : -0.05);
+      this.game.syncToast = 1.5;
+    }
+    return true;
+  }
 
   private showTime(t: number): void { this.time.textContent = `${fmtTime(t)} · ${barLabel(t)}`; }
 
   tick(): void {
     if (!this.enabled || this.dragging) return;
-    if (this.game.mode === 'play' || this.game.mode === 'pause') {
+    if (this.game.mode === 'play' || this.game.mode === 'pause' || this.game.mode === 'editor') {
       this.slider.value = String(this.game.s.lastT);
       this.showTime(this.game.s.lastT);
     }

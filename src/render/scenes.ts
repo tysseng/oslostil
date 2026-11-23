@@ -4,11 +4,18 @@ import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, 
 import trainGreenUrl from '../../assets/vehicles/hires/local-train-green.png';
 import trainTomatoUrl from '../../assets/vehicles/hires/local-train-tomato-soup.png';
 import airportExpressUrl from '../../assets/vehicles/hires/airport-express.png';
+import subwayUrl from '../../assets/vehicles/hires/subway-new.png';
 import busGreenUrl from '../../assets/vehicles/hires/bus-green.png';
 import busRedUrl from '../../assets/vehicles/hires/bus-red.png';
 import tokyoStreetUrl from '../../assets/backgrounds/tokyoslo-buildings.png';
 import tokyoFarUrl from '../../assets/backgrounds/tokyoslo-far.png';
-import { R, ctx, loadImage, ready, text } from './draw';
+import classicStreetUrl from '../../assets/backgrounds/oslo-classic-buildings.png';
+import tokyoStreetV2Url from '../../assets/backgrounds/tokyoslo-v2-buildings.png';
+import burningTramUrl from '../../assets/vehicles/hires/tram-burning.png';
+import burningTram from '../../assets/vehicles/hires/tram-burning.json';
+import fireUrl from '../../assets/sprites/fire.png';
+import fireMeta from '../../assets/sprites/fire.json';
+import { HIRES_PPM, R, ctx, drawVehicle, loadImage, meta, ready, text } from './draw';
 import { drawPlatformMachine } from './sprites';
 
 export const SKY: Record<SceneName, [string, string]> = {
@@ -18,7 +25,6 @@ export const SKY: Record<SceneName, [string, string]> = {
 const GROUND_COLOR: Record<SceneName, string> = {
   station: '#2b2f45', glitch: '#2b1f45', neon: '#160022', boss: '#160012', map: '#0a2e33', map2: '#330a14', chaos: '#2a1206',
 };
-const PLACES = ['TJUVHOLMEN', 'KAMPEN', 'SKULLERUD', 'VULKAN', 'TORSHOV', 'VALHALL', 'ORMØYA', 'SINSEN'];
 // Trains passing through Sandvika stasjon: the hi-res masters (100 px per metre), trimmed and drawn smoothly at
 // TRAIN_PPM. Pixel-art versions (pixel_trains.py) are parked until new sprites are made.
 const TRAIN_GREEN = loadImage(trainGreenUrl);
@@ -61,6 +67,26 @@ const TRAIN_RUNS: TrainRun[] = [
   { img: TRAIN_TOMATO, path: passing(barT(26) + 0.5, W + 10, -210) }, // pre-chorus 1: another one the other way
 ];
 
+/**
+ * Level 4 (bar 42, «LANGUAGE CHANGED»): a 3-car T-bane train arrives from the left and comes to a stop.
+ * Worked out in the frame of the map background (it rests at SUBWAY.rest px/s to the left on screen):
+ * it comes in at `approach` px/s, brakes evenly for `brake` s and then stands still, drifting off with the city.
+ * The nose peaks just inside the right edge.
+ */
+const SUBWAY_IMG = loadImage(subwayUrl);
+const SUBWAY = { stop: barT(42) + 4.5, approach: 320, brake: 4, rest: SECTIONS.find((s) => s.id === 'verse2')!.speed * 0.8, noseStop: 220 };
+function drawSubway(t: number): void {
+  if (t < barT(42) - 0.5 || !ready(SUBWAY_IMG)) return;
+  const { stop, approach, brake, rest, noseStop } = SUBWAY, before = stop - t, a = approach / brake;
+  let frame: number; // nose position relative to where it stops, in the background's frame
+  if (before <= 0) frame = 0;
+  else if (before <= brake) frame = -(a * before * before) / 2;
+  else frame = -(approach * brake) / 2 - approach * (before - brake);
+  const nose = noseStop + frame + rest * before; // background frame → screen
+  const w = (meta(SUBWAY_IMG).box[2] * TRAIN_PPM) / HIRES_PPM;
+  drawVehicle(SUBWAY_IMG, nose - w, GROUND + WHEEL_M * TRAIN_PPM, TRAIN_PPM); // the ground strip covers the wheels
+}
+
 function drawTrains(t: number): void {
   for (const run of TRAIN_RUNS) {
     if (!ready(run.img)) continue;
@@ -78,60 +104,8 @@ function drawTrains(t: number): void {
  */
 const BUS_GREEN = loadImage(busGreenUrl);
 const BUS_RED = loadImage(busRedUrl);
-const HIRES_PPM = 100;
 /** game px per metre for the buses: a 2.7 m door becomes about 36 px, a bit taller than a girl */
 const BUS_PPM = 13.2;
-interface VehicleMeta { box: [number, number, number, number]; sign: [number, number, number, number] | null }
-const metas = new Map<HTMLImageElement, VehicleMeta>();
-/**
- * The bounding box of the non-transparent pixels (the bottom row is the wheel bottoms) and of the amber
- * destination sign (so a mirrored bus can have its sign drawn the right way round).
- */
-function meta(img: HTMLImageElement): VehicleMeta {
-  let m = metas.get(img);
-  if (!m) {
-    const c = document.createElement('canvas');
-    c.width = img.naturalWidth; c.height = img.naturalHeight;
-    const x = c.getContext('2d', { willReadFrequently: true })!;
-    x.drawImage(img, 0, 0);
-    const d = x.getImageData(0, 0, c.width, c.height).data;
-    const box = [c.width, c.height, 0, 0], sign = [c.width, c.height, 0, 0];
-    const grow = (b: number[], i: number, y: number) => { b[0] = Math.min(b[0], i); b[1] = Math.min(b[1], y); b[2] = Math.max(b[2], i); b[3] = Math.max(b[3], y); };
-    for (let y = 0; y < c.height; y++) for (let i = 0; i < c.width; i++) {
-      const o = (y * c.width + i) * 4;
-      if (d[o + 3] > 8) grow(box, i, y);
-      if (d[o + 3] > 200 && d[o] > 200 && d[o + 1] > 130 && d[o + 1] < 210 && d[o + 2] < 90) grow(sign, i, y); // amber text
-    }
-    const pad = 14; // the dark sign box around the text
-    m = {
-      box: [box[0], box[1], box[2] - box[0] + 1, box[3] - box[1] + 1],
-      sign: sign[2] > 0 ? [sign[0] - pad, sign[1] - pad, sign[2] - sign[0] + 1 + 2 * pad, sign[3] - sign[1] + 1 + 2 * pad] : null,
-    };
-    metas.set(img, m);
-  }
-  return m;
-}
-/**
- * Draw a hi-res vehicle with its left end at screen x and its wheel bottoms on y. `flip` mirrors it (front on
- * the left) but keeps the destination sign readable.
- */
-function drawVehicle(img: HTMLImageElement, x: number, y: number, ppm: number, flip = false): void {
-  if (!ready(img)) return;
-  const { box: [sx, sy, sw, sh], sign } = meta(img), k = ppm / HIRES_PPM, w = sw * k, h = sh * k;
-  if (x > W || x + w < 0) return;
-  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-  if (!flip) ctx.drawImage(img, sx, sy, sw, sh, x, y - h, w, h);
-  else {
-    ctx.save(); ctx.translate(x + w, 0); ctx.scale(-1, 1);
-    ctx.drawImage(img, sx, sy, sw, sh, 0, y - h, w, h);
-    ctx.restore();
-    if (sign) {
-      const [ax, ay, aw, ah] = sign;
-      ctx.drawImage(img, ax, ay, aw, ah, x + (sx + sw - ax - aw) * k, y - h + (ay - sy) * k, aw * k, ah * k);
-    }
-  }
-  ctx.imageSmoothingEnabled = false;
-}
 /** Buses waiting at the terminal stops: roof-layer x of the left end. The first is on screen at the start. */
 const WAITING_BUSES: [HTMLImageElement, number][] = [[BUS_GREEN, 120], [BUS_RED, 560], [BUS_GREEN, 950]];
 /** The red bus driving through behind them, right to left: start time and screen speed. */
@@ -199,24 +173,31 @@ function roofSection(k: RoofKind, x: number): void {
 const wrap = (v: number, m: number) => ((v % m) + m) % m;
 
 /**
- * Tokyoslo: from the colour change (COLOR_T, 1:42.0) to the end of the song the city is Oslo with Asian
- * features (STAGE_DESIGN.md). Two pixel-art layers from tools/backgrounds/tokyoslo.py, bottom row on GROUND:
- * a far skyline and the street of landmarks with neon signs and the TOKYOSLO billboard.
+ * Level 4 and Tokyoslo: one street of classic Oslo buildings in two styles (tools/backgrounds/karljohan.py).
+ * Classic British-style Oslo under the teal sky from bar 42; at the colour change (COLOR_T, 1:42.0) every
+ * building swaps to its Tokyoslo style in place, and Tokyoslo stays for the rest of the song (STAGE_DESIGN.md).
+ * Both images share one layout and one scroll anchor (the start of level 4), so nothing moves at the switch.
+ * Layers are pixel art, bottom row on GROUND.
  */
+const CLASSIC_STREET = loadImage(classicStreetUrl);
+const TOKYO_STREET_V2 = loadImage(tokyoStreetV2Url);
+/** the first Tokyoslo draft (tools/backgrounds/tokyoslo.py), kept for comparison: set TOKYO_VERSION to 1 */
+const TOKYO_STREET_V1 = loadImage(tokyoStreetUrl);
 const TOKYO_FAR = loadImage(tokyoFarUrl);
-const TOKYO_STREET = loadImage(tokyoStreetUrl);
-const TOKYO_FAR_PARALLAX = 0.15, TOKYO_STREET_PARALLAX = 0.45;
-/** screen x of the street's left end at COLOR_T, so the billboard is in view when Tokyoslo appears */
-const TOKYO_STREET_X0 = 30;
-let tokyoBx0: number | undefined;
-/** background scroll at COLOR_T (the same integration as scrollAt in game.ts) */
-function tokyoStartBx(): number {
-  if (tokyoBx0 === undefined) {
-    let x = 0;
-    for (let u = 0; u < COLOR_T; u += 0.05) x += sectionAt(u).speed * Math.min(0.05, COLOR_T - u);
-    tokyoBx0 = x;
+const TOKYO_VERSION = 2 as 1 | 2;
+const STREET_PARALLAX = 0.45, TOKYO_FAR_PARALLAX = 0.15;
+/** screen x of the street's left end when level 4 starts */
+const STREET_X0 = 40;
+/** background scroll at a song time (the same integration as scrollAt in game.ts), cached */
+const bxCache = new Map<number, number>();
+function bxAt(t: number): number {
+  let x = bxCache.get(t);
+  if (x === undefined) {
+    x = 0;
+    for (let u = 0; u < t; u += 0.05) x += sectionAt(u).speed * Math.min(0.05, t - u);
+    bxCache.set(t, x);
   }
-  return tokyoBx0;
+  return x;
 }
 /** Repeat an image horizontally across the screen with its bottom on GROUND. */
 function tileLayer(img: HTMLImageElement, x0: number): void {
@@ -224,10 +205,14 @@ function tileLayer(img: HTMLImageElement, x0: number): void {
   const w = img.naturalWidth;
   for (let x = wrap(x0, w) - w; x < W; x += w) ctx.drawImage(img, Math.round(x), GROUND - img.naturalHeight);
 }
+const streetX = (bx: number): number => STREET_X0 - (bx - bxAt(barT(42))) * STREET_PARALLAX;
+function drawClassicOslo(bx: number): void {
+  tileLayer(CLASSIC_STREET, streetX(bx));
+}
 function drawTokyoslo(bx: number): void {
-  const d = bx - tokyoStartBx();
-  tileLayer(TOKYO_FAR, -d * TOKYO_FAR_PARALLAX);
-  tileLayer(TOKYO_STREET, TOKYO_STREET_X0 - d * TOKYO_STREET_PARALLAX);
+  tileLayer(TOKYO_FAR, -(bx - bxAt(COLOR_T)) * TOKYO_FAR_PARALLAX);
+  if (TOKYO_VERSION === 2) tileLayer(TOKYO_STREET_V2, streetX(bx));
+  else tileLayer(TOKYO_STREET_V1, 30 - (bx - bxAt(COLOR_T)) * 0.45);
 }
 
 export function sky(c: [string, string]): void {
@@ -237,6 +222,58 @@ export function sky(c: [string, string]): void {
 }
 
 /** @param bx background scroll distance  @param beatFlash 0..1, peaks on each beat */
+// ── Kollektivkaos: wrecked, burning trams (vector tram, darkened) with pixel-art flame sprites on top
+const BURNING_TRAM = loadImage(burningTramUrl), FIRE = loadImage(fireUrl);
+const BT_PPM = 6, BT_PERIOD = 760, BT_PARALLAX = 0.35;
+const BT_SET = [ // x within the period, tilt, mirrored, rail height above GROUND
+  { x: 0, rot: -0.12, flip: false, lift: 10 },
+  { x: 200, rot: 0.08, flip: true, lift: 4 },
+  { x: 390, rot: -0.05, flip: false, lift: 14 },
+  { x: 580, rot: 0.13, flip: true, lift: 6 },
+];
+let btDark: HTMLCanvasElement | null = null;
+function darkTram(): HTMLCanvasElement | null { // pre-darkened once so the trams stay behind the action
+  if (btDark || !ready(BURNING_TRAM)) return btDark;
+  const c = document.createElement('canvas'); c.width = BURNING_TRAM.naturalWidth; c.height = BURNING_TRAM.naturalHeight;
+  const x = c.getContext('2d')!;
+  x.drawImage(BURNING_TRAM, 0, 0);
+  x.globalCompositeOperation = 'source-atop'; x.fillStyle = 'rgba(20,6,10,0.42)'; x.fillRect(0, 0, c.width, c.height);
+  return (btDark = c);
+}
+function fireSprite(kind: keyof typeof fireMeta.sprites, gx: number, gy: number, t: number, seed: number): void {
+  const sp = fireMeta.sprites[kind], c = fireMeta.cell;
+  const f = Math.floor(t * sp.fps + seed * 3.7) % sp.frames;
+  ctx.drawImage(FIRE, f * c, sp.row * c, c, c, Math.round(gx - c / 2), Math.round(gy - c), c, c);
+}
+function drawBurningTrams(t: number, bx: number): void {
+  const img = darkTram();
+  if (!img || !ready(FIRE)) return;
+  const u = BT_PPM / burningTram.unitsPerMetre, k = BT_PPM / HIRES_PPM, len = burningTram.length * u;
+  const [vx, vy] = [-10, -40], rail = burningTram.rail; // SVG viewBox origin; PNG is 2 px per SVG unit
+  for (let i = 0; i < BT_SET.length; i++) {
+    const s = BT_SET[i], x0 = wrap(s.x - bx * BT_PARALLAX, BT_PERIOD) - len;
+    if (x0 > W || x0 + len < 0) continue;
+    const cx = x0 + len / 2, cy = GROUND - s.lift, cos = Math.cos(s.rot), sin = Math.sin(s.rot), m = s.flip ? -1 : 1;
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(s.rot); ctx.scale(m, 1);
+    ctx.drawImage(img, -len / 2 + vx * u, (vy - rail) * u, img.width * k, img.height * k);
+    ctx.restore();
+    ctx.imageSmoothingEnabled = false;
+    const at = (ax: number, ay: number): [number, number] => { // tram SVG point → game px, following the tilt
+      const lx = m * (ax * u - len / 2), ly = (ay - rail) * u;
+      return [cx + lx * cos - ly * sin, cy + lx * sin + ly * cos];
+    };
+    burningTram.smoke.forEach((p, j) => { // puffs rise and drift, two per anchor, staggered
+      for (let n = 0; n < 2; n++) {
+        const life = (t * 0.6 + j * 0.37 + n * 0.5 + i * 0.13) % 1, [gx, gy] = at(p.x, p.y);
+        const sp = fireMeta.sprites.smoke, c = fireMeta.cell, f = Math.min(sp.frames - 1, Math.floor(life * sp.frames));
+        ctx.drawImage(FIRE, f * c, sp.row * c, c, c, Math.round(gx - c / 2 + life * 10), Math.round(gy - c - life * 26), c, c);
+      }
+    });
+    burningTram.flames.forEach((p, j) => { const [gx, gy] = at(p.x, p.y); fireSprite(p.kind as 'big' | 'small', gx, gy, t, i * 7 + j); });
+  }
+}
+
 export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: number): void {
   const name: SceneName = scene === 'map' && t >= COLOR_T ? 'map2' : scene;
   sky(SKY[name]);
@@ -285,21 +322,13 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
       const mx = wrap(i * 50 - bx * 0.2, 1000) - 50;
       R(mx, 20 + ((i * 37) % 100), 40, 1, line); R(mx + 20, 20 + ((i * 37) % 100), 1, 30, line);
     }
-    if (name === 'map2') drawTokyoslo(bx); // 1:42.0: the city turns into Tokyoslo
-    else for (let i = 0; i < PLACES.length; i++) { // «hele Oslo på en skjerm» – place signs
-      const sx = i * 260 + 200 - (bx - barT(42) * 145) * 0.8;
-      if (sx > -80 && sx < W + 40) { R(sx, GROUND - 40, 2, 40, '#ccc'); R(sx - 30, GROUND - 52, 62, 12, '#0b3d91'); text(PLACES[i], sx + 1, GROUND - 49, '#fff', 4, 'center', null); }
-    }
+    // classic British-style Oslo, then at 1:42.0 the same street in Tokyoslo style (no place-name signs)
+    if (name === 'map2') drawTokyoslo(bx);
+    else drawClassicOslo(bx);
+    if (name === 'map') drawSubway(t); // in front of the buildings
   } else if (name === 'chaos') { // «brennende trikker og busser på skrå» – in burning Tokyoslo
     drawTokyoslo(bx);
-    for (let i = 0; i < 6; i++) {
-      const bx2 = wrap(i * 110 - bx * 0.35, 660) - 80;
-      ctx.save(); ctx.translate(bx2 + 40, GROUND - 20); ctx.rotate(-0.18 + (i % 3) * 0.12);
-      R(-40, -20, 80, 22, i % 2 ? '#c0352b' : '#1b56c8');
-      for (let w = 0; w < 5; w++) R(-36 + w * 15, -16, 10, 7, '#ffb347');
-      ctx.restore();
-      for (let k = 0; k < 6; k++) R(bx2 + 20 + k * 8, GROUND - 46 - ((k * 11 + Math.floor(t * 12)) % 18), 5, 8, k % 2 ? '#ff7b00' : '#ffd000');
-    }
+    drawBurningTrams(t, bx);
     for (let i = 0; i < 30; i++) R(wrap(r() * W - bx * 0.05, W), wrap(r() * GROUND - t * 40, GROUND), 1, 1, '#ffb347'); // embers
   }
   R(0, GROUND, W, H - GROUND, GROUND_COLOR[name]);

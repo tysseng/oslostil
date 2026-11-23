@@ -62,7 +62,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
    - **`sprites.ts`:** the girls', Automat Victoria's and the enemies' sprite sheets, `drawPlatformMachine`, `drawEnemy` (sheet cell bottom-centred at `(x, GROUND − e.y)`, frame `floor(t × fps) % frames`), `drawTram` (HD image or placeholder, x = nose) and `drawBoss` (still rectangles).
    - **`scenes.ts`:** backgrounds per scene, plus the Sandvika trains (`TRAIN_RUNS`, `stoppingTrain`) and the platform machines.
    - **`screens.ts`:** the game frame (scene, flashes, enemies, companions, HUD, banners, chorus calls), Victoria's wake animation and moods, and the pause, title and win screens.
-10. `src/ui/`: `subtitles.ts` (HTML layer over the canvas, sharp text) and `devpanel.ts`.
+10. `src/ui/`: `subtitles.ts` (HTML layer over the canvas, sharp text), `devpanel.ts` and `editor.ts` (frozen playfield, visual palette, dragging, deletion and browser-local layout saving).
 11. `ASSETS.md`: every visual and its status. `ART_BRIEF.md`: the art rules, which also matter when you place art in the game.
 
 ## Key concepts
@@ -83,19 +83,27 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 - **Two resolutions:** the canvas is 1280 × 720 (320 × 180 game px × `RES` 4).
   - Rectangles and pixel sprites are drawn in game px with no smoothing, so they stay blocky.
   - Text and hi-res images keep their detail.
-- **Vehicles use smooth hi-res images for now.** Trains and buses are drawn straight from the masters in `assets/vehicles/hires/` (100 px per metre) with `drawVehicle` in `scenes.ts`, which trims them at load. Sizes: trains `TRAIN_PPM` 10 game px per metre, waiting buses `BUS_PPM` 13.2, the driving bus 80 % of that (it's further back). Joakim didn't like the pixel versions; new vehicle sprites come later. (The tram obstacle still expects a `tram-hd.png` from `game_hd.py`.)
+- **Vehicles use smooth hi-res images for now.** Trains and buses are drawn straight from the masters in `assets/vehicles/hires/` (100 px per metre) with `drawVehicle` in `scenes.ts`, which trims them at load. Sizes: trains `TRAIN_PPM` 10 game px per metre, waiting buses `BUS_PPM` 13.2, the driving bus 80 % of that (it's further back). Joakim didn't like the pixel versions; new vehicle sprites come later. The tram obstacle (`drawTram` in `sprites.ts`) uses `tram-new.png` the same way at `TRAM_PPM` 10, mirrored so its front leads. `meta`, `drawVehicle` and `HIRES_PPM` live in `draw.ts`.
 - **Sprites** are sheets of fixed-size cells, bottom-aligned (feet, base or wheels on the bottom row) and horizontally centred.
 - **Banners:** only the newest one is shown, so a new beat replaces the previous one at once.
 - **Lyric subtitles** are an HTML overlay, not canvas. They use white text with a black outline and no background box.
 
 ### Dev mode
 
-- **Toggle:** the key left of «1» (`§` or `` ` ``). It's on by default in `pnpm dev` and the dev build.
-- **What it shows:** a seek slider and jump buttons (they seek the audio *and* the game state), and **T** to mark the current time. Joakim uses T to time things by ear.
+- **Toggle:** **1**. The panel and shortcuts are available only in `pnpm dev` and the dev build, gated by `__DEV_MODE_DEFAULT__`; the release build cannot activate them.
+- **What it shows:** a seek slider and jump buttons (they seek the audio *and* the game state), and **2** to mark the current time while playing, paused or editing with the panel enabled. **3 / 4** adjust sync -/+50 ms. `DevPanel.keyDown` handles these before gameplay/editor input and UI button focus checks; text/file inputs and modifier combinations are ignored.
 - **Testing hook:** `window.__oslo.seek(t)`, `window.__oslo.snap(t, lead = 1.5)` and `window.__oslo.game` (state, `pause()`, `resume()`).
   - To check a moment: `snap(t)` seeks to `t − lead`, simulates to `t` at 60 fps with no input, pauses, draws the frame without the pause overlay and returns a PNG data URL. It works even when the tab is hidden (where `requestAnimationFrame` stops, so seek + wait doesn't advance). The canvas keeps that frame until the next animation frame.
   - Without input the player gets hit, so she may be blinking (invisible) in a snap.
   - Audio only starts after a key press (browser rule); `seek` handles a suspended context.
+
+### Level editor
+
+- The title-screen **Level editor** button enters `editor` mode. Its own song-position slider changes the frozen scene without running physics or playing audio.
+- `Game.level` holds the editable schedule. `seek` and `start` always use it. `editor.ts` saves it under `oslostil-level-v1` in local storage and validates it on load; failures appear in the editor status.
+- `level.ts` validates imported JSON and loads `src/default-level.json`: `null` uses the generator, an array replaces it. Download level exports that same array format; replace the repository file and rebuild/deploy to publish it. Import level validates before asking to replace the draft. Browser drafts override the bundled default until Use default level discards them.
+- Manual positioning stores `arr`, height `y`, and fixed relative speed `rel`, so dragging across a section boundary does not change the item's screen position. `eventSpeed`, `createEnemy` and `spawnTime` in `state.ts` are shared with gameplay; spawn order is based on entry time, not arrival time.
+- Trams can also be raised: rendering and ride/side-hit collision both use their edited height. Scripted scenery, companions and the boss are not editable.
 
 ## Story beats already built
 
@@ -109,6 +117,9 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 | after that | She talks on lyrics about her («automat», «hun …»), cheers on chorus «OSLOSTIL!» calls and the final hit, and cheers on the win screen | `machineMood` |
 | 0:41 | Airport express whisks through right to left (620 px/s) | `TRAIN_RUNS` |
 | 0:50 | Tomato soup | `TRAIN_RUNS` |
+| 1:20.7 (level 4) | A 3-car T-bane train (`subway-new.png`) arrives from the left, brakes and stops, then drifts off with the city | `drawSubway`, `SUBWAY` in `scenes.ts` |
+| 1:20.7 → 1:42.0 | Level 4 street: classic British-style Oslo (`oslo-classic-buildings.png`) | `drawClassicOslo` in `scenes.ts` |
+| 1:42.0 → end | The same street swaps to Tokyoslo style in place (`tokyoslo-v2-buildings.png`, same layout and scroll anchor) plus the far skyline; also in Kollektivkaos and the boss. `TOKYO_VERSION = 1` brings back the first draft | `drawTokyoslo`, `streetX` |
 | 1:40.15 | Ninja mode, white flash, girls switch to ninja sprites | `NINJA_T` |
 | 1:42.0 | Screen changes colour (map → red), red flash, no text | `COLOR_T` |
 | bar 70 → 76 | Boss Kaos-trikken, final hit 2:27.6, win screen 2.2 s later | `BOSS_AT`, `FINAL_HIT`, `WIN_AT` |
@@ -140,11 +151,12 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 ## Open tasks for the code side
 
 1. **Enemy sprites: done** (22 Nov). `drawEnemy` draws `assets/sprites/enemies.png` using `SHEET` from `enemies.json`; `TYPES` `w`/`h` follow the JSON, so a regenerated sheet needs no code change unless rows are added. Heights (`y`) are unchanged and still work: standing clears pigeons, drones and fireballs; shots, suitcases, snow and fire need a jump; every pickup is reachable with one jump. **Left:** the tram's art (see below).
-   - **Tram (22 Nov, Joakim):** full length, a moving platform. Constants in `schedule.ts` (`TRAM_LEN` 242, `TRAM_ROOF` 31, `TRAM_OWN` 40, `TRAM_EDGE`, `TRAM_WARN`); the rules are `Game.tram()`.
+   - **Tram (22 Nov, Joakim):** full length, a moving platform. Constants in `schedule.ts` (`TRAM_PPM` 10, `TRAM_LEN` 305, `TRAM_ROOF` 38, `TRAM_OWN` 40, `TRAM_EDGE`, `TRAM_WARN`); the rules are `Game.tram()`.
      - The tram's x is its **nose** (left end), which reaches the player's spot on the beat. It spawns `TRAM_WARN` s early so the blinking «!» shows before it enters.
      - **Side hit:** if the player is below roof height when the body reaches her, she dies at once (`die()`), unless she is invincible, in which case she passes through.
      - **Riding:** landing on the roof sets `p.ride`; the tram carries her left at its relative speed down to `TRAM_EDGE`, she can jump and slide there, and when the tail passes she falls to the ground.
-     - **Art:** `drawTram` uses `assets/sprites/tram-hd.png` through `import.meta.glob`, so a missing file is fine and falls back to a placeholder of the same size. Requested as Requests #2 in `ASSETS.md`.
+     - **Art:** the new light-blue tram, `assets/vehicles/hires/tram-new.png`.
+     - **Times:** 1:09.9, 1:17.7, 1:30.5 (moved from 1:29.5, after the T-bane train), 1:45.3, 1:57.1, 2:05.0, 2:12.8.
 2. **Kaos-trikken boss sprite:** request it from the art side via `ASSETS.md`.
 3. **Ideas in `IDEAS.md`** (Joakim decides the order):
    - a tram crashing into Eplehuset;
@@ -198,5 +210,5 @@ Where they live:
   - a re-used staging path has delivered a stale copy before;
   - check `git status` before and after.
 - **The song file** is `assets/oslostil.mp3`: the final mix trimmed to 150 s.
-- **`outputLatency`** is subtracted in the clock. `[` and `]` nudge sync by ±50 ms, saved per browser.
+- **`outputLatency`** is subtracted in the clock. **3 / 4** nudge sync by -/+50 ms in dev builds, saved per browser.
 - **Testing at a specific moment:** seek a bit before it, because `seek` resets the game state (score, enemies) by design.

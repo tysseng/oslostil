@@ -1,0 +1,19 @@
+.editor-entry, .level-editor button {
+  font: inherit; font-size: 10px; color: var(--fg); background: var(--frame);
+  border: 1px solid var(--muted); border-radius: 4px; padding: 8px; cursor: pointer;
+}
+.editor-entry { border-color: var(--cyan); }
+.level-editor { width: min(96vw, 1100px); font-size: 10px; line-height: 1.7; }
+.editor-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.editor-row input { flex: 1; min-width: 100px; accent-color: var(--cyan); }
+.editor-status { color: var(--cyan); }
+.editor-time { min-width: 9ch; }
+.editor-palette { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 2px 8px; }
+.editor-palette button { flex: 0 0 78px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; font-size: 8px; }
+.editor-palette canvas, .editor-palette img { width: 64px; height: 40px; object-fit: contain; image-rendering: pixelated; }
+.level-editor button[aria-pressed="true"] { border-color: var(--cyan); background: #193744; box-shadow: 0 0 0 1px var(--cyan); }
+.level-editor button:focus-visible, .editor-entry:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
+.level-editor p { color: var(--muted); margin: 4px 0; font-size: 9px; }
+body.editing { overflow-y: auto; justify-content: flex-start; }
+body.editing .note, body.editing .devpanel { display: none; }
+[hidden] { display: none !important; }

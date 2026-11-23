@@ -58,3 +58,57 @@ export function loadImage(url: string): HTMLImageElement {
 }
 
 export const ready = (img: HTMLImageElement): boolean => img.complete && img.naturalWidth > 0;
+
+/** The hi-res vehicle masters in assets/vehicles/hires/ are 100 px per metre. */
+export const HIRES_PPM = 100;
+export interface VehicleMeta { box: [number, number, number, number]; sign: [number, number, number, number] | null }
+const metas = new Map<HTMLImageElement, VehicleMeta>();
+/**
+ * The bounding box of the non-transparent pixels (the bottom row is the wheel bottoms) and of the amber
+ * destination sign (so a mirrored bus can have its sign drawn the right way round).
+ */
+export function meta(img: HTMLImageElement): VehicleMeta {
+  let m = metas.get(img);
+  if (!m) {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const x = c.getContext('2d', { willReadFrequently: true })!;
+    x.drawImage(img, 0, 0);
+    const d = x.getImageData(0, 0, c.width, c.height).data;
+    const box = [c.width, c.height, 0, 0], sign = [c.width, c.height, 0, 0];
+    const grow = (b: number[], i: number, y: number) => { b[0] = Math.min(b[0], i); b[1] = Math.min(b[1], y); b[2] = Math.max(b[2], i); b[3] = Math.max(b[3], y); };
+    for (let y = 0; y < c.height; y++) for (let i = 0; i < c.width; i++) {
+      const o = (y * c.width + i) * 4;
+      if (d[o + 3] > 8) grow(box, i, y);
+      if (d[o + 3] > 200 && d[o] > 200 && d[o + 1] > 130 && d[o + 1] < 210 && d[o + 2] < 90) grow(sign, i, y); // amber text
+    }
+    const pad = 14; // the dark sign box around the text
+    m = {
+      box: [box[0], box[1], box[2] - box[0] + 1, box[3] - box[1] + 1],
+      sign: sign[2] > 0 ? [sign[0] - pad, sign[1] - pad, sign[2] - sign[0] + 1 + 2 * pad, sign[3] - sign[1] + 1 + 2 * pad] : null,
+    };
+    metas.set(img, m);
+  }
+  return m;
+}
+/**
+ * Draw a hi-res vehicle with its left end at screen x and its wheel bottoms on y. `flip` mirrors it (front on
+ * the left) but keeps the destination sign readable.
+ */
+export function drawVehicle(img: HTMLImageElement, x: number, y: number, ppm: number, flip = false): void {
+  if (!ready(img)) return;
+  const { box: [sx, sy, sw, sh], sign } = meta(img), k = ppm / HIRES_PPM, w = sw * k, h = sh * k;
+  if (x > W || x + w < 0) return;
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  if (!flip) ctx.drawImage(img, sx, sy, sw, sh, x, y - h, w, h);
+  else {
+    ctx.save(); ctx.translate(x + w, 0); ctx.scale(-1, 1);
+    ctx.drawImage(img, sx, sy, sw, sh, 0, y - h, w, h);
+    ctx.restore();
+    if (sign) {
+      const [ax, ay, aw, ah] = sign;
+      ctx.drawImage(img, ax, ay, aw, ah, x + (sx + sw - ax - aw) * k, y - h + (ay - sy) * k, aw * k, ah * k);
+    }
+  }
+  ctx.imageSmoothingEnabled = false;
+}

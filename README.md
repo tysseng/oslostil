@@ -53,11 +53,11 @@ The game is published at **https://tysseng.github.io/oslostil/** (the dev build,
 
 ## Dev mode
 
-Toggle it with the key left of «1» (§ on a Nordic Mac keyboard, ` on US layouts), in every build. It is on by default in `pnpm dev` and the dev build. It shows:
+The panel and its shortcuts are available only in `pnpm dev` and the dev build, not in the release build. It starts visible; press **1** to toggle it. It shows:
 
 - a seek slider that jumps the song and the game to any point, with the time and bar number;
 - jump buttons for the story beats (Verse 1, Ninja, Farge, Boss …);
-- time marks: press **T** while playing to note the current song time, which is handy for timing lyrics and events by ear;
+- time marks: press **2** while playing, paused or editing to note the current song time (with the panel enabled), which is handy for timing lyrics and events by ear;
 - a small DEV tag in the HUD.
 
 ## Controls
@@ -72,9 +72,23 @@ Toggle it with the key left of «1» (§ on a Nordic Mac keyboard, ` on US layou
 | ← → | move |
 | P / Esc | pause |
 | M | soundtrack on/off (starts off; sound effects always play) |
-| `[` `]` | nudge the audio/visual sync ±50 ms (saved in the browser) |
-| § / ` | dev mode on/off |
-| T | mark the current time (dev mode) |
+| 1 | toggle dev panel (dev builds only) |
+| 2 | mark the current time with the dev panel enabled (dev builds only) |
+| 3 / 4 | nudge the audio/visual sync -/+50 ms, saved in the browser (dev builds only) |
+
+## Level editor
+
+Click **Level editor** on the title screen to edit the generated layout. Scrub **Song position** to reach any part of the level; the scene stays frozen while editing.
+
+- Drag an existing item to move it, or right-click it to delete it.
+- Select a sprite in the visual palette, then click empty space to place copies. The selected tool stays active; **Move** or **Esc** stops placing. Existing items remain draggable with any tool selected.
+- **Play level** starts the edited level from the beginning. **Back to editor** returns to the editing position.
+- Changes save automatically in this browser and are used for subsequent games, including after reload. They do not change the repository or other browsers. **Reset generated layout** restores the original generated items after confirmation.
+- **Download level** exports the current layout as `default-level.json`. **Import level** opens a previously downloaded JSON layout, validates it, and asks before replacing your draft.
+- To make a downloaded layout the default for everyone, replace **`src/default-level.json`** with that file, then rebuild/deploy. The file ships bundled with both builds (no server needed). Its initial value, `null`, uses the generator; a JSON array replaces the generator, including `[]` for an empty level.
+- **Use default level** discards your browser-local draft and loads the bundled default. Use this after publishing a new default if your browser still has an older draft; existing drafts otherwise take precedence.
+
+The editor covers enemies, pickups, hazards and rideable trams, not background scenery, companions or the scripted boss.
 
 ## Layout
 
@@ -84,6 +98,8 @@ src/main.ts                entry: wiring, frame loop, resume-after-reload
 src/config.ts              screen size, tempo, bar grid, seeded RNG
 src/timeline.ts            song sections, lyric timings, banners, ninja/colour-change moments, boss timing
 src/schedule.ts            enemy types and the beat-synced spawn schedule
+src/level.ts               shared level validation and bundled-default loading
+src/default-level.json     published layout (null = generated)
 src/state.ts               game state types
 src/game.ts                rules: physics, combat, scoring, keyboard
 src/audio.ts               song playback (the master clock) and sound effects
@@ -93,6 +109,7 @@ src/render/scenes.ts       backgrounds
 src/render/screens.ts      game frame + HUD, title, pause and win screens
 src/ui/subtitles.ts        HTML lyric layer over the canvas
 src/ui/devpanel.ts         dev mode panel
+src/ui/editor.ts           level editor, item palette and browser-local layout saving
 assets/oslostil.mp3        the song (final mix v8, first 150 s, 128 kbps)
 assets/sprites/            pixel-art sprite sheets (girls, automat, enemies.png + enemies.json)
 tools/sprites/girls.py     generator for the girls' sprite sheets

@@ -1,8 +1,9 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PX, W, WIN_AT, barT } from './config';
-import { TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TRAM_WARN, TYPES } from './schedule';
-import { createState, enemyX, type Enemy, type GameState } from './state';
+import { TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
+import { loadDefaultLevel } from './level';
+import { createEnemy, createState, enemyX, spawnTime, type Enemy, type GameState } from './state';
 import { VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, sectionAt } from './timeline';
 
 /** seconds she is gone after losing her last heart */
@@ -12,18 +13,19 @@ const RESPAWN_FLASH = 1.2;
 /** she drops back in from this height (screen y of her feet) */
 const DROP_Y = GROUND - 100;
 
-export type Mode = 'loading' | 'title' | 'play' | 'pause' | 'win';
+export type Mode = 'loading' | 'title' | 'play' | 'pause' | 'win' | 'editor';
 const BEST_KEY = 'oslostil-best';
 
 export class Game {
-  s: GameState = createState();
+  level = loadDefaultLevel();
+  s: GameState = createState(this.level);
   mode: Mode = 'loading';
   readonly keys = new Set<string>();
   /** seconds left of the on-screen sync readout */
   syncToast = 0;
   /** seconds left of the on-screen music on/off readout */
   musicToast = 0;
-  /** called when T is pressed (debug panel shows the marks) */
+  /** called by the development time-mark shortcut */
   onMark: (t: number) => void = () => {};
 
   constructor(readonly audio: AudioEngine) {}
@@ -33,11 +35,20 @@ export class Game {
   /** Jump the song and the game to time t (also used by the debug panel). */
   seek(t: number): void {
     t = Math.max(0, Math.min(WIN_AT - 0.5, t));
-    this.s = createState();
+    this.s = createState(this.level);
     this.s.lastT = t;
     this.s.bgx = scrollAt(t);
     this.audio.play(t);
     this.mode = 'play';
+  }
+
+  edit(t = this.s.lastT): void {
+    this.audio.pause();
+    this.keys.clear();
+    this.s = createState(this.level);
+    this.s.lastT = Math.max(0, Math.min(WIN_AT - 0.5, t));
+    this.s.bgx = scrollAt(this.s.lastT);
+    this.mode = 'editor';
   }
 
   pause(): void { if (this.mode === 'play') { this.mode = 'pause'; this.audio.pause(); } }
@@ -51,8 +62,6 @@ export class Game {
     const c = e.code;
     if (this.mode === 'title' && (c === 'Enter' || c === 'Space')) return this.start();
     if (this.mode === 'win' && c === 'Enter') return this.start();
-    if (c === 'BracketLeft' || c === 'BracketRight') { this.audio.nudgeSync(c === 'BracketRight' ? 0.05 : -0.05); this.syncToast = 1.5; }
-    if (c === 'KeyT' && (this.mode === 'play' || this.mode === 'pause')) this.onMark(this.s.lastT);
     if (c === 'KeyM') { this.audio.toggleMusic(); this.musicToast = 1.5; }
     if (this.mode === 'play' && (c === 'KeyP' || c === 'Escape')) return this.pause();
     if (this.mode === 'pause' && (c === 'KeyP' || c === 'Escape' || c === 'Enter')) return this.resume();
@@ -151,16 +160,16 @@ export class Game {
    * Runs after gravity moved the player from prevY to p.y.
    */
   private tram(t: number, prevY: number): void {
-    const { s } = this, p = s.p, roof = GROUND - TRAM_ROOF;
+    const { s } = this, p = s.p;
     let ride: Enemy | undefined;
     for (const e of s.enemies) {
       if (e.type !== 'tram' || e.dead) continue;
-      const x = enemyX(e, t);
+      const x = enemyX(e, t), base = GROUND - e.y, roof = base - TRAM_ROOF;
       if (p.x + 4 < x || p.x - 4 > x + TRAM_LEN) continue;
       if (p.vy >= 0 && prevY <= roof + 0.5 && p.y >= roof) ride = e; // feet came down on (or stayed on) the roof
-      else if (p.y > roof + 2 && s.inv <= 0) { this.die(); return; } // hit by the side
+      else if (p.y > roof + 2 && p.y - (p.slide > 0 ? 10 : 24) < base && s.inv <= 0) { this.die(); return; } // hit by the side
     }
-    if (ride) { p.y = roof; p.vy = 0; p.jumps = 0; }
+    if (ride) { p.y = GROUND - ride.y - TRAM_ROOF; p.vy = 0; p.jumps = 0; }
     p.ride = ride;
   }
 
@@ -174,11 +183,12 @@ export class Game {
 
     // spawn everything that is about to scroll in
     while (s.ei < s.ev.length) {
-      const e = s.ev[s.ei], ty = TYPES[e.type], rel = sectionAt(e.arr).speed + ty.own;
-      if (PX + (e.arr - t) * rel > W + 100 + (e.type === 'tram' ? rel * TRAM_WARN : 0)) break;
+      const e = s.ev[s.ei];
+      if (spawnTime(e) > t) break;
       s.ei++;
-      if (e.arr < t - 1) continue;
-      s.enemies.push({ ...e, rel, hp: ty.hp, y: e.y ?? ty.y });
+      const enemy = createEnemy(e);
+      if (enemyX(enemy, t) + TYPES[e.type].w < 0) continue;
+      s.enemies.push(enemy);
     }
 
     // player: gone for a moment after dying, then dropped back in
@@ -224,7 +234,7 @@ export class Game {
         }
       }
       if (e.dead) continue;
-      if (t > barT(34) && f.cd <= 0 && !ty.pickup && !ty.solid && x > s.fx - 8 && x < s.fx + 16 && ty.y === 0) {
+      if (t > barT(34) && f.cd <= 0 && !ty.pickup && !ty.solid && x > s.fx - 8 && x < s.fx + 16 && e.y === 0) {
         f.cd = 1.1; f.atk = 0.18; e.dead = true; this.award(x, ey - 8, 75);
       }
       if (e.dead) continue;

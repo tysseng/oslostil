@@ -1,13 +1,14 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { GROUND, W } from '../config';
-import { SHEET, SHEET_CELL, TRAM_LEN, TRAM_ROOF, type SheetKind } from '../schedule';
+import { SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
 import type { Enemy } from '../state';
-import { R, RES, ctx, drawHiRes, loadImage, ready, text } from './draw';
+import { R, ctx, drawVehicle, loadImage, ready, text } from './draw';
 
 import friendUrl from '../../assets/sprites/friend.png';
 import victoriaUrl from '../../assets/sprites/victoria.png';
 import automatUrl from '../../assets/sprites/automat.png';
 import enemiesUrl from '../../assets/sprites/enemies.png';
+import tramUrl from '../../assets/vehicles/hires/tram-new.png';
 import bossUrl from '../../assets/sprites/kaostrikken.png';
 import bossMeta from '../../assets/sprites/kaostrikken.json';
 
@@ -91,23 +92,14 @@ export function drawMachine(x: number, y: number, t: number, mood: Mood = 'idle'
 }
 
 /**
- * The tram obstacle, x = nose (left end), wheels on y. Uses assets/sprites/tram-hd.png (made with
- * tools/vehicles/game_hd.py) once the art side delivers it; until then a placeholder of the same size.
+ * The tram obstacle: the new light-blue tram (hi-res master tram-new.png) at TRAM_PPM, mirrored so its front
+ * leads as it comes at the girls (the sign stays readable). x = nose (left end), wheels on y.
  */
-const TRAM_URL = Object.values(import.meta.glob<string>('../../assets/sprites/tram-hd.png', { eager: true, query: '?url', import: 'default' }))[0];
-const TRAM_IMG = TRAM_URL ? loadImage(TRAM_URL) : undefined;
+const TRAM_IMG = loadImage(tramUrl);
 
 function drawTram(x: number, y: number, t: number): void {
-  if (x > W && Math.floor(t * 8) % 2) text('!', W - 12, GROUND - 44, '#ff4040', 16); // warning before it rolls in
-  if (TRAM_IMG && ready(TRAM_IMG)) {
-    const w = TRAM_IMG.naturalWidth / RES, h = TRAM_IMG.naturalHeight / RES;
-    drawHiRes(TRAM_IMG, x, y - h, w, h);
-    return;
-  }
-  const top = y - TRAM_ROOF;
-  R(x, top, TRAM_LEN, TRAM_ROOF - 4, '#3fa3e0'); R(x, top, TRAM_LEN, 2, '#86c9f1'); R(x, y - 10, TRAM_LEN, 3, '#2a7fb8');
-  for (let i = 0; i < 17; i++) R(x + 8 + i * 14, top + 5, 9, 9, '#252b34');
-  for (const bx of [20, 85, 157, 222]) { R(x + bx - 6, y - 5, 5, 5, '#2b2e36'); R(x + bx + 1, y - 5, 5, 5, '#2b2e36'); }
+  if (x > W && Math.floor(t * 8) % 2) text('!', W - 12, GROUND - 52, '#ff4040', 16); // warning before it rolls in
+  drawVehicle(TRAM_IMG, x, y, TRAM_PPM, true);
 }
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */

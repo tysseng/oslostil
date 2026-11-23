@@ -34,13 +34,16 @@ export interface EnemyType {
 }
 
 /**
- * The tram is a full-length moving platform (new light-blue tram, 30.3 m at 8 game px per metre).
+ * The tram is a full-length moving platform (new light-blue tram, 30.5 m at TRAM_PPM).
  * Its x is the nose (left end), which reaches the player's spot on the beat. If it hits the player she is
  * thrown up in the air; she can land on the roof and ride it until it leaves the screen.
  */
-export const TRAM_LEN = 242;
-/** walkable roof height above the ground */
-export const TRAM_ROOF = 31;
+/** drawn at the trains' scale (game px per metre) */
+export const TRAM_PPM = 10;
+/** 30.5 m long (tram-new.png) */
+export const TRAM_LEN = 305;
+/** walkable roof height above the ground: the roof line is 3.84 m above the wheel bottoms (the roof boxes stick up a bit more) */
+export const TRAM_ROOF = 38;
 /** own speed on top of the scroll speed (px/s); lower = longer rides */
 export const TRAM_OWN = 40;
 /** a rider standing still is carried back to this screen x, then falls off when the tail passes */
@@ -75,6 +78,8 @@ export interface ScheduledEvent {
   y?: number;
   label?: string;
   fromBoss?: boolean;
+  /** Fixed relative speed for manually positioned items. */
+  rel?: number;
 }
 
 const LABELS = ['CHILD', 'ADULT', 'STUDENT', 'SENIOR'];
@@ -137,7 +142,8 @@ export function buildSchedule(): ScheduledEvent[] {
     else if (k === 3 && r() < 0.6) add(t, 'drone');
     else if (r() < 0.3) add(t, 'coin', { y: 34 + r() * 12 });
   }
-  for (const b of [46, 54]) add(barT(b, 8), 'tram');
+  add(barT(47), 'tram'); // a little later than bar 46.5, after the T-bane train has gone
+  add(barT(54, 8), 'tram');
   // pre-chorus 2: burning trams
   for (const { k, t } of beats(58, 65)) {
     add(t, k % 2 ? (r() < 0.5 ? 'drone' : 'ninja') : r() < 0.35 ? 'fire' : 'ninja');

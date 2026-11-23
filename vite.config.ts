@@ -5,7 +5,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 // pnpm build   – two self-contained single files (JS, CSS and the song inlined):
 //   dist/dev/index.html      dev mode on at start
 //   dist/release/index.html  dev mode off at start
-// Dev mode can always be toggled in the game with the key left of «1».
+// Dev panel and shortcuts are available only on the dev server and in the dev build.
 export default defineConfig(({ command, mode }) => ({
   plugins: [viteSingleFile()],
   define: { __DEV_MODE_DEFAULT__: JSON.stringify(command === 'serve' || mode === 'devbuild') },

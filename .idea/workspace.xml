@@ -4,39 +4,64 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added github pages">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Lots of backgrounds. New trams, added subway">
+      <change afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/backgrounds/oslo-classic-buildings.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/backgrounds/tokyoslo-v2-buildings.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/fire.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/fire.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-burning.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-burning.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-burning.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/backgrounds/karljohan.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/fire.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/vehicles/burning_tram.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/STAGE_DESIGN.md" beforeDir="false" afterPath="$PROJECT_DIR$/STAGE_DESIGN.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/draw.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/draw.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/devpanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/devpanel.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/joakim/git/tysseng/oslostil" value="3MUw83Ix9sV6z5X017lMzpwldRL" />
+    </persistenceIdMap>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0006959833934088" />
-      <entry key="MS500" value="1.4646702832510512" />
-      <entry key="S2" value="3.4789527676567396" />
-      <entry key="S5" value="6.137088015267694" />
-      <entry key="S10" value="9.46602660129128" />
-      <entry key="S30" value="15.907683145952456" />
-      <entry key="S60" value="23.74233632197477" />
-      <entry key="M2" value="40.17806484171578" />
-      <entry key="M5" value="78.18229291594912" />
-      <entry key="M10" value="112.51830918558755" />
-      <entry key="M15" value="131.32453415876026" />
-      <entry key="M30" value="163.52229576365022" />
-      <entry key="H1" value="221.71528026024134" />
-      <entry key="H2" value="320.85487361747306" />
-      <entry key="H4" value="428.3493642474498" />
-      <entry key="D1" value="582.3453027213629" />
-      <entry key="W1" value="617.7739432578437" />
+      <entry key="MS100" value="1.0000465779083245" />
+      <entry key="MS500" value="1.1519575084956482" />
+      <entry key="S2" value="2.4528607656438006" />
+      <entry key="S5" value="3.9238972525589664" />
+      <entry key="S10" value="4.7961241309370966" />
+      <entry key="S30" value="5.554058718690216" />
+      <entry key="S60" value="5.770870306692595" />
+      <entry key="M2" value="5.88400036991822" />
+      <entry key="M5" value="6.153456616324777" />
+      <entry key="M10" value="8.46322390786882" />
+      <entry key="M15" value="11.862251951693478" />
+      <entry key="M30" value="20.045553139643882" />
+      <entry key="H1" value="27.823798448887093" />
+      <entry key="H2" value="34.04706776624925" />
+      <entry key="H4" value="58.16059016207904" />
+      <entry key="D1" value="397.42328030403553" />
+      <entry key="W1" value="622.5397621305025" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -58,23 +83,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9532967244278804" />
-      <entry key="MS500" value="1.4500778445690097" />
-      <entry key="S2" value="3.470017115687245" />
-      <entry key="S5" value="6.130660172143805" />
-      <entry key="S10" value="9.46096063066385" />
-      <entry key="S30" value="15.904757019684753" />
-      <entry key="S60" value="23.74006535087231" />
-      <entry key="M2" value="40.17605721309275" />
-      <entry key="M5" value="78.18068126727553" />
-      <entry key="M10" value="112.51715536559526" />
-      <entry key="M15" value="131.32364446597092" />
-      <entry key="M30" value="163.5217587338368" />
-      <entry key="H1" value="221.71493750963543" />
-      <entry key="H2" value="320.8546237729527" />
-      <entry key="H4" value="428.34918553629274" />
-      <entry key="D1" value="582.3452574858419" />
-      <entry key="W1" value="617.7739362371512" />
+      <entry key="MS100" value="0.9593087998403225" />
+      <entry key="MS500" value="1.1423905206789948" />
+      <entry key="S2" value="2.4473344344119914" />
+      <entry key="S5" value="3.9201955231567616" />
+      <entry key="S10" value="4.793828086728997" />
+      <entry key="S30" value="5.55316427671425" />
+      <entry key="S60" value="5.770404618970099" />
+      <entry key="M2" value="5.883762710030761" />
+      <entry key="M5" value="6.153357820865369" />
+      <entry key="M10" value="8.463159886425164" />
+      <entry key="M15" value="11.862195093425468" />
+      <entry key="M30" value="20.04550778510571" />
+      <entry key="H1" value="27.82376777632751" />
+      <entry key="H2" value="34.047049033708625" />
+      <entry key="H4" value="58.16057131558362" />
+      <entry key="D1" value="397.4232509273353" />
+      <entry key="W1" value="622.5397552994136" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -82,6 +107,24 @@
   "fromUser": false
 }]]></component>
   <component name="ProjectId" id="3MSJ9aReDLz7Mw3Z2tVuSEsLS73" />
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="ensembleEnabled" value="true" />
+        <option name="ensembleTierId" value="balance" />
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="ensemble" />
+          </model>
+        </option>
+        <option name="targetType" value="BACKGROUND" />
+        <option name="worktreeMode" value="WORKSPACE" />
+      </template>
+    </option>
+    <option name="version" value="1" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -92,6 +135,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/joakim/git/tysseng/oslostil",
@@ -134,6 +178,8 @@
     <MESSAGE value="Added bus station and plenty more" />
     <MESSAGE value="More and more and more" />
     <MESSAGE value="Added github pages" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added github pages" />
+    <MESSAGE value="Added first background graphics" />
+    <MESSAGE value="Lots of backgrounds. New trams, added subway" />
+    <option name="LAST_COMMIT_MESSAGE" value="Lots of backgrounds. New trams, added subway" />
   </component>
 </project>

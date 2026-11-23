@@ -1,0 +1,26 @@
+{
+ "cell": 32,
+ "sprites": {
+  "big": {
+   "row": 0,
+   "frames": 8,
+   "fps": 12,
+   "w": 20,
+   "h": 30
+  },
+  "small": {
+   "row": 1,
+   "frames": 8,
+   "fps": 12,
+   "w": 12,
+   "h": 18
+  },
+  "smoke": {
+   "row": 2,
+   "frames": 8,
+   "fps": 6,
+   "w": 16,
+   "h": 16
+  }
+ }
+}

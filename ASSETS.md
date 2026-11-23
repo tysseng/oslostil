@@ -13,7 +13,7 @@ Status of every visual in the game: converted to a pixel-art sprite, or still dr
 | # | Asset | File | Size / layout | For | Status |
 |---|---|---|---|---|---|
 | 1 | Remaining vehicle masters: tram SL79, old tram, Italian tram | `assets/vehicles/hires/tram-sl79.svg` … | hi-res, same scale as the others | later scenes | open |
-| 2 | Tram obstacle, **full length** (rolls in fast; the players get thrown onto it or jump on and ride it) | `assets/sprites/tram-hd.png` | the 5-section new light-blue tram (`tram-new`) through `game_hd.py` (8 game px/m = 32 canvas px/m, ≈ 970 × 140 canvas px), side view, trimmed, wheel bottoms on the last row. The game treats the roof as walkable 31 game px above the wheel bottoms and the length as 242 game px; tell the code side if yours differs | chorus 1 → chorus 2 (`drawTram`) | open |
+| 2 | Tram obstacle, **full length** (rolls in fast; the players get thrown onto it or jump on and ride it) | `assets/sprites/tram-hd.png` | the 5-section new light-blue tram (`tram-new`) through `game_hd.py` (8 game px/m = 32 canvas px/m, ≈ 970 × 140 canvas px), side view, trimmed, wheel bottoms on the last row. The game treats the roof as walkable 31 game px above the wheel bottoms and the length as 242 game px; tell the code side if yours differs | chorus 1 → chorus 2 (`drawTram`) | withdrawn: the game now draws the `tram-new.png` master directly |
 
 ### Done
 
@@ -138,9 +138,13 @@ All in `drawScene` (`src/render/scenes.ts`). These are kept as they are for now;
 | Glitch stripes + «A-A-A-AUTOMAT» | ⬜ | glitch | |
 | Sun, barcode skyline, Holmenkollen jump, neon grid floor | ⬜ | neon, boss | |
 | Map lines + place-name signs | ⬜ | map | Tjuvholmen, Kampen … |
-| Burning trams and buses, embers | ⬜ | chaos | |
+| Burning trams, embers | ✅ in game | chaos | `assets/vehicles/hires/tram-burning.png` (+ `.json` with flame/smoke anchors) from `tools/vehicles/burning_tram.py`: the new light-blue 3-section tram, damaged (blown-out windows, soot, hanging door, torn roof box), darkened in game, 4 per 760 px at parallax 0.35, tilted |
+| Fire and smoke sprites | ✅ in game | chaos | `assets/sprites/fire.png` + `.json` from `tools/sprites/fire.py`: pixel-art flames big 20×30 and small 12×18 (8 frames, 12 fps), smoke puff 16×16 (8 frames) |
+| Burning buses | ⬜ | chaos | |
 | Ground strip and beat line | — | all | |
 | Eplehuset | ⬜ | (new) | idea: tram crashes into it |
 | Entur logo billboard | ⬜ | (new) | idea: pixelated logo on a building or station |
-| Tokyoslo street: Rådhuset, Stortinget, Slottet, Universitetet, Nationaltheatret with pagoda roofs, lanterns, neon signs, TOKYOSLO billboard | ✅ in game | Tokyoslo (stage 4 from 1:42.0, stages 5–7) | `assets/backgrounds/tokyoslo-buildings.png` (902 × 150, transparent, bottom row on `GROUND`) from `tools/backgrounds/tokyoslo.py`; drawn by `drawTokyoslo` in `scenes.ts` (parallax 0.45) in map after 1:42.0, chaos and boss |
+| Tokyoslo street: Rådhuset, Stortinget, Slottet, Universitetet, Nationaltheatret with pagoda roofs, lanterns, neon signs, TOKYOSLO billboard | 🟡 kept (v1) | Tokyoslo (stage 4 from 1:42.0, stages 5–7) | `assets/backgrounds/tokyoslo-buildings.png` (902 × 150, transparent, bottom row on `GROUND`) from `tools/backgrounds/tokyoslo.py`; first draft, kept for comparison: set `TOKYO_VERSION = 1` in `scenes.ts` |
+| Level 4 street, classic British-style Oslo | ✅ in game | map, bar 42 → 1:42.0 | `assets/backgrounds/oslo-classic-buildings.png` (1203 × 150) from `tools/backgrounds/karljohan.py`: Rådhuset, Stortinget, Slottet, Universitetet, Nationaltheatret and tall townhouses; dark, detail high up, quiet bottom 40 px |
+| Tokyoslo street v2 | ✅ in game | map after 1:42.0, chaos, boss | `assets/backgrounds/tokyoslo-v2-buildings.png`, same script and the same layout as the classic street, so the buildings swap style in place at 1:42.0 |
 | Tokyoslo far skyline | 🟡 draft | Tokyoslo | `assets/backgrounds/tokyoslo-far.png` (640 × 150, tiles horizontally, parallax 0.15), same script; to be made full level width |

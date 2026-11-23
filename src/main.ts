@@ -6,8 +6,9 @@ import { Game } from './game';
 import { canvas, resetTransform } from './render/draw';
 import { drawGame, drawPause, drawTitle, drawWin } from './render/screens';
 import { lyricAt } from './timeline';
-import { DEV_KEYS, DevPanel } from './ui/devpanel';
+import { DevPanel } from './ui/devpanel';
 import { Subtitles } from './ui/subtitles';
+import { LevelEditor } from './ui/editor';
 import './style.css';
 
 const audio = new AudioEngine();
@@ -20,9 +21,18 @@ canvas.before(screen);
 screen.append(canvas);
 const subtitles = new Subtitles(screen);
 const dev = new DevPanel(game, screen, canvas, __DEV_MODE_DEFAULT__);
+const editor = new LevelEditor(game, screen);
+if (__DEV_MODE_DEFAULT__) {
+  const help = document.createElement('span');
+  help.innerHTML = ' · <b>1</b> dev panel · <b>2</b> mark time · <b>3 / 4</b> sync';
+  document.querySelector('.note')?.append(help);
+}
 
 addEventListener('keydown', (e) => {
-  if (DEV_KEYS.includes(e.code) && !e.repeat) { e.preventDefault(); dev.toggle(); return; }
+  if (e.target instanceof HTMLElement && (e.target.isContentEditable || e.target.closest('textarea, input:not([type="range"])'))) return;
+  if (dev.keyDown(e)) return;
+  if (editor.keyDown(e)) return;
+  if (e.target instanceof HTMLElement && e.target.closest('button, input, select, textarea')) return;
   game.keyDown(e);
 });
 addEventListener('keyup', (e) => game.keyUp(e));
@@ -44,6 +54,7 @@ function frame(now: number): void {
   resetTransform();
   if (game.mode === 'loading' || game.mode === 'title') { subtitles.set(null); drawTitle(now / 1000, game.mode === 'loading'); }
   else if (game.mode === 'win') { subtitles.set(null); drawWin(game, now / 1000); }
+  else if (game.mode === 'editor') { subtitles.set(null); editor.draw(); }
   else {
     if (game.mode === 'play') game.update(audio.time(), dt);
     const t = game.s.lastT;
@@ -52,6 +63,7 @@ function frame(now: number): void {
     if (game.mode === 'pause') drawPause();
   }
   dev.tick();
+  editor.tick();
   requestAnimationFrame(frame);
 }
 

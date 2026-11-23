@@ -1,0 +1,7 @@
+- startup screen: Trykk enter for å aktivere tekst til tale
+- return to front page
+
+
+
+Impportant before the 3rd
+- pixelate vehicles
