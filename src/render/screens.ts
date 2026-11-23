@@ -34,7 +34,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   // companions
-  if (t >= VICTORIA_WAKE_T) drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t));
+  if (t >= VICTORIA_WAKE_T) drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
   const ninja = isNinja(t), f = s.friend, fy = f.yHist.length ? f.yHist[0] : GROUND;
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
   drawGirl('friend', s.fx, fy, t + 0.13, { ninja, air: fy < GROUND, rising: fRising, atk: f.atk > 0 });
@@ -130,11 +130,11 @@ export function drawTitle(t: number, loading: boolean): void {
   text('AN AUTOMAT VICTORIA ADVENTURE', W / 2, 60, '#2bf0ff', 6, 'center');
   drawGirl('friend', 130, GROUND, t, { ninja: false, idle: true });
   drawGirl('victoria', 152, GROUND, t + 0.5, { ninja: false, idle: true });
-  drawMachine(184, GROUND - 4, t);
+  drawMachine(184, GROUND - 4, t, 'idle', 2, true);
   if (loading) text('LASTER LÅTEN … LOADING', W / 2, 84, '#fff', 6, 'center');
   else if (Math.floor(t * 2) % 2) text('Trykk enter for å aktivere tekst-til-tale.', W / 2, 84, '#fff', 7, 'center');
-  text('SPACE/↑ HOPP·JUMP   ↓ SKLI·SLIDE   X SLÅ·HIT', W / 2, 104, '#ccc', 5, 'center');
-  text('C KAST·THROW   ←→ FLYTT·MOVE   P PAUSE   M MUSIKK·MUSIC', W / 2, 114, '#ccc', 5, 'center');
+  text('SPACE/↑ HOPP·JUMP   ↓ SKLI·SLIDE   X SLÅ·HIT', W / 2, GROUND + 8, '#ccc', 5, 'center');
+  text('C KAST·THROW   ←→ FLYTT·MOVE   P PAUSE   M MUSIKK·MUSIC', W / 2, GROUND + 18, '#ccc', 5, 'center');
 }
 
 export function drawWin(g: Game, t: number, place: number): void {
@@ -155,8 +155,8 @@ export function drawWin(g: Game, t: number, place: number): void {
   text(rank, W / 2, 128, '#ff2bd6', 8, 'center');
   drawGirl('friend', 140, GROUND, t, { ninja: true, idle: true });
   drawGirl('victoria', 162, GROUND, t + 0.2, { ninja: true, idle: true, atk: Math.floor(t * 2) % 2 === 1 });
-  drawMachine(196, GROUND - 4, t, 'cheer');
-  text(place === 1 ? 'NEW HIGHSCORE!' : `YOU PLACED #${place}`, W / 2, 154, place === 1 ? '#ffe14a' : '#ccc', 6, 'center');
+  drawMachine(196, GROUND - 4, t, 'cheer', 2, true);
+  text(place > 10 ? 'GAME OVER' : place === 1 ? 'NEW HIGHSCORE!' : `YOU PLACED #${place}`, W / 2, 154, place === 1 ? '#ffe14a' : '#ccc', 6, 'center');
   if (Math.floor(t * 2) % 2) text('ENTER: HIGHSCORE', W / 2, 166, '#fff', 5, 'center');
 }
 

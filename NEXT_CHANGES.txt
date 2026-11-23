@@ -1,9 +1,11 @@
 
-
-Make sun circular but keep the slits on neon oslo and ending
-
 Important before the 3rd
 - pixelate vehicles
 - drones -> seagulls
+- replace sound effects with automat sounds.
+
+- Larger enemy sprites to match player sprites, especially ninjas
+
+M;ust be possible to gain health
 
 Fikse trikk, ser rar ut

@@ -1,6 +1,6 @@
 // Scrolling backgrounds, one per part of the story.
 import { GROUND, H, W, barT, rng } from '../config';
-import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, machineCenter, machinesX, type SceneName } from '../timeline';
+import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, machineCenter, machinesX, platformMachines, type SceneName } from '../timeline';
 import trainGreenUrl from '../../assets/vehicles/hires/local-train-green.png';
 import trainTomatoUrl from '../../assets/vehicles/hires/local-train-tomato-soup.png';
 import airportExpressUrl from '../../assets/vehicles/hires/airport-express.png';
@@ -112,7 +112,8 @@ const WAITING_BUSES: [HTMLImageElement, number][] = [[BUS_GREEN, 120], [BUS_RED,
 const DRIVING_BUS = { t0: 1.5, vx: -170, ppm: BUS_PPM * 0.8 }; // a bit smaller: it's further away
 function drawBuses(t: number, bx: number): void {
   if (t > barT(10) + 8) return;
-  drawVehicle(BUS_RED, W + (t - DRIVING_BUS.t0) * DRIVING_BUS.vx, GROUND, DRIVING_BUS.ppm, true); // behind the waiting ones
+  const bounce = Math.sin((t - DRIVING_BUS.t0) * 18) * 0.35;
+  drawVehicle(BUS_RED, W + (t - DRIVING_BUS.t0) * DRIVING_BUS.vx, GROUND + bounce, DRIVING_BUS.ppm, true); // behind the waiting ones
   for (const [img, x] of WAITING_BUSES) drawVehicle(img, x - bx * ROOF_PARALLAX, GROUND, BUS_PPM);
 }
 
@@ -292,7 +293,7 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
     drawTrains(t);
     drawPlatformRoof(bx);
     if (t > MACHINES_T && t < barT(20)) { // «tre blå maskiner» – the left one is Victoria until she wakes up
-      for (let k = t < VICTORIA_WAKE_T ? 0 : 1; k < 3; k++) drawPlatformMachine(machineCenter(t, k), GROUND);
+      for (const k of platformMachines(t)) drawPlatformMachine(machineCenter(t, k), GROUND);
       if (t < VICTORIA_WAKE_T) text('VICTORIA', machinesX(t) + 1, GROUND - 42, '#ffcc33', 4, 'left');
     }
 
@@ -304,8 +305,21 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
       if (Math.floor(t * 4) % 2) text('A-A-A-AUTOMAT', W / 2, 60, '#ff2bd6', 8, 'center');
     }
   } else if (name === 'neon' || name === 'boss') {
-    R(W / 2 - 30, 40, 60, 30, name === 'boss' ? '#ff3366' : '#ff7ad9'); // sun
-    for (let i = 0; i < 5; i++) R(W / 2 - 30, 52 + i * 4, 60, 1, SKY[name][1]);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(W / 2, 55, 30, 0, Math.PI * 2);
+    ctx.clip();
+    const background = ctx.createLinearGradient(0, 0, 0, GROUND);
+    background.addColorStop(0, SKY[name][0]);
+    background.addColorStop(1, SKY[name][1]);
+    ctx.fillStyle = background;
+    ctx.fillRect(W / 2 - 31, 24, 62, 62);
+    ctx.fillStyle = name === 'boss' ? '#ff3366' : '#ff7ad9';
+    // Draw only the solid bands so clipped edge pixels cannot leave a pink rim in the gaps.
+    for (const [y, height] of [[25, 27], [53, 4], [59, 4], [66, 4], [74, 4]]) {
+      ctx.fillRect(W / 2 - 30, y, 60, height);
+    }
+    ctx.restore();
     if (name === 'boss') drawTokyoslo(bx); // the boss fight is in Tokyoslo
     else {
       for (let i = 0; i < 12; i++) { // barcode skyline

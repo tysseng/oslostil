@@ -85,6 +85,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
   - Text and hi-res images keep their detail.
 - **Vehicles use smooth hi-res images for now.** Trains and buses are drawn straight from the masters in `assets/vehicles/hires/` (100 px per metre) with `drawVehicle` in `scenes.ts`, which trims them at load. Sizes: trains `TRAIN_PPM` 10 game px per metre, waiting buses `BUS_PPM` 13.2, the driving bus 80 % of that (it's further back). Joakim didn't like the pixel versions; new vehicle sprites come later. The tram obstacle (`drawTram` in `sprites.ts`) uses `tram-new.png` the same way at `TRAM_PPM` 10, mirrored so its front leads. `meta`, `drawVehicle` and `HIRES_PPM` live in `draw.ts`.
 - **Sprites** are sheets of fixed-size cells, bottom-aligned (feet, base or wheels on the bottom row) and horizontally centred.
+- **Flying Automat Victoria** has two flickering downward exhaust flames, enabled after her wake-up hops and on the hovering title/summary poses.
 - **Banners:** only the newest one is shown, so a new beat replaces the previous one at once.
 - **Stomps and slides:** descending onto a pigeon/drone/suitcase top bounces the player without damage and awards 100 base points plus normal bonuses. Birds/drones fall and splash; suitcases flatten for 0.6 seconds. Sliding into a suitcase awards a kill and launches it in the remembered slide direction; walking retains ordinary damage. `GameState.knocked` holds these non-colliding sprite effects separately from scheduled enemies.
 - **Bounce chains:** `bounceChain` counts consecutive airborne stomps across all three types and multiplies their awards by 1, 2, 3, etc., stacking with combo/PERFECT. Ground/tram landing and damage reset it. Ground landing is resolved after stomp crossings so fast falls do not lose valid stomps.
@@ -110,8 +111,8 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 ### Highscores
 
 - Seven seconds on the win screen (or Enter) advances to `highscore` mode. `Game.tickWin` uses wall-clock time; gameplay and dev shortcuts do not handle keys during initials entry.
-- `ui/highscores.ts` offers a focusable arcade letter control (no login/form input) only for top-ten runs, starting AAA and saving on Enter. Its shared `place(score)` calculation drives summary and entry placement. Only the win summary announces NEW HIGHSCORE for first place; the leaderboard has no placement announcement. It stores scores descending under `oslostil-highscores-v1` and shows ten rows with placeholders. Ties follow existing scores; storage errors are shown explicitly.
-- Entry has no timeout. After submission the table remains for seven seconds before returning to startup; the Startup button returns immediately. The win screen's existing BEST value remains separate for compatibility.
+- `ui/highscores.ts` offers a focusable arcade letter control (no login/form input) only for top-ten runs, starting AAA and saving on Enter. Its shared `place(score)` calculation drives summary and entry placement. Only the win summary announces NEW HIGHSCORE for first place; runs outside the top ten show GAME OVER instead of placement. The leaderboard has no placement announcement. It stores scores descending under `oslostil-highscores-v1` and shows ten rows with placeholders. Ties follow existing scores; storage errors are shown explicitly.
+- Entry has no timeout. After submission the table remains for seven seconds before returning to startup automatically, without a return message or button. Key instructions stay on one line. The win screen's existing BEST value remains separate for compatibility.
 
 ## Story beats already built
 

@@ -18,7 +18,6 @@ export class Highscores {
   private readonly heading: HTMLElement;
   private readonly placement: HTMLElement;
   private readonly status: HTMLElement;
-  private readonly done: HTMLButtonElement;
   private scores: Highscore[] = [];
   private active = false;
   private returnAt: number | null = null;
@@ -35,10 +34,10 @@ export class Highscores {
         <div class="score-entry"><div id="score-initials" class="arcade-initials" tabindex="0" role="textbox"
           aria-label="Three player initials" aria-describedby="initials-help"><div class="initials-letters" aria-hidden="true"><span></span><span></span><span></span></div></div>
           <span class="current-score"></span></div>
-        <div id="initials-help">UP / DOWN: LETTER &nbsp; LEFT / RIGHT: SLOT &nbsp; ENTER: SAVE<br>Or type three letters.</div>
+        <div id="initials-help">UP/DOWN: LETTER &nbsp; LEFT/RIGHT: SLOT &nbsp; ENTER: SAVE</div>
       </div>
       <table><thead><tr><th scope="col">PLACE</th><th scope="col">PLAYER</th><th scope="col">SCORE</th></tr></thead><tbody></tbody></table>
-      <p role="status"></p><button type="button" class="score-done" hidden>STARTUP</button>`;
+      <p role="status"></p>`;
     screen.append(this.el);
     this.entry = this.el.querySelector('.initials-entry')!;
     this.input = this.el.querySelector('#score-initials')!;
@@ -49,7 +48,6 @@ export class Highscores {
     this.heading = this.el.querySelector('h2')!;
     this.placement = this.el.querySelector('.score-placement')!;
     this.status = this.el.querySelector('[role="status"]')!;
-    this.done = this.el.querySelector('.score-done')!;
     this.letters.forEach((letter, index) => {
       letter.addEventListener('click', () => {
         this.input.focus();
@@ -81,7 +79,6 @@ export class Highscores {
         this.selectLetter(this.letterIndex);
       }
     });
-    this.done.addEventListener('click', () => this.finish());
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored !== null) {
@@ -108,13 +105,13 @@ export class Highscores {
     if (this.returnAt !== null) return;
     const entry = { initials: this.initials, score: this.game.s.score };
     this.scores = [...this.scores, entry].sort((a, b) => b.score - a.score).slice(0, LIMIT);
-    let message = 'Returning to startup in 7 seconds.';
+    let message = '';
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.scores));
       this.loadError = '';
     } catch (error) {
       console.error('Could not save highscores', error);
-      message = 'Save failed. Scores are temporary. Returning in 7 seconds.';
+      message = 'Save failed. Scores are temporary.';
     }
     this.showTable(performance.now(), message, entry);
   }
@@ -126,8 +123,7 @@ export class Highscores {
     this.table.hidden = false;
     this.el.classList.remove('entering-score');
     this.heading.textContent = 'HIGHSCORES';
-    this.done.hidden = false;
-    this.done.focus();
+    document.getElementById('game')?.focus();
     this.status.textContent = message;
     this.returnAt = now + 7000;
   }
@@ -188,7 +184,6 @@ export class Highscores {
       this.table.hidden = true;
       this.el.classList.add('entering-score');
       this.heading.textContent = 'ENTER HIGHSCORE';
-      this.done.hidden = true;
       this.score.textContent = String(this.game.s.score).padStart(6, '0');
       this.status.textContent = this.loadError;
       this.render();
@@ -198,7 +193,7 @@ export class Highscores {
       this.placement.textContent = `YOU PLACED #${place}`;
       this.placement.hidden = false;
       this.placement.classList.toggle('first-place', place === 1);
-      if (place > LIMIT) this.showTable(now, this.loadError || 'Outside the top 10. Returning in 7 seconds.');
+      if (place > LIMIT) this.showTable(now, this.loadError);
     }
     if (this.returnAt !== null && now >= this.returnAt) {
       this.finish();

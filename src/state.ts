@@ -32,6 +32,8 @@ export interface Player {
   star: number;
   /** the tram she is standing on */
   ride?: Enemy;
+  /** Index of the stationary Sandvika machine supporting her. */
+  machineRide?: number;
 }
 
 export interface GameState {

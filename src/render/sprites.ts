@@ -80,9 +80,20 @@ export function drawPlatformMachine(x: number, y: number): void {
 }
 
 /** Draws her with the base at (x, y), bobbing gently (bob = amplitude in px). */
-export function drawMachine(x: number, y: number, t: number, mood: Mood = 'idle', bob = 2): void {
+export function drawMachine(x: number, y: number, t: number, mood: Mood = 'idle', bob = 2, flying = false): void {
   if (!ready(AUTOMAT)) return;
   const oy = Math.round(y + Math.sin(t * 3) * bob);
+  if (flying) {
+    for (const [i, offset] of [-5, 5].entries()) {
+      const length = 7 + Math.floor((Math.sin(t * 39 + i * 2.4) + 1) * 2);
+      R(x + offset - 2, oy - 1, 5, 4, '#ff5a24');
+      R(x + offset - 1, oy + 3, 3, length - 4, '#ff5a24');
+      R(x + offset, oy + length - 1, 1, 2, '#ff5a24');
+      R(x + offset - 1, oy - 1, 3, 4, '#ffb52e');
+      R(x + offset, oy + 3, 1, length - 4, '#ffb52e');
+      R(x + offset, oy - 1, 1, 3, '#fff3a1');
+    }
+  }
   let frame: (typeof AUTOMAT_FRAMES)[number];
   if (mood === 'talk') frame = Math.floor(t * 8) % 2 ? 'talk0' : 'talk1';
   else if (mood === 'cheer') frame = Math.floor(t * 6) % 2 ? 'cheer0' : 'cheer1';

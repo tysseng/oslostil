@@ -50,6 +50,13 @@ export const MACHINE_GAP = 24;
 export const machinesX = (t: number): number => W + 40 - (t - MACHINES_T) * STATION_VX;
 /** Centre x of platform machine k (0 = Victoria). */
 export const machineCenter = (t: number, k = 0): number => machinesX(t) + k * MACHINE_GAP + 9;
+export const MACHINE_WIDTH = 18;
+export const MACHINE_HEIGHT = 31;
+/** Indices of the stationary cabinets still present on the platform. */
+export function platformMachines(t: number): number[] {
+  if (t <= MACHINES_T || t >= barT(20)) return [];
+  return t < VICTORIA_WAKE_T ? [0, 1, 2] : [1, 2];
+}
 /** Victoria wakes up when the girls reach her (the player's home spot is x = 80). */
 export const VICTORIA_WAKE_T = MACHINES_T + (W + 40 + 9 - 80) / STATION_VX;
 /** After waking she does a few little hops on the spot (seconds) … */
