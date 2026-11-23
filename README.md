@@ -76,9 +76,15 @@ The panel and its shortcuts are available only in `pnpm dev` and the dev build, 
 | 2 | mark the current time with the dev panel enabled (dev builds only) |
 | 3 / 4 | nudge the audio/visual sync -/+50 ms, saved in the browser (dev builds only) |
 
-The startup prompt reads “Trykk enter for å aktivere tekst-til-tale.” After seven seconds on the win screen (or Enter), the highscore screen asks for three player initials. Save to show the top ten browser-local scores beneath the OSLO-STIL logo placeholder. The game returns to startup seven seconds after submission, or immediately with the Startup button. Initials entry has no timeout; storage failures are shown on screen.
+The startup prompt reads “Trykk enter for å aktivere tekst-til-tale.” The win summary shows your leaderboard place, or “NEW HIGHSCORE!” for first. After seven seconds (or Enter), qualifying top-ten runs automatically enter three initials, saved with Enter. Initials entry shows placement without repeating the announcement; tied scores follow existing runs. Non-qualifying runs go directly to the list. All ten places are shown, with `---` / `------` for unplayed slots, and no placement announcement above the list. The game returns to startup seven seconds after submission or viewing a non-qualifying result, or immediately with the Startup button. Initials entry has no timeout; storage failures are shown on screen.
 
-Initials start as **AAA**, with the first letter selected and flashing. Enter initials by typing, or use **↑ / ↓** to cycle A–Z and **← / →** to move between the three slots. **Enter** saves. Arrow entry fills unused slots with A, and cycling wraps in both directions.
+Initials start as **AAA**, with the first letter selected and flashing between its letter and `_`. Enter initials by typing, or use **↑ / ↓** to cycle A–Z and **← / →** to move between the three slots. **Enter** saves. Entry uses an arcade control, not a browser login/form input. Both screens retain the startup frame position and use canvas-scaled typography.
+
+Landing on a pigeon or drone bounces you upward without damage; it falls and splashes on the ground. Landing on a suitcase squashes it and bounces you safely. Each stomp awards 100 base points, with the usual combo and PERFECT bonuses. Sliding into a suitcase launches it in your slide direction. Walking into a suitcase still causes ordinary collision damage.
+
+Moving backward uses the current scroll speed plus 80 px/s, so you can move left faster than the scenery in every section. Movement stops at the left screen edge.
+
+Consecutive airborne stomps multiply the stomp award by ×1, ×2, ×3, and so on, including mixed suitcase/pigeon/drone chains. This stacks with combo and PERFECT bonuses. Landing on the ground or a tram roof, or taking damage, resets the bounce multiplier; sliding and ordinary attacks do not receive it.
 
 ## Level editor
 

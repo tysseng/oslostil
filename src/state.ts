@@ -18,6 +18,7 @@ export interface Enemy extends ScheduledEvent {
 export interface Star { x: number; y: number; vx: number; vy: number; a: number; ninja: boolean; gone?: boolean }
 export interface Particle { x: number; y: number; vx: number; vy: number; life: number; c: string }
 export interface Pop { x: number; y: number; txt: string; life: number; c: string }
+export interface KnockedEnemy { enemy: Enemy; x: number; y: number; vx: number; vy: number; splash: boolean; squash?: number }
 
 export interface Player {
   x: number;
@@ -25,6 +26,7 @@ export interface Player {
   vy: number;
   jumps: number;
   slide: number;
+  slideDirection: -1 | 1;
   atk: number;
   cd: number;
   star: number;
@@ -40,6 +42,7 @@ export interface GameState {
   stars: Star[];
   parts: Particle[];
   pops: Pop[];
+  knocked: KnockedEnemy[];
   score: number;
   kills: number;
   tickets: number;
@@ -48,6 +51,8 @@ export interface GameState {
   perfect: number;
   continues: number;
   combo: number;
+  /** Consecutive stomps without landing or taking damage. */
+  bounceChain: number;
   hp: number;
   inv: number;
   /** friend and machine x positions (they ease after the player) */
@@ -82,10 +87,10 @@ export function createEnemy(e: ScheduledEvent): Enemy {
 
 export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {
   return {
-    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [],
-    score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0,
+    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [],
+    score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0, bounceChain: 0,
     hp: 5, inv: 0, fx: PX - 22, mx: PX - 46,
-    p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, atk: 0, cd: 0, star: 0 },
+    p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, slideDirection: 1, atk: 0, cd: 0, star: 0 },
     friend: { yHist: [], atk: 0, cd: 0 },
     bgx: 0, lastT: 0, shake: 0, power: 0, down: 0, respawn: 0,
     boss: { hp: 60, max: 60, hit: 0 }, final: false, won: false,

@@ -83,7 +83,12 @@ export class Game {
     if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW') {
       if (p.jumps < 2) { p.vy = p.jumps ? -250 : -300; p.jumps++; p.slide = 0; this.audio.sfx('jump'); }
     }
-    if (c === 'ArrowDown' || c === 'KeyS') { if (p.y >= GROUND || p.ride) p.slide = 0.45; else p.vy = 340; }
+    if (c === 'ArrowDown' || c === 'KeyS') {
+      if (p.y >= GROUND || p.ride) {
+        p.slide = 0.45;
+        p.slideDirection = this.keys.has('ArrowLeft') || this.keys.has('KeyA') ? -1 : 1;
+      } else p.vy = 340;
+    }
     if ((c === 'KeyX' || c === 'KeyJ') && p.cd <= 0) { p.atk = 0.18; p.cd = 0.22; this.audio.sfx('slash'); this.attack(); }
     if ((c === 'KeyC' || c === 'KeyK') && p.star <= 0) this.throwStar();
   }
@@ -123,13 +128,13 @@ export class Game {
     else this.burst(x, y - 8, '#fff', 4);
   }
 
-  private award(x: number, y: number, base: number): void {
+  private award(x: number, y: number, base: number, bounceMultiplier = 1): void {
     const { s } = this, perfect = nearBeat(s.lastT);
     s.combo++;
-    const pts = base * (1 + Math.min(4, Math.floor(s.combo / 8))) * (perfect ? 2 : 1);
+    const pts = base * bounceMultiplier * (1 + Math.min(4, Math.floor(s.combo / 8))) * (perfect ? 2 : 1);
     s.score += pts; s.kills++;
     if (perfect) s.perfect++;
-    s.pops.push({ x, y, txt: perfect ? 'PERFECT!' : '+' + pts, life: 0.7, c: perfect ? '#ffe14a' : '#fff' });
+    s.pops.push({ x, y, txt: bounceMultiplier > 1 ? `BOUNCE x${bounceMultiplier} +${pts}` : perfect ? 'PERFECT!' : '+' + pts, life: 0.7, c: perfect ? '#ffe14a' : '#fff' });
     this.burst(x, y, perfect ? '#ffe14a' : '#ff5ad1', 10);
   }
 
@@ -141,6 +146,7 @@ export class Game {
 
   private hurt(): void {
     const { s } = this;
+    s.bounceChain = 0;
     s.hp--;
     if (s.hp <= 0) return this.die();
     s.inv = 1.2; s.combo = 0; s.shake = 0.25;
@@ -151,6 +157,7 @@ export class Game {
   /** Last heart lost (or hit by a tram): she bursts and is gone for DEATH_TIME, then respawn() drops her back in. */
   private die(): void {
     const { s } = this, p = s.p;
+    s.bounceChain = 0;
     s.hp = 0; s.down = DEATH_TIME; s.combo = 0; s.shake = 0.35; s.continues++;
     s.score = Math.max(0, s.score - 1000);
     this.audio.sfx('die');
@@ -182,13 +189,14 @@ export class Game {
       if (p.vy >= 0 && prevY <= roof + 0.5 && p.y >= roof) ride = e; // feet came down on (or stayed on) the roof
       else if (p.y > roof + 2 && p.y - (p.slide > 0 ? 10 : 24) < base && s.inv <= 0) { this.die(); return; } // hit by the side
     }
-    if (ride) { p.y = GROUND - ride.y - TRAM_ROOF; p.vy = 0; p.jumps = 0; }
+    if (ride) { p.y = GROUND - ride.y - TRAM_ROOF; p.vy = 0; p.jumps = 0; s.bounceChain = 0; }
     p.ride = ride;
   }
 
   // ---------- update ----------
   update(t: number, dt: number): void {
     const { s } = this, p = s.p;
+    const prevT = s.lastT, prevX = p.x, prevY = p.y;
     s.lastT = t;
     s.bgx += sectionAt(t).speed * dt;
     this.syncToast = Math.max(0, this.syncToast - dt);
@@ -211,11 +219,13 @@ export class Game {
     } else {
       // a tram roof carries her back towards the left edge
       if (p.ride) p.x = Math.max(TRAM_EDGE, p.x - p.ride.rel * dt);
-      if (this.keys.has('ArrowLeft') || this.keys.has('KeyA')) p.x = Math.max(Math.min(34, p.x), p.x - 130 * dt);
+      if (this.keys.has('ArrowLeft') || this.keys.has('KeyA')) {
+        const backwardSpeed = sectionAt(t).speed + 80;
+        p.x = Math.max(TRAM_EDGE, p.x - backwardSpeed * dt);
+      }
       if (this.keys.has('ArrowRight') || this.keys.has('KeyD')) p.x = Math.min(W - 30, p.x + 130 * dt);
-      const prevY = p.y;
+      if (p.slide > 0 && p.x !== prevX) p.slideDirection = p.x < prevX ? -1 : 1;
       p.vy += 900 * dt; p.y += p.vy * dt;
-      if (p.y >= GROUND) { p.y = GROUND; p.vy = 0; p.jumps = 0; }
       this.tram(t, prevY);
     }
     s.fx += (p.x - 22 - s.fx) * Math.min(1, dt * 4);
@@ -234,6 +244,27 @@ export class Game {
     for (const st of s.stars) { st.x += st.vx * dt; st.y += st.vy * dt; st.a += dt * 20; }
     s.stars = s.stars.filter((st) => st.x < W + 10 && st.y > 0 && st.y < H && !st.gone);
 
+    for (const q of s.knocked) {
+      if (q.squash !== undefined) {
+        q.squash -= dt;
+        q.x += q.vx * dt;
+        continue;
+      }
+      q.vy += 900 * dt;
+      q.x += q.vx * dt;
+      q.y += q.vy * dt;
+      if (q.splash && q.y >= GROUND) {
+        q.y = GROUND;
+        this.audio.sfx('hit');
+        for (let i = 0; i < 14; i++) s.parts.push({
+          x: q.x, y: GROUND - 1, vx: (Math.random() - 0.5) * 180,
+          vy: -20 - Math.random() * 70, life: 0.3 + Math.random() * 0.25,
+          c: q.enemy.type === 'pigeon' ? '#a9b8ce' : '#2bf0ff',
+        });
+      }
+    }
+    s.knocked = s.knocked.filter((q) => (q.squash !== undefined ? q.squash > 0 : q.y < GROUND) && q.x > -40 && q.x < W + 40);
+
     // enemies
     const ph = p.slide > 0 ? 10 : 24;
     for (const e of s.enemies) {
@@ -241,6 +272,32 @@ export class Game {
       const ty = TYPES[e.type], x = enemyX(e, t), ey = GROUND - e.y;
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
       if (e.type === 'tram') continue; // handled in tram()
+      const top = ey - ty.h;
+      if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'suitcase') && s.down <= 0 && p.vy > 0 && prevY <= top && p.y >= top) {
+        const crossing = (top - prevY) / (p.y - prevY);
+        const playerX = prevX + (p.x - prevX) * crossing;
+        const ex = enemyX(e, prevT) + (x - enemyX(e, prevT)) * crossing;
+        if (Math.abs(ex - playerX) < ty.w / 2 + 4) {
+          e.dead = true;
+          if (e.type === 'suitcase') {
+            s.knocked.push({ enemy: e, x, y: ey, vx: -e.rel, vy: 0, splash: false, squash: 0.6 });
+          } else {
+            s.knocked.push({ enemy: e, x, y: ey, vx: -e.rel, vy: 90, splash: true });
+          }
+          p.y = top; p.vy = -300; p.jumps = 1; p.slide = 0; p.ride = undefined;
+          this.audio.sfx('jump');
+          this.award(x, top, 100, ++s.bounceChain);
+          continue;
+        }
+      }
+      if (e.type === 'suitcase' && p.slide > 0 && s.down <= 0
+        && Math.abs(x - p.x) < ty.w / 2 + 4 && ey > p.y - 10 && top < p.y) {
+        e.dead = true;
+        s.knocked.push({ enemy: e, x, y: ey, vx: p.slideDirection * 260, vy: -240, splash: false });
+        this.audio.sfx('hit');
+        this.award(x, top, 100);
+        continue;
+      }
       for (const st of s.stars) {
         if (!ty.pickup && !ty.solid && !st.gone && Math.abs(st.x - x) < ty.w / 2 + 4 && st.y > ey - ty.h - 3 && st.y < ey + 3) {
           st.gone = true; this.hitEnemy(e, x, ey, 1);
@@ -259,6 +316,10 @@ export class Game {
           else { s.tickets++; s.ammo++; s.score += 50; s.pops.push({ x, y: ey - 8, txt: '+1', life: 0.5, c: '#ffd84a' }); }
         } else if (s.inv <= 0) this.hurt();
       }
+    }
+    // Resolve stomp crossings before landing, including fast falls that cross an enemy and the ground in one frame.
+    if (s.down <= 0 && p.y >= GROUND) {
+      p.y = GROUND; p.vy = 0; p.jumps = 0; s.bounceChain = 0;
     }
     s.enemies = s.enemies.filter((e) => !e.gone && !(e.dead && enemyX(e, t) < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)));
     if (p.ride?.dead) p.ride = undefined;

@@ -46,6 +46,7 @@ function fit(): void {
   canvas.style.width = W * s + 'px';
   canvas.style.height = H * s + 'px';
   subtitles.fit(canvas.getBoundingClientRect().width / W);
+  screen.style.setProperty('--game-scale', String(canvas.clientWidth / W));
 }
 addEventListener('resize', fit);
 fit();
@@ -58,8 +59,8 @@ function frame(now: number): void {
   highscores.tick(now);
   resetTransform();
   if (game.mode === 'loading' || game.mode === 'title') { subtitles.set(null); drawTitle(now / 1000, game.mode === 'loading'); }
-  else if (game.mode === 'win') { subtitles.set(null); drawWin(game, now / 1000); }
-  else if (game.mode === 'highscore') { subtitles.set(null); drawHighscore(); }
+  else if (game.mode === 'win') { subtitles.set(null); drawWin(game, now / 1000, highscores.place(game.s.score)); }
+  else if (game.mode === 'highscore') { subtitles.set(null); drawHighscore(now / 1000); }
   else if (game.mode === 'editor') { subtitles.set(null); editor.draw(); }
   else {
     if (game.mode === 'play') game.update(audio.time(), dt);
