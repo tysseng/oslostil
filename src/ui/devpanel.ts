@@ -29,7 +29,7 @@ export class DevPanel {
         <input type="range" min="0" max="${(WIN_AT - 0.5).toFixed(1)}" step="0.05" value="0" aria-label="Song position">
         <span class="time">0:00.00 · bar 1.1</span></div>
       <div class="row jumps"></div>
-      <div class="row"><span>1 = dev panel · 2 = mark time · 3 / 4 = sync - / +50 ms</span><span class="marks"></span></div>`;
+      <div class="row"><span>1 = dev panel · 2 = mark time · 3 / 4 = sync - / +50 ms · 5 = clean pause</span><span class="marks"></span></div>`;
     after.after(this.el);
     this.slider = this.el.querySelector('input')!;
     this.time = this.el.querySelector('.time')!;
@@ -63,12 +63,15 @@ export class DevPanel {
   keyDown(e: KeyboardEvent): boolean {
     if (!__DEV_MODE_DEFAULT__ || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return false;
     const key = e.key;
-    if (!['1', '2', '3', '4'].includes(key)) return false;
+    if (!['1', '2', '3', '4', '5'].includes(key)) return false;
     e.preventDefault();
     if (e.repeat) return true;
     if (key === '1') this.toggle();
     else if (key === '2') {
       if (this.game.mode === 'play' || this.game.mode === 'pause' || this.game.mode === 'editor') this.game.onMark(this.game.s.lastT);
+    } else if (key === '5') {
+      if (this.game.mode === 'pause' && this.game.cleanPause) this.game.resume();
+      else this.game.pause(true);
     } else {
       this.game.audio.nudgeSync(key === '4' ? 0.05 : -0.05);
       this.game.syncToast = 1.5;

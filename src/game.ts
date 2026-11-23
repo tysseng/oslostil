@@ -20,6 +20,7 @@ export class Game {
   level = loadDefaultLevel();
   s: GameState = createState(this.level);
   mode: Mode = 'loading';
+  cleanPause = false;
   private winReturnAt = 0;
   readonly keys = new Set<string>();
   /** seconds left of the on-screen sync readout */
@@ -48,6 +49,7 @@ export class Game {
     this.s.bgx = scrollAt(t);
     this.audio.play(t);
     this.mode = 'play';
+    this.cleanPause = false;
   }
 
   edit(t = this.s.lastT): void {
@@ -59,8 +61,15 @@ export class Game {
     this.mode = 'editor';
   }
 
-  pause(): void { if (this.mode === 'play') { this.mode = 'pause'; this.audio.pause(); } }
-  resume(): void { if (this.mode === 'pause') { this.mode = 'play'; this.audio.resume(); } }
+  pause(clean = false): void {
+    if (this.mode !== 'play' && this.mode !== 'pause') return;
+    if (this.mode === 'pause' && !clean) return;
+    this.cleanPause = __DEV_MODE_DEFAULT__ && clean;
+    if (this.mode === 'play') { this.mode = 'pause'; this.audio.pause(); }
+  }
+  resume(): void {
+    if (this.mode === 'pause') { this.mode = 'play'; this.cleanPause = false; this.audio.resume(); }
+  }
 
   // ---------- input ----------
   keyDown(e: KeyboardEvent): void {

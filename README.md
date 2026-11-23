@@ -75,6 +75,7 @@ The panel and its shortcuts are available only in `pnpm dev` and the dev build, 
 | 1 | toggle dev panel (dev builds only) |
 | 2 | mark the current time with the dev panel enabled (dev builds only) |
 | 3 / 4 | nudge the audio/visual sync -/+50 ms, saved in the browser (dev builds only) |
+| 5 | toggle clean pause without dimming or pause text; keeps subtitles visible (dev builds only) |
 
 The startup prompt reads “Trykk enter for å aktivere tekst-til-tale.” The win summary shows your leaderboard place, or “NEW HIGHSCORE!” for first. After seven seconds (or Enter), qualifying top-ten runs automatically enter three initials, saved with Enter. Initials entry shows placement without repeating the announcement; tied scores follow existing runs. Non-qualifying runs go directly to the list. All ten places are shown, with `---` / `------` for unplayed slots, and no placement announcement above the list. The game returns to startup automatically seven seconds after submission or viewing a non-qualifying result, without a return message or button. Initials entry has no timeout; storage failures are shown on screen.
 

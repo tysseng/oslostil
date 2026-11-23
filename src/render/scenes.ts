@@ -1,6 +1,6 @@
 // Scrolling backgrounds, one per part of the story.
 import { GROUND, H, W, barT, rng } from '../config';
-import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, machineCenter, machinesX, platformMachines, type SceneName } from '../timeline';
+import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, machineCenter, platformMachines, type SceneName } from '../timeline';
 import trainGreenUrl from '../../assets/vehicles/hires/local-train-green.png';
 import trainTomatoUrl from '../../assets/vehicles/hires/local-train-tomato-soup.png';
 import airportExpressUrl from '../../assets/vehicles/hires/airport-express.png';
@@ -113,7 +113,10 @@ const DRIVING_BUS = { t0: 1.5, vx: -170, ppm: BUS_PPM * 0.8 }; // a bit smaller:
 function drawBuses(t: number, bx: number): void {
   if (t > barT(10) + 8) return;
   const bounce = Math.sin((t - DRIVING_BUS.t0) * 18) * 0.35;
+  ctx.save();
+  ctx.filter = 'brightness(80%)';
   drawVehicle(BUS_RED, W + (t - DRIVING_BUS.t0) * DRIVING_BUS.vx, GROUND + bounce, DRIVING_BUS.ppm, true); // behind the waiting ones
+  ctx.restore();
   for (const [img, x] of WAITING_BUSES) drawVehicle(img, x - bx * ROOF_PARALLAX, GROUND, BUS_PPM);
 }
 
@@ -294,7 +297,7 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
     drawPlatformRoof(bx);
     if (t > MACHINES_T && t < barT(20)) { // «tre blå maskiner» – the left one is Victoria until she wakes up
       for (const k of platformMachines(t)) drawPlatformMachine(machineCenter(t, k), GROUND);
-      if (t < VICTORIA_WAKE_T) text('VICTORIA', machinesX(t) + 1, GROUND - 42, '#ffcc33', 4, 'left');
+      if (t < VICTORIA_WAKE_T) text('VICTORIA', machineCenter(t), GROUND - 42, '#ffcc33', 4, 'center');
     }
 
     if (name === 'glitch') {

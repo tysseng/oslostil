@@ -26,7 +26,7 @@ const editor = new LevelEditor(game, screen);
 const highscores = new Highscores(game, screen);
 if (__DEV_MODE_DEFAULT__) {
   const help = document.createElement('span');
-  help.innerHTML = ' · <b>1</b> dev panel · <b>2</b> mark time · <b>3 / 4</b> sync';
+  help.innerHTML = ' · <b>1</b> dev panel · <b>2</b> mark time · <b>3 / 4</b> sync · <b>5</b> clean pause';
   document.querySelector('.note')?.append(help);
 }
 
@@ -66,8 +66,8 @@ function frame(now: number): void {
     if (game.mode === 'play') game.update(audio.time(), dt);
     const t = game.s.lastT;
     drawGame(game, t, dev.enabled);
-    subtitles.set(game.mode === 'play' ? lyricAt(t)?.text ?? null : null);
-    if (game.mode === 'pause') drawPause();
+    subtitles.set(game.mode === 'play' || game.cleanPause ? lyricAt(t)?.text ?? null : null);
+    if (game.mode === 'pause' && !game.cleanPause) drawPause();
   }
   dev.tick();
   editor.tick();

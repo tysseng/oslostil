@@ -103,14 +103,14 @@ export function drawMachine(x: number, y: number, t: number, mood: Mood = 'idle'
 }
 
 /**
- * The tram obstacle: the new light-blue tram (hi-res master tram-new.png) at TRAM_PPM, mirrored so its front
- * leads as it comes at the girls (the sign stays readable). x = nose (left end), wheels on y.
+ * The bidirectional light-blue tram (hi-res master tram-new.png) at TRAM_PPM, without mirroring.
+ * x = leading end (left end), wheels on y.
  */
 const TRAM_IMG = loadImage(tramUrl);
 
 function drawTram(x: number, y: number, t: number): void {
   if (x > W && Math.floor(t * 8) % 2) text('!', W - 12, GROUND - 52, '#ff4040', 16); // warning before it rolls in
-  drawVehicle(TRAM_IMG, x, y, TRAM_PPM, true);
+  drawVehicle(TRAM_IMG, x, y, TRAM_PPM);
 }
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */

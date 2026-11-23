@@ -4,8 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So many nice fixes again!">
-      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added logo to startup screen">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/devpanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/devpanel.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,23 +29,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.000000000000005" />
-      <entry key="S5" value="1.000004142870536" />
-      <entry key="S10" value="1.0040227196776585" />
-      <entry key="S30" value="1.4001270991077934" />
-      <entry key="S60" value="2.337449091303988" />
-      <entry key="M2" value="4.197163371396859" />
-      <entry key="M5" value="9.399759914485138" />
-      <entry key="M10" value="15.854008410420162" />
-      <entry key="M15" value="20.65834107317313" />
-      <entry key="M30" value="34.96086689694957" />
-      <entry key="H1" value="67.47729481750615" />
-      <entry key="H2" value="120.43650600995849" />
-      <entry key="H4" value="184.825448491026" />
-      <entry key="D1" value="558.6246401108932" />
-      <entry key="W1" value="857.0725323074348" />
+      <entry key="MS100" value="1.0000000145147763" />
+      <entry key="MS500" value="1.0464922090742137" />
+      <entry key="S2" value="2.598479672630844" />
+      <entry key="S5" value="5.684836484489293" />
+      <entry key="S10" value="8.081377026962365" />
+      <entry key="S30" value="10.471791519831786" />
+      <entry key="S60" value="11.28396827773261" />
+      <entry key="M2" value="12.375345835622666" />
+      <entry key="M5" value="16.635866579896508" />
+      <entry key="M10" value="23.24736406503103" />
+      <entry key="M15" value="28.457756339548563" />
+      <entry key="M30" value="43.22936788333081" />
+      <entry key="H1" value="75.78906869026426" />
+      <entry key="H2" value="129.1045846824941" />
+      <entry key="H4" value="194.25281034547083" />
+      <entry key="D1" value="569.3223049519945" />
+      <entry key="W1" value="868.7868461688399" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -60,23 +67,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.7631296044802796" />
-      <entry key="MS500" value="0.9473700705992677" />
-      <entry key="S2" value="0.9865745659392645" />
-      <entry key="S5" value="0.9946121820159055" />
-      <entry key="S10" value="1.0013221419908644" />
-      <entry key="S30" value="1.3991942839877975" />
-      <entry key="S60" value="2.336943641338763" />
-      <entry key="M2" value="4.196866234470037" />
-      <entry key="M5" value="9.399583065228738" />
-      <entry key="M10" value="15.853879698737622" />
-      <entry key="M15" value="20.658235096937048" />
-      <entry key="M30" value="34.96077496243326" />
-      <entry key="H1" value="67.47711604993863" />
-      <entry key="H2" value="120.43616673641797" />
-      <entry key="H4" value="184.82507234700174" />
-      <entry key="D1" value="558.62449242479" />
-      <entry key="W1" value="857.0725056700426" />
+      <entry key="MS100" value="5.179462590846909E-7" />
+      <entry key="MS500" value="0.1009046546649199" />
+      <entry key="S2" value="2.055712566267689" />
+      <entry key="S5" value="5.396754143261489" />
+      <entry key="S10" value="7.919033862375527" />
+      <entry key="S30" value="10.412604735755695" />
+      <entry key="S60" value="11.253645570757637" />
+      <entry key="M2" value="12.359953203102492" />
+      <entry key="M5" value="16.629596163104434" />
+      <entry key="M10" value="23.244174426061903" />
+      <entry key="M15" value="28.45560482951496" />
+      <entry key="M30" value="43.228251439585" />
+      <entry key="H1" value="75.78838232012497" />
+      <entry key="H2" value="129.10399605383287" />
+      <entry key="H4" value="194.2523100558828" />
+      <entry key="D1" value="569.3221360458333" />
+      <entry key="W1" value="868.7868164596774" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -164,6 +171,7 @@
     <MESSAGE value="Should fix highscore screen.&#10;Multiplier when jumping on things&#10;Backwards move is now faster than scroll" />
     <MESSAGE value="So many nice fixes!" />
     <MESSAGE value="So many nice fixes again!" />
-    <option name="LAST_COMMIT_MESSAGE" value="So many nice fixes again!" />
+    <MESSAGE value="Added logo to startup screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added logo to startup screen" />
   </component>
 </project>

@@ -83,7 +83,8 @@ export interface GameState {
   best?: number;
 }
 
-export const eventSpeed = (e: ScheduledEvent): number => e.rel ?? sectionAt(e.arr).speed + TYPES[e.type].own;
+export const eventSpeed = (e: ScheduledEvent): number =>
+  e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : 1);
 export const spawnTime = (e: ScheduledEvent): number =>
   e.arr - (W + 100 - PX) / eventSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
 

@@ -83,7 +83,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 - **Two resolutions:** the canvas is 1280 × 720 (320 × 180 game px × `RES` 4).
   - Rectangles and pixel sprites are drawn in game px with no smoothing, so they stay blocky.
   - Text and hi-res images keep their detail.
-- **Vehicles use smooth hi-res images for now.** Trains and buses are drawn straight from the masters in `assets/vehicles/hires/` (100 px per metre) with `drawVehicle` in `scenes.ts`, which trims them at load. Sizes: trains `TRAIN_PPM` 10 game px per metre, waiting buses `BUS_PPM` 13.2, the driving bus 80 % of that (it's further back). Joakim didn't like the pixel versions; new vehicle sprites come later. The tram obstacle (`drawTram` in `sprites.ts`) uses `tram-new.png` the same way at `TRAM_PPM` 10, mirrored so its front leads. `meta`, `drawVehicle` and `HIRES_PPM` live in `draw.ts`.
+- **Vehicles use smooth hi-res images for now.** Trains and buses are drawn straight from the masters in `assets/vehicles/hires/` (100 px per metre) with `drawVehicle` in `scenes.ts`, which trims them at load. Sizes: trains `TRAIN_PPM` 10 game px per metre, waiting buses `BUS_PPM` 13.2, the driving bus 80 % of that (it's further back). Joakim didn't like the pixel versions; new vehicle sprites come later. The bidirectional tram obstacle (`drawTram` in `sprites.ts`) uses `tram-new.png` unmirrored at `TRAM_PPM` 10, preserving the original door and sign positions. `meta`, `drawVehicle` and `HIRES_PPM` live in `draw.ts`.
 - **Sprites** are sheets of fixed-size cells, bottom-aligned (feet, base or wheels on the bottom row) and horizontally centred.
 - **Tram deaths:** the player tumbles backward; each companion launches independently when the tram's nose crosses it (swept between frames, including the player's impact frame), never from overlap with the middle. Struck companions remain hidden until respawn; unstruck companions stay visible. `deathFlight` holds visual-only motion; other deaths keep the ordinary delay.
 - **Boss:** enters from the right over one bar, then patrols between x=192 and x=256 on a four-bar cycle. Projectile hits deal 2 damage and use bounded body coordinates at that position. The unlabelled health bar follows the head's per-frame offsets (mirrored from `tools/sprites/boss.py` in `BOSS_HEAD_OFFSETS`), with a tram-blue frame and dark empty track behind the shrinking red fill.
@@ -95,6 +95,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Dev mode
 
+- **Clean pause:** **5** freezes gameplay/audio without the pause overlay or text, retaining subtitles. Press **5**, **P**, **Escape** or **Enter** to resume. From ordinary pause, **5** switches to clean pause. Both the shortcut and clean rendering flag are gated to dev builds.
 - **Toggle:** **1**. The panel and shortcuts are available only in `pnpm dev` and the dev build, gated by `__DEV_MODE_DEFAULT__`; the release build cannot activate them.
 - **What it shows:** a seek slider and jump buttons (they seek the audio *and* the game state), and **2** to mark the current time while playing, paused or editing with the panel enabled. **3 / 4** adjust sync -/+50 ms. `DevPanel.keyDown` handles these before gameplay/editor input and UI button focus checks; text/file inputs and modifier combinations are ignored.
 - **Testing hook:** `window.__oslo.seek(t)`, `window.__oslo.snap(t, lead = 1.5)` and `window.__oslo.game` (state, `pause()`, `resume()`).
@@ -108,6 +109,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 - `Game.level` holds the editable schedule. `seek` and `start` always use it. `editor.ts` saves it under `oslostil-level-v1` in local storage and validates it on load; failures appear in the editor status.
 - `level.ts` validates imported JSON and loads the complete schedule from `src/level.json` as a fresh copy. There is no runtime level generator or `null` fallback; `[]` is an empty level. Download level exports that same array format as `level.json`; replace the repository file and rebuild/deploy to publish it. Import level validates before asking to replace the draft. Browser drafts override the bundled default until Use default level discards them.
 - Manual positioning stores `arr`, height `y`, and fixed relative speed `rel`, so dragging across a section boundary does not change the item's screen position. `eventSpeed`, `createEnemy` and `spawnTime` in `state.ts` are shared with gameplay; spawn order is based on entry time, not arrival time.
+- Default tram movement is 20% faster than the combined section scroll and tram own speed; editor-saved explicit `rel` speeds remain unchanged.
 - Trams can also be raised: rendering and ride/side-hit collision both use their edited height. Scripted scenery, companions and the boss are not editable.
 
 ### Highscores
