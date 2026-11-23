@@ -3,7 +3,9 @@ import type { Game } from '../game';
 import { loadDefaultLevel, parseLevel } from '../level';
 import { canvas, ctx, resetTransform } from '../render/draw';
 import { drawScene } from '../render/scenes';
-import { drawEnemy, drawLampLight } from '../render/sprites';
+import { drawEnemy, drawLampLights } from '../render/sprites';
+import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
+import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
 import { LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, itemLayer, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
 import { createEnemy, enemyX, eventSpeed } from '../state';
 import { sectionAt } from '../timeline';
@@ -13,6 +15,9 @@ import tramUrl from '../../assets/vehicles/hires/tram-new.png';
 import propsUrl from '../../assets/sprites/props.png';
 import lampsUrl from '../../assets/sprites/lamps.png';
 import lightsUrl from '../../assets/sprites/lamps-light.png';
+import ninjasUrl from '../../assets/sprites/ninjas.png';
+import thugsUrl from '../../assets/sprites/thugs.png';
+import passengersUrl from '../../assets/sprites/passengers.png';
 import './editor.css';
 
 const STORAGE_KEY = 'oslostil-level-v1';
@@ -146,7 +151,10 @@ export class LevelEditor {
     sheet.src = enemiesUrl;
     const props = new Image();
     props.src = propsUrl;
-    const lamps = new Image(), lights = new Image();
+    const lamps = new Image(), lights = new Image(), ninjas = new Image();
+    ninjas.src = ninjasUrl;
+    const thugs = new Image(), passengers = new Image();
+    thugs.src = thugsUrl; passengers.src = passengersUrl;
     lamps.src = lampsUrl; lights.src = lightsUrl;
     for (const kind of kinds) {
       const button = addTool(kind[0].toUpperCase() + kind.slice(1), kind);
@@ -170,6 +178,22 @@ export class LevelEditor {
         lamps.addEventListener('load', draw, { once: true });
         lights.addEventListener('load', draw, { once: true });
         draw();
+        button.prepend(preview);
+      } else if (isFighter(kind) || isPassenger(kind) || kind === 'tagger_spray') {
+        const preview = document.createElement('canvas');
+        preview.width = 64; preview.height = 40;
+        const img = isNinjaKind(kind) ? ninjas : isPassenger(kind) ? passengers : thugs;
+        const draw = () => {
+          const c = preview.getContext('2d')!;
+          c.imageSmoothingEnabled = false;
+          if (isFighter(kind)) c.drawImage(img, NINJAS.anims.run[0] * NINJA_CELL_W, fighterRow(kind) * NINJA_CELL_H,
+            NINJA_CELL_W, NINJA_CELL_H, 12, 4, 40, 32);
+          else if (isPassenger(kind)) c.drawImage(img, PASSENGERS.anims.walk[0] * PASSENGER_CELL_W,
+            PASSENGERS.kinds[kind].row * PASSENGER_CELL_H, PASSENGER_CELL_W, PASSENGER_CELL_H, 12, 4, 40, 32);
+          else c.drawImage(img, 0, THUGS.spray.row * NINJA_CELL_H, NINJA_CELL_W, NINJA_CELL_H, 12, 4, 40, 32);
+        };
+        if (img.complete && img.naturalWidth) draw();
+        else img.addEventListener('load', draw, { once: true });
         button.prepend(preview);
       } else if (isProp(kind)) {
         const preview = document.createElement('canvas');
@@ -352,23 +376,12 @@ export class LevelEditor {
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0);
     const events = this.layeredEvents();
     for (const event of events) {
-      if (event.type === 'tram') continue;
       const b = this.bounds(event);
       if (b.x > W || b.x + b.w < 0) continue;
       const enemy = createEnemy(event);
       drawEnemy(enemy, enemyX(enemy, t), t);
     }
-    for (const event of events) {
-      if (!isLamp(event.type)) continue;
-      const enemy = createEnemy(event);
-      drawLampLight(enemy, enemyX(enemy, t));
-    }
-    for (const event of events) {
-      if (event.type === 'tram') {
-        const enemy = createEnemy(event);
-        drawEnemy(enemy, enemyX(enemy, t), t);
-      }
-    }
+    drawLampLights(events.map(createEnemy), t);
     for (const event of events) {
       const b = this.bounds(event);
       if (b.x > W || b.x + b.w < 0) continue;

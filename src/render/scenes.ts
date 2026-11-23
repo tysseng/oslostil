@@ -1,6 +1,6 @@
 // Scrolling backgrounds, one per part of the story.
 import { GROUND, H, W, barT, rng } from '../config';
-import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, machineCenter, platformMachines, type SceneName } from '../timeline';
+import { COLOR_T, MACHINES_T, SECTIONS, sectionAt, STATION_VX, VICTORIA_WAKE_T, machineCenter, platformMachines, subwayNose, subwayTaggerX, TAGGER_RUN, TAGGER_SPRAY, type SceneName } from '../timeline';
 import trainGreenUrl from '../../assets/vehicles/hires/local-train-green.png';
 import trainTomatoUrl from '../../assets/vehicles/hires/local-train-tomato-soup.png';
 import airportExpressUrl from '../../assets/vehicles/hires/airport-express.png';
@@ -16,7 +16,8 @@ import burningTram from '../../assets/vehicles/hires/tram-burning.json';
 import fireUrl from '../../assets/sprites/fire.png';
 import fireMeta from '../../assets/sprites/fire.json';
 import { HIRES_PPM, R, ctx, drawVehicle, loadImage, meta, ready, text } from './draw';
-import { drawPlatformMachine } from './sprites';
+import { drawEnemy, drawPlatformMachine } from './sprites';
+import { createEnemy } from '../state';
 
 export const SKY: Record<SceneName, [string, string]> = {
   station: ['#0b1030', '#26305e'], glitch: ['#170a2e', '#3c1a5c'], neon: ['#12002b', '#5b0f6e'], map: ['#06222b', '#0f5c5a'],
@@ -74,17 +75,31 @@ const TRAIN_RUNS: TrainRun[] = [
  * The nose peaks just inside the right edge.
  */
 const SUBWAY_IMG = loadImage(subwayUrl);
-const SUBWAY = { stop: barT(42) + 4.5, approach: 320, brake: 4, rest: SECTIONS.find((s) => s.id === 'verse2')!.speed * 0.8, noseStop: 220 };
-function drawSubway(t: number): void {
+function drawSubway(t: number, taggerStoppedAt?: number): void {
   if (t < barT(42) - 0.5 || !ready(SUBWAY_IMG)) return;
-  const { stop, approach, brake, rest, noseStop } = SUBWAY, before = stop - t, a = approach / brake;
-  let frame: number; // nose position relative to where it stops, in the background's frame
-  if (before <= 0) frame = 0;
-  else if (before <= brake) frame = -(a * before * before) / 2;
-  else frame = -(approach * brake) / 2 - approach * (before - brake);
-  const nose = noseStop + frame + rest * before; // background frame → screen
+  const nose = subwayNose(t);
   const w = (meta(SUBWAY_IMG).box[2] * TRAIN_PPM) / HIRES_PPM;
   drawVehicle(SUBWAY_IMG, nose - w, GROUND + WHEEL_M * TRAIN_PPM, TRAIN_PPM); // the ground strip covers the wheels
+  const paintTime = Math.min(t, taggerStoppedAt ?? t) - TAGGER_SPRAY, target = nose - 70;
+  if (paintTime >= 0) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(nose - w, GROUND - 26, w - 24, 24);
+    ctx.clip();
+    for (let i = 0; i < 5; i++) {
+      const progress = Math.max(0, Math.min(1, (paintTime - i * 0.18) / 0.18));
+      if (!progress) continue;
+      const x = target - 24 + i * 5, y = GROUND - 24 + (i % 2) * 3;
+      R(x, y, 3, 16 * progress, '#ff2bd6');
+      if (progress === 1) R(x + 1, y + 15, 1, 3 + i % 3, '#d51ca5');
+    }
+    ctx.restore();
+  }
+  const x = subwayTaggerX(t);
+  if (x !== null && taggerStoppedAt === undefined) {
+    const tagger = createEnemy({ type: t >= TAGGER_SPRAY ? 'tagger_spray' : 'tagger', arr: TAGGER_RUN - 1 });
+    drawEnemy(tagger, x, t);
+  }
 }
 
 function drawTrains(t: number): void {
@@ -278,7 +293,7 @@ function drawBurningTrams(t: number, bx: number): void {
   }
 }
 
-export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: number): void {
+export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: number, taggerStoppedAt?: number): void {
   const name: SceneName = scene === 'map' && t >= COLOR_T ? 'map2' : scene;
   sky(SKY[name]);
   const r = rng(7);
@@ -342,7 +357,7 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
     // classic British-style Oslo, then at 1:42.0 the same street in Tokyoslo style (no place-name signs)
     if (name === 'map2') drawTokyoslo(bx);
     else drawClassicOslo(bx);
-    if (name === 'map') drawSubway(t); // in front of the buildings
+    if (name === 'map') drawSubway(t, taggerStoppedAt); // in front of the buildings
   } else if (name === 'chaos') { // «brennende trikker og busser på skrå» – in burning Tokyoslo
     drawTokyoslo(bx);
     drawBurningTrams(t, bx);

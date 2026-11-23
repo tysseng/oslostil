@@ -582,15 +582,15 @@
     "arr": 61.02160655737705
   },
   {
-    "type": "ninja",
+    "type": "thug",
     "arr": 64.95603278688525
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 65.44783606557377
   },
   {
-    "type": "ninja",
+    "type": "punk",
     "arr": 65.93963934426229
   },
   {
@@ -599,19 +599,19 @@
     "y": 40
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 66.43144262295083
   },
   {
-    "type": "ninja",
+    "type": "tagger",
     "arr": 66.92324590163933
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 67.41504918032786
   },
   {
-    "type": "ninja",
+    "type": "thug",
     "arr": 67.90685245901638
   },
   {
@@ -620,19 +620,19 @@
     "y": 40
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 68.39865573770491
   },
   {
-    "type": "ninja",
+    "type": "punk",
     "arr": 68.89045901639344
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 69.38226229508196
   },
   {
-    "type": "ninja",
+    "type": "tagger",
     "arr": 69.87406557377048
   },
   {
@@ -645,19 +645,19 @@
     "y": 40
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 70.36586885245902
   },
   {
-    "type": "ninja",
+    "type": "thug",
     "arr": 70.85767213114754
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 71.34947540983606
   },
   {
-    "type": "ninja",
+    "type": "punk",
     "arr": 71.84127868852458
   },
   {
@@ -666,35 +666,35 @@
     "y": 40
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 72.33308196721312
   },
   {
-    "type": "ninja",
+    "type": "tagger",
     "arr": 72.82488524590164
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 73.31668852459016
   },
   {
-    "type": "ninja",
+    "type": "thug",
     "arr": 73.80849180327868
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 74.30029508196722
   },
   {
-    "type": "ninja",
+    "type": "punk",
     "arr": 74.79209836065573
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 75.28390163934425
   },
   {
-    "type": "ninja",
+    "type": "tagger",
     "arr": 75.77570491803277
   },
   {
@@ -703,19 +703,19 @@
     "y": 40
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 76.26750819672131
   },
   {
-    "type": "ninja",
+    "type": "thug",
     "arr": 76.75931147540983
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 77.25111475409835
   },
   {
-    "type": "ninja",
+    "type": "punk",
     "arr": 77.74291803278687
   },
   {
@@ -728,19 +728,19 @@
     "y": 40
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 78.23472131147541
   },
   {
-    "type": "ninja",
+    "type": "tagger",
     "arr": 78.72652459016393
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 79.21832786885246
   },
   {
-    "type": "ninja",
+    "type": "thug",
     "arr": 79.71013114754098
   },
   {
@@ -749,30 +749,30 @@
     "y": 40
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 80.20193442622951
   },
   {
-    "type": "bot",
+    "type": "student",
     "arr": 80.69373770491802,
     "label": "STUDENT"
   },
   {
-    "type": "bot",
+    "type": "senior",
     "arr": 82.66095081967212,
     "label": "SENIOR"
   },
   {
-    "type": "bot",
+    "type": "adult",
     "arr": 83.64455737704917,
     "label": "ADULT"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 84.1363606557377
   },
   {
-    "type": "bot",
+    "type": "child",
     "arr": 84.62816393442623,
     "label": "CHILD"
   },
@@ -782,7 +782,7 @@
     "y": 34.66147461067885
   },
   {
-    "type": "bot",
+    "type": "student",
     "arr": 85.61177049180327,
     "label": "STUDENT"
   },
@@ -792,30 +792,30 @@
     "y": 43.78005451802164
   },
   {
-    "type": "bot",
+    "type": "adult",
     "arr": 86.59537704918033,
     "label": "ADULT"
   },
   {
-    "type": "bot",
+    "type": "senior",
     "arr": 87.57898360655737,
     "label": "SENIOR"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 88.07078688524591
   },
   {
-    "type": "bot",
+    "type": "student",
     "arr": 88.56259016393442,
     "label": "STUDENT"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 90.038
   },
   {
-    "type": "bot",
+    "type": "senior",
     "arr": 90.52980327868852,
     "label": "SENIOR"
   },
@@ -824,22 +824,22 @@
     "arr": 90.52980327868852
   },
   {
-    "type": "bot",
+    "type": "adult",
     "arr": 91.51340983606556,
     "label": "ADULT"
   },
   {
-    "type": "bot",
+    "type": "child",
     "arr": 92.49701639344262,
     "label": "CHILD"
   },
   {
-    "type": "bot",
+    "type": "student",
     "arr": 93.48062295081967,
     "label": "STUDENT"
   },
   {
-    "type": "bot",
+    "type": "adult",
     "arr": 94.46422950819671,
     "label": "ADULT"
   },
@@ -848,11 +848,11 @@
     "arr": 95.44783606557375
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 95.93963934426229
   },
   {
-    "type": "bot",
+    "type": "student",
     "arr": 96.43144262295081,
     "label": "STUDENT"
   },
@@ -862,53 +862,53 @@
     "y": 38.0358229232952
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 97.90685245901639
   },
   {
-    "type": "bot",
+    "type": "senior",
     "arr": 98.39865573770491,
     "label": "SENIOR"
   },
   {
-    "type": "bot",
+    "type": "adult",
     "arr": 99.38226229508196,
     "label": "ADULT"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 99.8740655737705
   },
   {
-    "type": "bot",
+    "type": "child",
     "arr": 100.36586885245902,
     "label": "CHILD"
   },
   {
-    "type": "bot",
+    "type": "student",
     "arr": 101.34947540983606,
     "label": "STUDENT"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 101.8412786885246
   },
   {
-    "type": "bot",
+    "type": "adult",
     "arr": 102.3330819672131,
     "label": "ADULT"
   },
   {
-    "type": "bot",
+    "type": "senior",
     "arr": 103.31668852459015,
     "label": "SENIOR"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 103.80849180327868
   },
   {
-    "type": "bot",
+    "type": "student",
     "arr": 104.3002950819672,
     "label": "STUDENT"
   },
@@ -922,11 +922,11 @@
     "arr": 105.28390163934425
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 105.77570491803279
   },
   {
-    "type": "bot",
+    "type": "senior",
     "arr": 106.26750819672131,
     "label": "SENIOR"
   },
@@ -941,34 +941,34 @@
     "y": 37.4713627146557
   },
   {
-    "type": "bot",
+    "type": "child",
     "arr": 108.23472131147541,
     "label": "CHILD"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 109.71013114754099
   },
   {
-    "type": "bot",
+    "type": "adult",
     "arr": 110.2019344262295,
     "label": "ADULT"
   },
   {
-    "type": "bot",
+    "type": "senior",
     "arr": 111.18554098360654,
     "label": "SENIOR"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 111.67734426229508
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 112.1691475409836
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 112.66095081967212
   },
   {
@@ -976,15 +976,15 @@
     "arr": 112.90685245901639
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 113.15275409836065
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 113.39865573770491
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 113.64455737704918
   },
   {
@@ -996,15 +996,15 @@
     "arr": 114.1363606557377
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 114.38226229508197
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 114.62816393442623
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 114.8740655737705
   },
   {
@@ -1012,7 +1012,7 @@
     "arr": 115.11996721311475
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 115.61177049180328
   },
   {
@@ -1020,15 +1020,15 @@
     "arr": 115.85767213114755
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 116.10357377049179
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 116.34947540983606
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 116.59537704918031
   },
   {
@@ -1036,7 +1036,7 @@
     "arr": 116.84127868852458
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 117.08718032786884
   },
   {
@@ -1044,11 +1044,11 @@
     "arr": 117.08718032786884
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 117.3330819672131
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 117.57898360655737
   },
   {
@@ -1056,7 +1056,7 @@
     "arr": 118.0707868852459
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 118.56259016393442
   },
   {
@@ -1064,11 +1064,11 @@
     "arr": 119.05439344262294
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 119.54619672131147
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 120.038
   },
   {
@@ -1076,7 +1076,7 @@
     "arr": 120.28390163934426
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 120.52980327868852
   },
   {
@@ -1084,7 +1084,7 @@
     "arr": 121.02160655737704
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 121.51340983606558
   },
   {
@@ -1096,11 +1096,11 @@
     "arr": 122.49701639344262
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 122.98881967213114
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 123.48062295081968
   },
   {
@@ -1108,7 +1108,7 @@
     "arr": 123.97242622950819
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 124.46422950819671
   },
   {
@@ -1120,7 +1120,7 @@
     "arr": 124.95603278688523
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 125.44783606557377
   },
   {
@@ -1132,11 +1132,11 @@
     "arr": 125.93963934426229
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 126.43144262295081
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 126.92324590163933
   },
   {
@@ -1144,11 +1144,11 @@
     "arr": 127.41504918032787
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 127.66095081967214
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 127.90685245901639,
     "label": "KAOS"
   },
@@ -1162,25 +1162,25 @@
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 128.64455737704918
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 128.89045901639344,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 129.1363606557377
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 129.38226229508197,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 129.62816393442623
   },
   {
@@ -1193,12 +1193,12 @@
     "arr": 130.11996721311476
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 130.36586885245904,
     "label": "KAOS"
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 130.6117704918033
   },
   {
@@ -1207,7 +1207,7 @@
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 131.1035737704918
   },
   {
@@ -1216,7 +1216,7 @@
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 131.59537704918034
   },
   {
@@ -1229,12 +1229,12 @@
     "arr": 132.08718032786885
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 132.33308196721313,
     "label": "KAOS"
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 132.5789836065574
   },
   {
@@ -1247,16 +1247,16 @@
     "arr": 132.82488524590164
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 133.0707868852459
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 133.31668852459018,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 133.56259016393443
   },
   {
@@ -1265,16 +1265,16 @@
     "label": "KAOS"
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 134.05439344262294
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 134.30029508196722,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 134.54619672131147
   },
   {
@@ -1283,16 +1283,16 @@
     "label": "KAOS"
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 135.03799999999998
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 135.28390163934426,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 135.52980327868852
   },
   {
@@ -1315,11 +1315,11 @@
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 136.5134098360656
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 136.75931147540985,
     "label": "KAOS"
   },
@@ -1329,16 +1329,16 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 137.0052131147541
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 137.25111475409838,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 137.49701639344264
   },
   {
@@ -1352,11 +1352,11 @@
     "fromBoss": true
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 137.98881967213114
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 138.23472131147543,
     "label": "KAOS"
   },
@@ -1375,20 +1375,20 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 138.9724262295082
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 139.21832786885247,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 139.46422950819672
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 139.710131147541,
     "label": "KAOS"
   },
@@ -1402,16 +1402,16 @@
     "arr": 139.95603278688526
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 140.20193442622954,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 140.4478360655738
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 140.69373770491805,
     "label": "KAOS"
   },
@@ -1421,7 +1421,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 140.9396393442623
   },
   {
@@ -1430,11 +1430,11 @@
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 141.43144262295084
   },
   {
-    "type": "ninja",
+    "type": "ninja_oni",
     "arr": 141.6773442622951,
     "label": "KAOS"
   },
@@ -1444,16 +1444,16 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 141.92324590163935
   },
   {
-    "type": "ninja",
+    "type": "ninja_kasa",
     "arr": 142.16914754098363,
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 142.41504918032788
   },
   {
@@ -1467,7 +1467,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 142.9068524590164
   },
   {
@@ -1476,7 +1476,7 @@
     "label": "KAOS"
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 143.39865573770493
   },
   {
@@ -1485,7 +1485,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 143.89045901639344
   },
   {
@@ -1494,7 +1494,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 144.38226229508197
   },
   {
@@ -1503,7 +1503,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 144.87406557377048
   },
   {
@@ -1512,7 +1512,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 145.36586885245902
   },
   {
@@ -1521,7 +1521,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 145.85767213114755
   },
   {
@@ -1530,7 +1530,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 146.3494754098361
   },
   {
@@ -1539,7 +1539,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 146.8412786885246
   },
   {
@@ -1548,7 +1548,7 @@
     "fromBoss": true
   },
   {
-    "type": "drone",
+    "type": "gull",
     "arr": 147.33308196721313
   },
   {

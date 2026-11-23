@@ -61,6 +61,18 @@ When a PNG in `assets/` changes, the running dev server reloads it straight away
 - **Glitch blob:** loose pink and cyan 2 × 2 pixel squares that jump around, with no outline and no face, like the first version.
 - **Size:** all enemies are a bit bigger and clearer than the original rectangles.
 
+### Enemy ninjas and the seagull (Joakim, 23 Nov)
+
+- **Enemy ninjas are the girls' height (30 px)** and must look **clearly different from the girls in ninja mode** (navy, pink or purple scarf, ponytail): different colours, headgear and silhouettes, no ponytail. Three kinds: Shadow (ash grey, black hood, red headband, yellow eyes), Oni (crimson, white horned mask, katana), Wanderer (teal, straw kasa hat, ochre scarf, short sword). They face left.
+- **Elaborate animation:** idle ×2, run ×6, crouch, jump up, jump down, attack ×3 (`tools/sprites/ninjas.py`, 40 × 32 cells, layout in `ninjas.json`).
+- **Seagull** replaces the drone: bigger than the pigeon, about drone size in body, white with grey wings and black tips, an 8-frame flap.
+
+### Thugs and zombie passengers (Joakim, 23 Nov)
+
+- **Before ninja mode** the enemies are street thugs, not ninjas: a classic thug, a punk and a tagger. The tagger has a spray mode for the subway: pink spray, slightly transparent.
+- **The passengers** (they replace the ticket bot and its label) are ordinary people in normal clothes with **red glowing eyes**, like zombies or robots: an adult woman with yellow hair, a small child in a red cap, an old man with a rolled-up newspaper, and a teenager smoking a joint.
+- All are drawn by `tools/sprites/people.py` on the ninjas' skeleton (40 × 32 cells, facing left).
+
 ### Ticket machines
 
 Automat Victoria and the platform machines are seen from the front. They have **plain blue edges and no white side light strip**: that strip is only visible from the side.
@@ -76,6 +88,7 @@ Automat Victoria and the platform machines are seen from the front. They have **
 
 - **Front view only**, flat 2D, in the girls' style: dark outlines tinted per material (not one flat black), 3–4 tone shading, rich colour.
 - **Hand anti-aliasing:** curves and corners get hand-placed in-between tones (opaque pixels), never a scaled-down or blurred image. This replaces the «no blended edge pixels» rule for props only.
+- **The kiosk is at dusk** (Joakim, 23 Nov): darker outside, lit windows and name plate, and a light cone each side of the centre. The light is in `props-light.png` (same grid as `props.png`), made like the lamp light.
 - **Heights relative to a girl (30 px):** round trash bin ≈ 55 % (17 px), recycling bin > girl (36 px), phone booth between recycling and kiosk (44 px), kiosk ≈ 2 × girl (61 px).
 - No real marks: the kiosk is a generic «KIOSK» (after narvesen 3, colours from the other kiosk photos); the textile bin is plain red with dots for writing, no Red Cross logo.
 
@@ -142,6 +155,8 @@ pip install pillow playwright && python -m playwright install chromium
 | `python3 tools/sprites/automat.py` | Automat Victoria sheet (7 frames of 24 × 32; the last is the plain platform machine) |
 | `python3 tools/sprites/props.py` | street props sheet + JSON: trash bin, recycling bin, phone booth, kiosk |
 | `python3 tools/sprites/lamps.py` | street lamps + separate light sheet: roadside (1 and 2 arms), round globe, vintage lantern, subway |
+| `python3 tools/sprites/ninjas.py` | enemy ninjas sheet + JSON (three kinds, 14 frames each) |
+| `python3 tools/sprites/people.py` | thugs (+ tagger spray row) and zombie passengers, sheets + JSON |
 | `python3 tools/sprites/girls.py` | the girls' sheets (**overwrites** any hand edits to the PNGs) |
 
 All generators run from the repo root and write into `assets/`.

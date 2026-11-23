@@ -1,0 +1,53 @@
+{
+ "cell": [
+  40,
+  32
+ ],
+ "anims": {
+  "idle": [
+   0,
+   1
+  ],
+  "walk": [
+   2,
+   3,
+   4,
+   5
+  ],
+  "attack": [
+   6,
+   7
+  ]
+ },
+ "fps": {
+  "idle": 3,
+  "walk": 6,
+  "attack": 6
+ },
+ "kinds": {
+  "adult": {
+   "row": 0,
+   "w": 18,
+   "h": 30,
+   "label": "ADULT"
+  },
+  "child": {
+   "row": 1,
+   "w": 18,
+   "h": 25,
+   "label": "CHILD"
+  },
+  "senior": {
+   "row": 2,
+   "w": 18,
+   "h": 27,
+   "label": "SENIOR"
+  },
+  "student": {
+   "row": 3,
+   "w": 18,
+   "h": 30,
+   "label": "STUDENT"
+  }
+ }
+}

@@ -13,6 +13,9 @@ export interface Enemy extends ScheduledEvent {
   rel: number;
   hp: number;
   y: number;
+  /** a ninja's base height; y is this plus its jump */
+  y0?: number;
+  dropIn?: number;
   dead?: boolean;
   gone?: boolean;
 }
@@ -21,6 +24,7 @@ export interface Star { x: number; y: number; vx: number; vy: number; a: number;
 export interface Particle { x: number; y: number; vx: number; vy: number; life: number; c: string }
 export interface Pop { x: number; y: number; txt: string; life: number; c: string }
 export interface KnockedEnemy { enemy: Enemy; x: number; y: number; vx: number; vy: number; splash: boolean; squash?: number }
+export interface Dropping { x: number; y: number; vy: number; life: number; landed: boolean }
 
 export interface Player {
   x: number;
@@ -49,6 +53,8 @@ export interface GameState {
   parts: Particle[];
   pops: Pop[];
   knocked: KnockedEnemy[];
+  droppings: Dropping[];
+  taggerStoppedAt?: number;
   score: number;
   kills: number;
   tickets: number;
@@ -96,7 +102,7 @@ export function createEnemy(e: ScheduledEvent): Enemy {
 
 export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {
   return {
-    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [],
+    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [], droppings: [],
     score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0, bounceChain: 0,
     hp: PLAYER_MAX_HP, inv: 0, fx: PX - 22, mx: PX - 46,
     p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, slideDirection: 1, atk: 0, cd: 0, star: 0 },

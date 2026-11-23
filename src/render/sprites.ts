@@ -1,8 +1,10 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
-import { GROUND, W } from '../config';
+import { GROUND, H, W } from '../config';
 import { LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
-import type { Enemy } from '../state';
-import { R, ctx, drawVehicle, loadImage, ready, text } from './draw';
+import { enemyX, type Enemy } from '../state';
+import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
+import { PASSENGER_CELL_W, PASSENGER_CELL_H, PASSENGERS, isPassenger, passengerColumn } from '../passengers';
+import { R, ctx, drawVehicle, loadImage, ready, text, meta, HIRES_PPM } from './draw';
 
 import friendUrl from '../../assets/sprites/friend.png';
 import victoriaUrl from '../../assets/sprites/victoria.png';
@@ -11,6 +13,10 @@ import enemiesUrl from '../../assets/sprites/enemies.png';
 import propsUrl from '../../assets/sprites/props.png';
 import lampsUrl from '../../assets/sprites/lamps.png';
 import lightsUrl from '../../assets/sprites/lamps-light.png';
+import ninjasUrl from '../../assets/sprites/ninjas.png';
+import thugsUrl from '../../assets/sprites/thugs.png';
+import passengersUrl from '../../assets/sprites/passengers.png';
+import propLightsUrl from '../../assets/sprites/props-light.png';
 import tramUrl from '../../assets/vehicles/hires/tram-new.png';
 import bossUrl from '../../assets/sprites/kaostrikken.png';
 import bossMeta from '../../assets/sprites/kaostrikken.json';
@@ -121,7 +127,34 @@ const ENEMIES = loadImage(enemiesUrl);
 const PROP_IMAGE = loadImage(propsUrl);
 const LAMP_IMAGE = loadImage(lampsUrl), LIGHT_IMAGE = loadImage(lightsUrl);
 
+export function drawLampLights(enemies: Enemy[], t: number): void {
+  ctx.save();
+  if (ready(TRAM_IMG)) {
+    const [, , width, height] = meta(TRAM_IMG).box, scale = TRAM_PPM / HIRES_PPM;
+    for (const e of enemies) {
+      if (e.dead || e.type !== 'tram') continue;
+      ctx.beginPath();
+      ctx.rect(0, 0, W, H);
+      ctx.rect(enemyX(e, t), GROUND - e.y - height * scale, width * scale, height * scale);
+      ctx.clip('evenodd');
+    }
+  }
+  for (const e of enemies) if (!e.dead) drawLampLight(e, enemyX(e, t));
+  ctx.restore();
+}
+const NINJA_IMAGE = loadImage(ninjasUrl), THUG_IMAGE = loadImage(thugsUrl), PASSENGER_IMAGE = loadImage(passengersUrl);
+const PROP_LIGHT_IMAGE = loadImage(propLightsUrl);
+
+/** Light from lamps and lit props (the dusk kiosk), drawn in front of the characters. */
 export function drawLampLight(e: Enemy, x: number): void {
+  if (isProp(e.type) && ready(PROP_LIGHT_IMAGE)) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.drawImage(PROP_LIGHT_IMAGE, 0, PROPS[e.type].row * PROP_CELL_H, PROP_CELL_W, PROP_CELL_H,
+      Math.round(x - PROP_CELL_W / 2), Math.round(GROUND - e.y - PROP_CELL_H), PROP_CELL_W, PROP_CELL_H);
+    ctx.restore();
+    return;
+  }
   if (!isLamp(e.type) || !ready(LIGHT_IMAGE)) return;
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
@@ -143,6 +176,30 @@ export function drawEnemy(e: Enemy, x: number, t: number): void {
   if (isLamp(e.type)) {
     if (ready(LAMP_IMAGE)) ctx.drawImage(LAMP_IMAGE, 0, LAMPS[e.type].row * LAMP_CELL_H, LAMP_CELL_W, LAMP_CELL_H,
       Math.round(x - LAMP_CELL_W / 2), Math.round(y - LAMP_CELL_H), LAMP_CELL_W, LAMP_CELL_H);
+    return;
+  }
+  if (isFighter(e.type)) { // ninjas and thugs: run, crouch, jump and attack frames (src/ninjas.ts)
+    const img = isNinjaKind(e.type) ? NINJA_IMAGE : THUG_IMAGE;
+    if (ready(img)) ctx.drawImage(img, ninjaColumn(e.type, t - e.arr, t, e.arr) * NINJA_CELL_W,
+      fighterRow(e.type) * NINJA_CELL_H, NINJA_CELL_W, NINJA_CELL_H,
+      Math.round(x - NINJA_CELL_W / 2), Math.round(y - NINJA_CELL_H), NINJA_CELL_W, NINJA_CELL_H);
+    return;
+  }
+  if (e.type === 'tagger_spray') { // the tagger painting the subway; his body sits at spray.body_x in the cell
+    const sp = THUGS.spray, f = Math.floor(t * sp.fps + e.arr * 3) % sp.frames;
+    if (ready(THUG_IMAGE)) ctx.drawImage(THUG_IMAGE, f * NINJA_CELL_W, sp.row * NINJA_CELL_H, NINJA_CELL_W, NINJA_CELL_H,
+      Math.round(x - sp.body_x), Math.round(y - NINJA_CELL_H), NINJA_CELL_W, NINJA_CELL_H);
+    return;
+  }
+  if (isPassenger(e.type)) { // zombie travellers; the label (ADULT, CHILD …) stays above them
+    if (ready(PASSENGER_IMAGE)) ctx.drawImage(PASSENGER_IMAGE, passengerColumn(t - e.arr, t, e.arr) * PASSENGER_CELL_W,
+      PASSENGERS.kinds[e.type].row * PASSENGER_CELL_H, PASSENGER_CELL_W, PASSENGER_CELL_H,
+      Math.round(x - PASSENGER_CELL_W / 2), Math.round(y - PASSENGER_CELL_H), PASSENGER_CELL_W, PASSENGER_CELL_H);
+    text(e.label ?? PASSENGERS.kinds[e.type].label, x, y - PASSENGERS.kinds[e.type].h - 6, '#ff4040', 4, 'center');
+    return;
+  }
+  if (e.type === 'gull') { // each gull flaps out of step with the others
+    drawEnemySprite('gull', x, y + (SHEET.gull.dy ?? 0), t + (e.arr * 0.37) % 1);
     return;
   }
   if (isProp(e.type)) {

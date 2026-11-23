@@ -2,12 +2,14 @@
 import sheetJson from '../assets/sprites/enemies.json';
 import propsJson from '../assets/sprites/props.json';
 import lampsJson from '../assets/sprites/lamps.json';
+import { NINJAS, THUGS, type NinjaKind, type ThugKind } from './ninjas';
+import { PASSENGERS, type PassengerKind } from './passengers';
 
 export type LampKind = keyof typeof lampsJson;
 export const LAMPS = lampsJson;
 export const LAMP_CELL_W = 96, LAMP_CELL_H = 80;
 export const isLamp = (kind: EnemyKind): kind is LampKind => Object.hasOwn(LAMPS, kind);
-export const itemLayer = (kind: EnemyKind): number => kind === 'tram' ? 2 : isProp(kind) || isLamp(kind) ? 0 : 1;
+export const itemLayer = (kind: EnemyKind): number => kind === 'tram' ? 1 : isProp(kind) || isLamp(kind) ? 0 : 2;
 
 export type PropKind = keyof typeof propsJson;
 export const PROPS = propsJson;
@@ -15,8 +17,8 @@ export const PROP_CELL_W = 112, PROP_CELL_H = 64;
 export const isProp = (kind: EnemyKind): kind is PropKind => Object.hasOwn(PROPS, kind);
 
 export type EnemyKind =
-  | 'suitcase' | 'snow' | 'pigeon' | 'ticket' | 'blob' | 'ninja' | 'drone'
-  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | PropKind | LampKind;
+  | 'suitcase' | 'snow' | 'pigeon' | 'ticket' | 'blob' | 'ninja' | 'drone' | 'gull'
+  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | PropKind | LampKind | NinjaKind | ThugKind | PassengerKind | 'tagger_spray';
 
 /** One row of the enemy sprite sheet (assets/sprites/enemies.png, 32 × 32 bottom-centred cells). */
 export interface SheetRow {
@@ -26,9 +28,11 @@ export interface SheetRow {
   /** visible size in game px */
   w: number;
   h: number;
+  /** draw the cell this many px below the base (the gull: its wings sweep far below the body) */
+  dy?: number;
 }
 /** Enemies and pickups use this sheet; trams and props have separate artwork. */
-export type SheetKind = Exclude<EnemyKind, 'tram' | PropKind | LampKind>;
+export type SheetKind = Exclude<EnemyKind, 'tram' | PropKind | LampKind | Exclude<NinjaKind, 'ninja'> | ThugKind | PassengerKind | 'tagger_spray'>;
 export const SHEET: Record<SheetKind, SheetRow> = sheetJson;
 export const SHEET_CELL = 32;
 
@@ -72,8 +76,20 @@ export const TYPES: Record<EnemyKind, EnemyType> = {
   pigeon: fromSheet('pigeon', { y: 26, hp: 1, own: 40 }),
   ticket: fromSheet('ticket', { y: 34, hp: 0, own: 0, pickup: true }), // collected = one more throw
   blob: fromSheet('blob', { y: 0, hp: 1, own: 20 }),
-  ninja: fromSheet('ninja', { y: 0, hp: 1, own: 50 }),
+  ninja: { ...NINJAS.kinds.ninja, y: 0, hp: 1, own: 50 },
+  ninja_oni: { ...NINJAS.kinds.ninja_oni, y: 0, hp: 2, own: 45 },
+  ninja_kasa: { ...NINJAS.kinds.ninja_kasa, y: 0, hp: 1, own: 60 },
+  thug: { ...THUGS.kinds.thug, y: 0, hp: 2, own: 40 },
+  punk: { ...THUGS.kinds.punk, y: 0, hp: 1, own: 55 },
+  tagger: { ...THUGS.kinds.tagger, y: 0, hp: 1, own: 50 },
+  /** the tagger in spray mode, painting the subway: stands still */
+  tagger_spray: { w: THUGS.kinds.tagger.w, h: THUGS.kinds.tagger.h, y: 0, hp: 1, own: 0 },
+  adult: { ...PASSENGERS.kinds.adult, y: 0, hp: 2, own: 25 },
+  child: { ...PASSENGERS.kinds.child, y: 0, hp: 1, own: 35 },
+  senior: { ...PASSENGERS.kinds.senior, y: 0, hp: 2, own: 15 },
+  student: { ...PASSENGERS.kinds.student, y: 0, hp: 2, own: 25 },
   drone: fromSheet('drone', { y: 30, hp: 1, own: 30 }),
+  gull: fromSheet('gull', { y: 30, hp: 1, own: 30 }),
   tram: { w: TRAM_LEN, h: TRAM_ROOF, y: 0, hp: 99, own: TRAM_OWN, solid: true },
   bot: fromSheet('bot', { y: 0, hp: 2, own: 25 }),
   terminal: fromSheet('terminal', { y: 30, hp: 0, own: 0, pickup: true }),

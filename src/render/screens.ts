@@ -6,7 +6,7 @@ import { itemLayer } from '../schedule';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
-import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawLampLight, drawMachine, type Mood } from './sprites';
+import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
@@ -14,11 +14,14 @@ const TITLE_LOGO = loadImage(titleLogoUrl);
 export function drawGame(g: Game, t: number, dev: boolean): void {
   const s = g.s, sec = sectionAt(t), beatFlash = Math.max(0, 1 - beatPhase(t, BEAT) * 4);
   if (s.shake > 0) resetTransform(Math.round((Math.random() - 0.5) * 24 * s.shake), Math.round((Math.random() - 0.5) * 24 * s.shake));
-  drawScene(sec.scene, t, s.bgx, beatFlash);
+  drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
   const prev = SECTIONS[SECTIONS.indexOf(sec) - 1];
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
   flash(t, NINJA_T, 0.4, '#fff'); // ninja transformation
+  for (const layer of [0, 1]) {
+    for (const e of s.enemies) if (!e.dead && itemLayer(e.type) === layer) drawEnemy(e, enemyX(e, t), t);
+  }
   if (bossVisible(t)) {
     // walks in for a bar, then fires its coupler cannon on every beat and idles in between
     const walking = t - BOSS_AT < BAR, ph = beatPhase(t, BEAT);
@@ -26,8 +29,16 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
       : ph < 0.4 ? ['attack', ph / 0.4] as const : ['idle', ((t * 4) % 4) / 4] as const;
     drawBoss(bossX(t), s.boss.hit > 0, s.boss.hp, s.boss.max, anim, at);
   }
-  for (const layer of [0, 1]) {
-    for (const e of s.enemies) if (!e.dead && itemLayer(e.type) === layer) drawEnemy(e, enemyX(e, t), t);
+  for (const e of s.enemies) if (!e.dead && itemLayer(e.type) === 2) drawEnemy(e, enemyX(e, t), t);
+  for (const drop of s.droppings) {
+    if (drop.landed) {
+      R(drop.x - 5, drop.y - 2, 10, 2, '#dce3c8');
+      R(drop.x - 2, drop.y - 3, 4, 2, '#fffce9');
+      R(drop.x + 1, drop.y - 2, 2, 1, '#7b8556');
+    } else {
+      R(drop.x - 1, drop.y - 3, 2, 5, '#fffce9');
+      R(drop.x - 2, drop.y, 4, 2, '#dce3c8');
+    }
   }
   for (const q of s.knocked) {
     ctx.save();
@@ -69,8 +80,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   for (const q of s.parts) R(q.x, q.y, 2, 2, q.c);
-  for (const e of s.enemies) if (!e.dead) drawLampLight(e, enemyX(e, t));
-  for (const e of s.enemies) if (!e.dead && e.type === 'tram') drawEnemy(e, enemyX(e, t), t);
+  drawLampLights(s.enemies, t);
   for (const q of s.pops) text(q.txt, q.x, q.y, q.c, 6, 'center');
   resetTransform();
 

@@ -31,6 +31,21 @@ export function sectionAt(t: number): Section {
   return bar < 1 ? SECTIONS[0] : SECTIONS[SECTIONS.length - 1];
 }
 
+export const SUBWAY_STOP = barT(42) + 4.5;
+export const TAGGER_RUN = SUBWAY_STOP - 3;
+export const TAGGER_SPRAY = SUBWAY_STOP - 1;
+export function subwayNose(t: number): number {
+  const before = SUBWAY_STOP - t, rest = SECTIONS.find(s => s.id === 'verse2')!.speed * 0.8;
+  const frame = before <= 0 ? 0 : before <= 4 ? -40 * before * before : -640 - 320 * (before - 4);
+  return 220 + frame + rest * before;
+}
+export function subwayTaggerX(t: number): number | null {
+  if (t < TAGGER_RUN || t >= COLOR_T) return null;
+  const target = subwayNose(t) - 70;
+  if (target <= -40) return null;
+  return t >= TAGGER_SPRAY ? target : W + 20 + (target - W - 20) * ((t - TAGGER_RUN) / 2);
+}
+
 /** Measured start of the sung line that belongs to a bar (seconds). Falls back to the bar grid. */
 const LINE_ON: Record<number, number> = {
   42: 80.8, 44: 84.0, 46: 87.85, 48: 91.95, 50: 95.5, 52: 98.0, 54: 100.15, 56: 102.05,

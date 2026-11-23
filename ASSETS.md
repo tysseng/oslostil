@@ -16,6 +16,8 @@ Status of every visual in the game: converted to a pixel-art sprite, or still dr
 | 2 | Tram obstacle, **full length** (rolls in fast; the players get thrown onto it or jump on and ride it) | `assets/sprites/tram-hd.png` | the 5-section new light-blue tram (`tram-new`) through `game_hd.py` (8 game px/m = 32 canvas px/m, ≈ 970 × 140 canvas px), side view, trimmed, wheel bottoms on the last row. The game treats the roof as walkable 31 game px above the wheel bottoms and the length as 242 game px; tell the code side if yours differs | chorus 1 → chorus 2 (`drawTram`) | withdrawn: the game now draws the `tram-new.png` master directly |
 | 3 | **Code:** add standable props (`props.png`/`props.json`): solid top at `top` px above the base, place them in the stages. Today only trams have standing physics | `assets/sprites/props.png` + `.json` | cells 112 × 64, bottom-centred; trash 15×17, recycling 24×36, phone booth 21×44, kiosk 106×61 | level 4 street, stations | open (code side) |
 | 4 | **Code:** street lamps: draw `lamps.png` behind the characters and `lamps-light.png` (same grid, pole centred on x = 48) in front of them; heads are standable at `top` over `top_span` | `assets/sprites/lamps*.png` + `lamps.json` | cells 96 × 80 | level 4 street, subway stations | open (code side) |
+| 5 | **Code:** before ninja mode use the thugs (`thug`, `punk`, `tagger`) where the ninjas are; same frame layout as `ninjas.png`, so `src/ninjas.ts` can drive them. The tagger's spray row (row 3, 4 frames, body at x = 32 in the cell) is for the subway scene | `assets/sprites/thugs.png` + `.json` | 40 × 32 cells | before 1:40 | done: wired in (`src/ninjas.ts`); the 16 ninjas before 1:40.15 are now thug/punk/tagger, and `tagger_spray` is an editor item for the subway |
+| 6 | **Code:** replace the ticket bot + text label with the zombie passengers; `passengers.json` maps each kind to its label (ADULT, CHILD, SENIOR, STUDENT). Frames: idle ×2, walk ×4, attack ×2 | `assets/sprites/passengers.png` + `.json` | 40 × 32 cells | verse 2, chorus 2 | done: `src/passengers.ts`; the 25 labelled bots are now passengers (label kept above them, in red); the 9 KAOS bots stay bots |
 
 ### Done
 
@@ -51,9 +53,12 @@ All in `drawEnemy` (`src/render/sprites.ts`).
 | Snow pile | 🎨 | 16 × 7 | intro, verse 1 | |
 | Pigeon | 🎨 | 10 × 8 | verse 1, pre-chorus 1 | 2-frame wing flap |
 | Glitch blob | 🎨 | 11 × 11 | pre-chorus 1 | flickering pixels |
-| Enemy ninja | 🎨 | 15 × 22 | chorus 1 → end | |
-| Drone | 🎨 | 18 × 8 | chorus 1 → end | 2-frame blinking light |
-| Ticket bot | 🎨 | 12 × 22 | verse 2, chorus 2 | label (CHILD/ADULT/STUDENT/SENIOR/KAOS) is text above it |
+| Enemy ninjas: Shadow (`ninja`), Oni (`ninja_oni`, katana, 2 hp), Wanderer (`ninja_kasa`, straw hat, short sword) | ✅ | 18 × 30 (40 × 32 cells) | chorus 1 → end | `assets/sprites/ninjas.png` + `.json` (`tools/sprites/ninjas.py`): idle, run ×6, crouch, jump up/down, attack ×3; facing left. Jumps and frame choice in `src/ninjas.ts`: Shadow hops once on the way in, Oni leaps and slashes, Wanderer keeps hopping. The level's 82 ninjas are spread evenly over the three kinds |
+| Drone | ✖ | 18 × 8 | | replaced by the seagull (the sprite stays in the sheet) |
+| Seagull (`gull`) | ✅ | 22 × 12 body (wings 26 × 31) | chorus 1 → end | `enemies.png` row 13: 8-frame flap at 14 fps, out of step per gull; JSON `dy` 11 draws the cell lower so the body sits on the base; stompable like the pigeon. All drones in `level.json` are now gulls |
+| Ticket bot | 🎨 | 12 × 22 | verse 2, chorus 2 | label (CHILD/ADULT/STUDENT/SENIOR/KAOS) is text above it; to be replaced by the zombie passengers |
+| Zombie passengers: adult (yellow bob, trench coat, handbag), child (red cap), senior (newspaper), student (beanie, joint) | ✅ | 18 × 30 / 25 / 27 / 30 | verse 2, chorus 2 | `assets/sprites/passengers.png` + `.json` (`tools/sprites/people.py`): pallid skin, red glowing eyes, ordinary clothes; idle ×2, shambling walk ×4 with arms out, attack ×2 (the senior swats with his paper); request 6 |
+| Thugs: thug (leather jacket), punk (pink mohawk), tagger (orange hoodie, spray can) | ✅ | 18 × 30 (punk 32 with the mohawk) | before ninja mode | `assets/sprites/thugs.png` + `.json`: same 14 columns as the ninjas; row 3 = the tagger's spray mode, 4 frames with a slightly transparent pink mist (body at x = 32 so the mist fits); request 5 |
 | Tram | ⬜ | 92 × 33 | several times | jump over it; «!» warning is text |
 | Fire | 🎨 | 14 × 9 | pre-chorus 2 | animated flames |
 | Boss shot | 🎨 | 8 × 8 | boss phase | |
@@ -91,7 +96,7 @@ Pixel sprites at girl scale, front view, in `assets/sprites/props.png` + `props.
 | Round trash bin (dark green, slatted) | 🎨 | 15 × 17 | |
 | Textile recycling bin (red, no logo) | 🎨 | 24 × 36 | |
 | Phone booth (red «TELEFON») | 🎨 | 21 × 44 | top 44: one jump |
-| Kiosk (freestanding, «KIOSK») | 🎨 | 106 × 61 | top 61: double jump; roof overhangs a pole on the left |
+| Kiosk (freestanding, «KIOSK»), at dusk | ✅ | 106 × 61 | top 61: double jump; roof overhangs a pole on the left. Dark outside, lit windows and name plate, two downlights; its light (two warm cones + sign glow) is in `props-light.png` (same grid as `props.png`), drawn in front of the characters by `drawLampLight` |
 | Street lamp, roadside, one arm | 🎨 | 31 × 62 | `lamps.png` row 0; arm points left, mirror for right; cool LED light |
 | Street lamp, roadside, two arms | 🎨 | 53 × 62 | row 1 |
 | Street lamp, round globe | 🎨 | 13 × 58 | row 2; warm light |

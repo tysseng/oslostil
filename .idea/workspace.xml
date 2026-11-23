@@ -4,19 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added new assets, fixed lives">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added lamps">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ART_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/_refsheet.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/_refsheet.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sprites/enemies.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/enemies.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sprites/enemies.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/enemies.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/sprites/props.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/level.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/timeline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/timeline.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/sprites/enemies.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/enemies.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/sprites/props.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/props.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,23 +39,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.1082355879904944" />
-      <entry key="MS500" value="1.9282231620410177" />
-      <entry key="S2" value="4.653176365333723" />
-      <entry key="S5" value="7.511976154911954" />
-      <entry key="S10" value="9.32383310232255" />
-      <entry key="S30" value="10.984628813725921" />
-      <entry key="S60" value="11.474757576792257" />
-      <entry key="M2" value="11.732808862098137" />
-      <entry key="M5" value="11.895386391118716" />
-      <entry key="M10" value="12.225659740983716" />
-      <entry key="M15" value="13.367625670264063" />
-      <entry key="M30" value="21.2833580085634" />
-      <entry key="H1" value="46.59508473158299" />
-      <entry key="H2" value="99.93066997226337" />
-      <entry key="H4" value="175.45660232198236" />
-      <entry key="D1" value="573.8186929970457" />
-      <entry key="W1" value="893.1607892448715" />
+      <entry key="MS100" value="1.0000030347308493" />
+      <entry key="MS500" value="1.07878146197489" />
+      <entry key="S2" value="1.5319802495992145" />
+      <entry key="S5" value="1.9419689182597222" />
+      <entry key="S10" value="2.5868083966302238" />
+      <entry key="S30" value="3.810618929202093" />
+      <entry key="S60" value="4.3361869581502" />
+      <entry key="M2" value="4.648673308651127" />
+      <entry key="M5" value="4.859713304516921" />
+      <entry key="M10" value="5.182243488467818" />
+      <entry key="M15" value="5.965877765653733" />
+      <entry key="M30" value="10.840375088320396" />
+      <entry key="H1" value="29.447688498660618" />
+      <entry key="H2" value="77.39698118422223" />
+      <entry key="H4" value="154.34480503550446" />
+      <entry key="D1" value="563.6149150828008" />
+      <entry key="W1" value="894.7410880359596" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -71,23 +77,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0712122088992306" />
-      <entry key="MS500" value="1.9115702609544505" />
-      <entry key="S2" value="4.606381464820018" />
-      <entry key="S5" value="7.475121487302063" />
-      <entry key="S10" value="9.300555784369179" />
-      <entry key="S30" value="10.975540922847708" />
-      <entry key="S60" value="11.47002900141064" />
-      <entry key="M2" value="11.730396902956034" />
-      <entry key="M5" value="11.894407765700908" />
-      <entry key="M10" value="12.22509409875482" />
-      <entry key="M15" value="13.367081004088714" />
-      <entry key="M30" value="21.2826866460253" />
-      <entry key="H1" value="46.594390463311164" />
-      <entry key="H2" value="99.93001760115395" />
-      <entry key="H4" value="175.4560403140568" />
-      <entry key="D1" value="573.8184974061568" />
-      <entry key="W1" value="893.1607547448957" />
+      <entry key="MS100" value="4.7632095582337185E-5" />
+      <entry key="MS500" value="0.2132493433415454" />
+      <entry key="S2" value="1.1372899009269914" />
+      <entry key="S5" value="1.759924030164471" />
+      <entry key="S10" value="2.491078146437765" />
+      <entry key="S30" value="3.7775381765894536" />
+      <entry key="S60" value="4.319487183616201" />
+      <entry key="M2" value="4.6402822288562975" />
+      <entry key="M5" value="4.856346364915545" />
+      <entry key="M10" value="5.180546698876624" />
+      <entry key="M15" value="5.9647127236838084" />
+      <entry key="M30" value="10.83962804994858" />
+      <entry key="H1" value="29.447042980530675" />
+      <entry key="H2" value="77.39636797611699" />
+      <entry key="H4" value="154.34425638231784" />
+      <entry key="D1" value="563.6147129612489" />
+      <entry key="W1" value="894.7410519948028" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -174,6 +180,7 @@
     <MESSAGE value="Tram fixes etc" />
     <MESSAGE value="Longer delay before respawn" />
     <MESSAGE value="Added new assets, fixed lives" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added new assets, fixed lives" />
+    <MESSAGE value="Added lamps" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added lamps" />
   </component>
 </project>

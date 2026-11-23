@@ -13,7 +13,8 @@ Props (visible height incl. outline):
 
 Sheet: one prop per row, one column per frame, CELL_W × CELL_H cells, each prop bottom-centred
 (base on the bottom row, centre on x = CELL_W // 2).
-Writes assets/sprites/props.png and assets/sprites/props.json
+Writes assets/sprites/props.png, assets/sprites/props-light.png (the same grid: light to draw in
+front of the characters; only the dusk kiosk has any) and assets/sprites/props.json
 ({name: {row, frames, fps, w, h, top}}; w × h is the visible size, top is the height of the
 walkable top surface above the base, in px).
 Usage: python3 tools/sprites/props.py
@@ -348,7 +349,19 @@ def kiosk():
     for (x, y) in ((px0, 7), (px1, 7), (px0, 15), (px1, 15), (px0 - 1, 8), (px1 + 1, 8), (px0 - 1, 14), (px1 + 1, 14)):
         cv.c(x, y, mix(RAMP['navy'][2], RAMP['cream'][3], 0.45), 'navy')
     cv.hline(px0 + 1, px1 - 1, 7, 'cream', 1); cv.hline(px0 + 2, px1 - 2, 7, 'navy', 2)
-    text(cv, 'KIOSK', cx - 9, 9, RAMP['cream'][5])
+    text(cv, 'KIOSK', cx - 9, 9, LETTER if DUSK_ON else RAMP['cream'][5])
+    if DUSK_ON:
+        # the name plate is lit from inside: a bright core and a light rim
+        for x in range(px0 + 1, px1):
+            for y in (9, 13):
+                if cv.get(x, y) == RAMP['navy'][3]:
+                    cv.set(x, y, 'navy', 4)
+        cv.hline(px0 + 2, px1 - 2, 8, 'navy', 5)
+        # two downlights under the sign band, one each side of the centre (they cast the cones)
+        for lx in (cx - 21, cx + 21):
+            cv.hline(lx - 2, lx + 2, 16, 'steel', 2)
+            cv.hline(lx - 1, lx + 1, 17, 'warm', 5)
+            cv.set(lx - 2, 17, 'warm', 3); cv.set(lx + 2, 17, 'warm', 3)
     # walls: green frame, glass bays full of magazines, lit warm inside
     cv.rect(BL, 16, BR, 57, 'kgreen', 3)
     cv.vline(BL, 16, 57, 'kgreen', 4); cv.vline(BR, 16, 57, 'kgreen', 2)
@@ -443,7 +456,71 @@ def kiosk():
     return cv
 
 
-PROPS = [('trash', trash), ('recycling', recycling), ('phonebooth', phonebooth), ('kiosk', kiosk)]
+# ---- the kiosk at dusk: the outside darkened towards the evening blue, the inside, the windows and
+# the name plate lit; its light (two downlight cones and a glow round the sign) is on a separate sheet
+NIGHT = rgb('#121830')
+DUSK = {'kgreen': 0.5, 'cream': 0.55, 'steel': 0.5, 'paper': 0.45, 'red': 0.45, 'dark': 0.3, 'glass': 0.4}
+LETTER = rgb('#fffbe8')
+DUSK_ON = False
+KIOSK_GEOM = dict(cx=59, lamps=(59 - 21, 59 + 21), lamp_y=17, sign=(59, 11), ground=60)
+
+
+def kiosk_dusk():
+    global DUSK_ON
+    saved = {m: RAMP[m] for m in DUSK}
+    for m, f in DUSK.items():
+        RAMP[m] = [mix(c, NIGHT, f) for c in RAMP[m]]
+    DUSK_ON = True
+    try:
+        return kiosk()
+    finally:
+        DUSK_ON = False
+        RAMP.update(saved)
+
+
+def kiosk_light(w, h):
+    """Warm light for the dusk kiosk in its own canvas coordinates: a smooth downward cone from each
+    downlight and a soft glow round the name plate, blurred edges, no dither (like lamps-light.png)."""
+    import math
+    from PIL import ImageFilter
+    A = [[0.0] * w for _ in range(h)]
+    g = KIOSK_GEOM
+    ss = lambda e0, e1, v: (lambda t: t * t * (3 - 2 * t))(max(0.0, min(1.0, (v - e0) / (e1 - e0))))
+    for lx in g['lamps']:
+        y0 = g['lamp_y']
+        for y in range(y0 + 1, g['ground'] + 1):
+            t = (y - y0) / (g['ground'] - y0)
+            half = 3 + 13 * t
+            for x in range(w):
+                u = abs(x - lx) / half
+                if u < 1.2:
+                    A[y][x] = max(A[y][x], 0.62 * (1 - 0.45 * t) * (1 - ss(0.55, 1.2, u)))
+        for y in range(g['ground'] - 3, g['ground'] + 1):           # pool on the ground
+            for x in range(w):
+                e = ((x - lx) / 18) ** 2 + ((y - g['ground']) / 2.5) ** 2
+                if e < 1:
+                    A[y][x] = max(A[y][x], 0.4 * (1 - e) ** 0.8)
+    sx, sy = g['sign']
+    for y in range(h):
+        for x in range(w):
+            d = math.hypot((x - sx) / 1.9, y - sy)
+            if d < 9:
+                A[y][x] = max(A[y][x], 0.6 * (1 - d / 9) ** 1.3)
+    a = Image.new('L', (w, h))
+    a.putdata([max(0, min(255, round(v * 255))) for row in A for v in row])
+    a = a.filter(ImageFilter.GaussianBlur(1.4))
+    col = rgb('#ffd88a')
+    im = Image.new('RGBA', (w, h), (0, 0, 0, 0))
+    for y in range(h):
+        for x in range(w):
+            v = a.getpixel((x, y))
+            if v:
+                im.putpixel((x, y), mix(col, (255, 255, 255), min(0.6, v / 255 * 0.9)) + (v,))
+    return im
+
+
+PROPS = [('trash', trash), ('recycling', recycling), ('phonebooth', phonebooth), ('kiosk', kiosk_dusk)]
+LIGHTS = {'kiosk': kiosk_light}
 # every prop has a flat top (rim, lid, roof cap, roof slab), so top = visible height
 
 
@@ -455,14 +532,24 @@ def trimmed(cv):
 if __name__ == '__main__':
     root = Path(__file__).resolve().parents[2] / 'assets' / 'sprites'
     sheet = Image.new('RGBA', (CELL_W, CELL_H * len(PROPS)), (0, 0, 0, 0))
+    light = Image.new('RGBA', sheet.size, (0, 0, 0, 0))
     meta = {}
     for row, (name, fn) in enumerate(PROPS):
-        im = trimmed(fn())
+        full = fn().image()
+        box = full.getbbox()
+        im = full.crop(box)
         w, h = im.size
         assert w <= CELL_W and h <= CELL_H, (name, w, h)
-        sheet.alpha_composite(im, (CELL_W // 2 - w // 2, row * CELL_H + CELL_H - h))
+        pos = (CELL_W // 2 - w // 2, row * CELL_H + CELL_H - h)
+        sheet.alpha_composite(im, pos)
+        if name in LIGHTS:   # same placement as the sprite, so both sheets share one grid
+            lit = LIGHTS[name](full.width, full.height)
+            cell = Image.new('RGBA', (CELL_W, CELL_H), (0, 0, 0, 0))
+            cell.alpha_composite(lit, (pos[0] - box[0], CELL_H - h - box[1]))
+            light.alpha_composite(cell, (0, row * CELL_H))
         meta[name] = {'row': row, 'frames': 1, 'fps': 1, 'w': w, 'h': h, 'top': h}
     sheet.save(root / 'props.png')
+    light.save(root / 'props-light.png')
     (root / 'props.json').write_text(json.dumps(meta, indent=1) + '\n')
     print('wrote', root / 'props.png', sheet.size)
     for n, _ in PROPS:

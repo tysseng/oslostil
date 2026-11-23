@@ -105,7 +105,11 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
-- Lamps (`roadside`, `roadside2`, `round`, `vintage`, `subway`) are single one-way platform items using `lamps.json` and aligned 96 × 80 cells in `lamps.png` / `lamps-light.png`. Players can land on their metadata-defined `top` / `top_span`, ride and jump off, without side or underside collision. Posts render with scenery, light uses screen blending over characters, and trams render afterward in front of both. The editor previews both sheets and moves/saves them together.
+- Subway tagger runs in three seconds before the train stops and starts spraying one second before it stops. Shared timeline helpers drive his position and paint. Shooting him during either phase removes him and awards 300 base points with normal combo/PERFECT bonuses, once only. `taggerStoppedAt` freezes existing train-anchored paint and prevents further spraying; seek/restart resets it. He does not damage the player.
+
+- Seagulls drop at randomized intervals while onscreen (first 0.8–3 seconds, then 1.2–4 seconds). Droppings fall under gravity, scroll with the world and leave six-second ground splats. Airborne contact or stepping in a splat deals 0.25 health with normal damage invincibility; droplets survive their gull's defeat and reset on seek/restart.
+
+- Lamps (`roadside`, `roadside2`, `round`, `vintage`, `subway`) are single one-way platform items using `lamps.json` and aligned 96 × 80 cells in `lamps.png` / `lamps-light.png`. Players can land on their metadata-defined `top` / `top_span`, ride and jump off, without side or underside collision. Posts render with scenery, then trams, then enemies/characters. Light uses screen blending over sprites with tram bounds excluded so it remains behind trams. The editor uses the same layering and previews both sheets as one item.
 
 - Props render behind trams and other enemies in gameplay and the editor; editor hit-testing selects the visually frontmost item.
 

@@ -4,7 +4,9 @@ import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT
 import { LAMPS, PROPS, isLamp, isProp, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
 import { loadDefaultLevel } from './level';
 import { createEnemy, createState, enemyX, spawnTime, type Enemy, type GameState } from './state';
-import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, victoriaBob, victoriaLift } from './timeline';
+import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
+import { isPassenger } from './passengers';
+import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX, victoriaBob, victoriaLift } from './timeline';
 
 /** seconds she is gone after losing her last heart */
 const DEATH_TIME = 0.85;
@@ -133,7 +135,7 @@ export class Game {
   private hitEnemy(e: Enemy, x: number, y: number, dmg: number): void {
     e.hp -= dmg;
     this.audio.sfx('hit');
-    if (e.hp <= 0) { e.dead = true; this.award(x, y - 8, e.type === 'bot' ? 200 : e.type === 'ninja' ? 150 : 100); }
+    if (e.hp <= 0) { e.dead = true; this.award(x, y - 8, e.type === 'bot' || isPassenger(e.type) ? 200 : isNinjaKind(e.type) ? 150 : isFighter(e.type) ? 120 : 100); }
     else this.burst(x, y - 8, '#fff', 4);
   }
 
@@ -153,10 +155,10 @@ export class Game {
     }
   }
 
-  private hurt(): void {
+  private hurt(damage = 1): void {
     const { s } = this;
     s.bounceChain = 0;
-    s.hp--;
+    s.hp = Math.max(0, s.hp - damage);
     if (s.hp <= 0) return this.die();
     s.inv = 1.2; s.combo = 0; s.shake = 0.25;
     this.audio.sfx('hurt');
@@ -326,6 +328,20 @@ export class Game {
 
     for (const st of s.stars) { st.x += st.vx * dt; st.y += st.vy * dt; st.a += dt * 20; }
     s.stars = s.stars.filter((st) => st.x < W + 10 && st.y > 0 && st.y < H && !st.gone);
+    const taggerX = subwayTaggerX(t), previousTaggerX = subwayTaggerX(prevT) ?? taggerX;
+    if (s.taggerStoppedAt === undefined && taggerX !== null && previousTaggerX !== null) {
+      for (const star of s.stars) {
+        const previousX = star.x - star.vx * dt, previousY = star.y - star.vy * dt;
+        const relative = star.x - taggerX, previousRelative = previousX - previousTaggerX;
+        if (star.gone || Math.min(relative, previousRelative) > 13 || Math.max(relative, previousRelative) < -13
+          || Math.max(star.y, previousY) < GROUND - 30 || Math.min(star.y, previousY) > GROUND) continue;
+        star.gone = true;
+        s.taggerStoppedAt = t;
+        this.audio.sfx('hit');
+        this.award(taggerX, GROUND - 30, 300);
+        break;
+      }
+    }
 
     for (const q of s.knocked) {
       if (q.squash !== undefined) {
@@ -342,21 +358,45 @@ export class Game {
         for (let i = 0; i < 14; i++) s.parts.push({
           x: q.x, y: GROUND - 1, vx: (Math.random() - 0.5) * 180,
           vy: -20 - Math.random() * 70, life: 0.3 + Math.random() * 0.25,
-          c: q.enemy.type === 'pigeon' ? '#a9b8ce' : '#2bf0ff',
+          c: q.enemy.type === 'pigeon' ? '#a9b8ce' : q.enemy.type === 'gull' ? '#f4f8ff' : '#2bf0ff',
         });
       }
     }
     s.knocked = s.knocked.filter((q) => (q.squash !== undefined ? q.squash > 0 : q.y < GROUND) && q.x > -40 && q.x < W + 40);
 
-    // enemies
+    // Droppings remain hazardous after their gull has left or been defeated.
     const ph = p.slide > 0 ? 10 : 24;
+    for (const drop of s.droppings) {
+      const previousY = drop.y;
+      drop.x -= sectionAt(t).speed * dt;
+      if (!drop.landed) {
+        drop.vy += 500 * dt;
+        drop.y += drop.vy * dt;
+        if (drop.y >= GROUND) { drop.y = GROUND; drop.landed = true; }
+      } else drop.life -= dt;
+      if (drop.life > 0 && s.down <= 0 && s.inv <= 0
+        && Math.abs(drop.x - p.x) < (drop.landed ? 9 : 6)
+        && Math.max(previousY, drop.y) + 2 >= Math.min(prevY, p.y) - ph
+        && Math.min(previousY, drop.y) - 2 <= Math.max(prevY, p.y)) this.hurt(0.25);
+    }
+    s.droppings = s.droppings.filter(drop => drop.life > 0 && drop.x > -12);
+
+    // enemies
     for (const e of s.enemies) {
       if (e.dead) continue;
+      if (isFighter(e.type)) { e.y0 ??= e.y; e.y = e.y0 + ninjaJump(e.type, t - e.arr).lift; }
       const ty = TYPES[e.type], x = enemyX(e, t), ey = GROUND - e.y;
+      if (e.type === 'gull' && x >= 0 && x <= W) {
+        e.dropIn = (e.dropIn ?? (0.8 + Math.random() * 2.2)) - dt;
+        if (e.dropIn <= 0) {
+          s.droppings.push({ x, y: ey, vy: 30, life: 6, landed: false });
+          e.dropIn = 1.2 + Math.random() * 2.8;
+        }
+      }
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
       if (e.type === 'tram' || isProp(e.type) || isLamp(e.type)) continue; // scenery has no side damage
       const top = ey - ty.h;
-      if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'suitcase') && s.down <= 0 && p.vy > 0 && prevY <= top && p.y >= top) {
+      if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase') && s.down <= 0 && p.vy > 0 && prevY <= top && p.y >= top) {
         const crossing = (top - prevY) / (p.y - prevY);
         const playerX = prevX + (p.x - prevX) * crossing;
         const ex = enemyX(e, prevT) + (x - enemyX(e, prevT)) * crossing;
