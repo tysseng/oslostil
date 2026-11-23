@@ -1,4 +1,4 @@
-import { GROUND, PX, W } from './config';
+import { GROUND, PLAYER_MAX_HP, PX, W } from './config';
 import { TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
@@ -96,7 +96,7 @@ export function createState(events: ScheduledEvent[] = loadDefaultLevel()): Game
   return {
     ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [],
     score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0, bounceChain: 0,
-    hp: 5, inv: 0, fx: PX - 22, mx: PX - 46,
+    hp: PLAYER_MAX_HP, inv: 0, fx: PX - 22, mx: PX - 46,
     p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, slideDirection: 1, atk: 0, cd: 0, star: 0 },
     friend: { yHist: [], atk: 0, cd: 0 },
     bgx: 0, lastT: 0, shake: 0, power: 0, down: 0, respawn: 0,

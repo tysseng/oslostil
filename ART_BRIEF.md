@@ -72,6 +72,13 @@ Automat Victoria and the platform machines are seen from the front. They have **
 11. **Ninja look:** hood and mask with the ponytail sticking out, coloured sash and scarf, a katana on the back and wraps.
 12. **Rich colour:** use varied colours and shading. Flat, simplistic sprites were rejected.
 
+### Street props (from Joakim, 23 Nov 2026)
+
+- **Front view only**, flat 2D, in the girls' style: dark outlines tinted per material (not one flat black), 3–4 tone shading, rich colour.
+- **Hand anti-aliasing:** curves and corners get hand-placed in-between tones (opaque pixels), never a scaled-down or blurred image. This replaces the «no blended edge pixels» rule for props only.
+- **Heights relative to a girl (30 px):** round trash bin ≈ 55 % (17 px), recycling bin > girl (36 px), phone booth between recycling and kiosk (44 px), kiosk ≈ 2 × girl (61 px).
+- No real marks: the kiosk is a generic «KIOSK» (after narvesen 3, colours from the other kiosk photos); the textile bin is plain red with dots for writing, no Red Cross logo.
+
 ## Technical contract
 
 ### Scale
@@ -84,6 +91,13 @@ Automat Victoria and the platform machines are seen from the front. They have **
 
 - **Hi-res vehicles:** `assets/vehicles/hires/<name>.svg` plus `.png`, with transparent backgrounds.
 - **Game sprites:** `assets/sprites/<name>.png` with transparent backgrounds, using only the design's own colours (no blended edge pixels).
+
+### Props (`assets/sprites/props.png` + `props.json`)
+
+- **Made by** `python3 tools/sprites/props.py`. Drawn 1:1 on the pixel grid at girl scale (≈ 19 px per metre); the game draws them unscaled.
+- **Cells:** 112 × 64, one prop per row, one column per frame; each prop bottom-centred (base on the bottom row, centre on x = 56).
+- **JSON:** `{name: {row, frames, fps, w, h, top}}`. `w × h` is the visible size; `top` is the walkable top surface above the base, in px.
+- **Jumps:** a single jump reaches about 50 px, a double about 85 px. Keep `top` ≤ 45 for one-jump props; the kiosk (61) needs a double jump.
 
 ### Sprite sheets for characters
 
@@ -118,6 +132,7 @@ pip install pillow playwright && python -m playwright install chromium
 | `python3 tools/vehicles/pixelate.py --ppm 8` | quick downscaled previews only |
 | `python3 tools/sprites/enemies.py` | enemy/obstacle/pickup sheet + JSON (rows, frames, fps, visible size) |
 | `python3 tools/sprites/automat.py` | Automat Victoria sheet (7 frames of 24 × 32; the last is the plain platform machine) |
+| `python3 tools/sprites/props.py` | street props sheet + JSON: trash bin, recycling bin, phone booth, kiosk |
 | `python3 tools/sprites/girls.py` | the girls' sheets (**overwrites** any hand edits to the PNGs) |
 
 All generators run from the repo root and write into `assets/`.

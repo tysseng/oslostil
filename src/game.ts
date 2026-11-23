@@ -1,6 +1,6 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
-import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PX, W, WIN_AT, barT } from './config';
+import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
 import { TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
 import { loadDefaultLevel } from './level';
 import { createEnemy, createState, enemyX, spawnTime, type Enemy, type GameState } from './state';
@@ -187,7 +187,7 @@ export class Game {
       if (s.deathFlight.machine) s.mx = p.x - 46;
       s.deathFlight = undefined;
     }
-    s.hp = 3; s.inv = s.respawn = RESPAWN_FLASH;
+    s.hp = PLAYER_MAX_HP; s.inv = s.respawn = RESPAWN_FLASH;
     this.audio.sfx('respawn');
   }
 

@@ -4,15 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added logo to startup screen">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Longer delay before respawn">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ART_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/devpanel.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/devpanel.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/timeline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/timeline.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,23 +30,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000145147763" />
-      <entry key="MS500" value="1.0464922090742137" />
-      <entry key="S2" value="2.598479672630844" />
-      <entry key="S5" value="5.684836484489293" />
-      <entry key="S10" value="8.081377026962365" />
-      <entry key="S30" value="10.471791519831786" />
-      <entry key="S60" value="11.28396827773261" />
-      <entry key="M2" value="12.375345835622666" />
-      <entry key="M5" value="16.635866579896508" />
-      <entry key="M10" value="23.24736406503103" />
-      <entry key="M15" value="28.457756339548563" />
-      <entry key="M30" value="43.22936788333081" />
-      <entry key="H1" value="75.78906869026426" />
-      <entry key="H2" value="129.1045846824941" />
-      <entry key="H4" value="194.25281034547083" />
-      <entry key="D1" value="569.3223049519945" />
-      <entry key="W1" value="868.7868461688399" />
+      <entry key="MS100" value="1.0028116823073978" />
+      <entry key="MS500" value="1.5516029479636808" />
+      <entry key="S2" value="3.5901068747544964" />
+      <entry key="S5" value="4.804815810701234" />
+      <entry key="S10" value="5.354703228837148" />
+      <entry key="S30" value="6.083406528944095" />
+      <entry key="S60" value="7.575303418959374" />
+      <entry key="M2" value="10.186881846633879" />
+      <entry key="M5" value="13.915754815016584" />
+      <entry key="M10" value="17.946448570463474" />
+      <entry key="M15" value="22.49096002844447" />
+      <entry key="M30" value="37.230917559740966" />
+      <entry key="H1" value="69.2315947802881" />
+      <entry key="H2" value="124.38009357568943" />
+      <entry key="H4" value="194.40281429117937" />
+      <entry key="D1" value="578.2897401339703" />
+      <entry key="W1" value="884.805687473338" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -67,23 +68,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="5.179462590846909E-7" />
-      <entry key="MS500" value="0.1009046546649199" />
-      <entry key="S2" value="2.055712566267689" />
-      <entry key="S5" value="5.396754143261489" />
-      <entry key="S10" value="7.919033862375527" />
-      <entry key="S30" value="10.412604735755695" />
-      <entry key="S60" value="11.253645570757637" />
-      <entry key="M2" value="12.359953203102492" />
-      <entry key="M5" value="16.629596163104434" />
-      <entry key="M10" value="23.244174426061903" />
-      <entry key="M15" value="28.45560482951496" />
-      <entry key="M30" value="43.228251439585" />
-      <entry key="H1" value="75.78838232012497" />
-      <entry key="H2" value="129.10399605383287" />
-      <entry key="H4" value="194.2523100558828" />
-      <entry key="D1" value="569.3221360458333" />
-      <entry key="W1" value="868.7868164596774" />
+      <entry key="MS100" value="0.0035409082548391382" />
+      <entry key="MS500" value="0.7479495095685871" />
+      <entry key="S2" value="3.0477848513195913" />
+      <entry key="S5" value="4.449763000959949" />
+      <entry key="S10" value="5.137806911394937" />
+      <entry key="S30" value="5.9999368494478205" />
+      <entry key="S60" value="7.531936107391821" />
+      <entry key="M2" value="10.164734802850427" />
+      <entry key="M5" value="13.906702124819445" />
+      <entry key="M10" value="17.941608517512176" />
+      <entry key="M15" value="22.48747612797094" />
+      <entry key="M30" value="37.2288860463454" />
+      <entry key="H1" value="69.23036976672965" />
+      <entry key="H2" value="124.37922881729156" />
+      <entry key="H4" value="194.402170274483" />
+      <entry key="D1" value="578.2895423267018" />
+      <entry key="W1" value="884.8056533209023" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -151,11 +152,6 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/src/game.js" />
-      </list>
-    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First version of oslostil game" />
@@ -172,6 +168,8 @@
     <MESSAGE value="So many nice fixes!" />
     <MESSAGE value="So many nice fixes again!" />
     <MESSAGE value="Added logo to startup screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added logo to startup screen" />
+    <MESSAGE value="Tram fixes etc" />
+    <MESSAGE value="Longer delay before respawn" />
+    <option name="LAST_COMMIT_MESSAGE" value="Longer delay before respawn" />
   </component>
 </project>

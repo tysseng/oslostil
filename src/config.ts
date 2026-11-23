@@ -2,6 +2,7 @@
 export const W = 320;
 export const H = 180;
 export const GROUND = 150;
+export const PLAYER_MAX_HP = 10;
 /** x position where scheduled events "arrive" (the player's home spot). */
 export const PX = 80;
 

@@ -1,0 +1,34 @@
+{
+ "trash": {
+  "row": 0,
+  "frames": 1,
+  "fps": 1,
+  "w": 15,
+  "h": 17,
+  "top": 17
+ },
+ "recycling": {
+  "row": 1,
+  "frames": 1,
+  "fps": 1,
+  "w": 24,
+  "h": 36,
+  "top": 36
+ },
+ "phonebooth": {
+  "row": 2,
+  "frames": 1,
+  "fps": 1,
+  "w": 21,
+  "h": 44,
+  "top": 44
+ },
+ "kiosk": {
+  "row": 3,
+  "frames": 1,
+  "fps": 1,
+  "w": 106,
+  "h": 61,
+  "top": 61
+ }
+}

@@ -14,6 +14,7 @@ Status of every visual in the game: converted to a pixel-art sprite, or still dr
 |---|---|---|---|---|---|
 | 1 | Remaining vehicle masters: tram SL79, old tram, Italian tram | `assets/vehicles/hires/tram-sl79.svg` … | hi-res, same scale as the others | later scenes | open |
 | 2 | Tram obstacle, **full length** (rolls in fast; the players get thrown onto it or jump on and ride it) | `assets/sprites/tram-hd.png` | the 5-section new light-blue tram (`tram-new`) through `game_hd.py` (8 game px/m = 32 canvas px/m, ≈ 970 × 140 canvas px), side view, trimmed, wheel bottoms on the last row. The game treats the roof as walkable 31 game px above the wheel bottoms and the length as 242 game px; tell the code side if yours differs | chorus 1 → chorus 2 (`drawTram`) | withdrawn: the game now draws the `tram-new.png` master directly |
+| 3 | **Code:** add standable props (`props.png`/`props.json`): solid top at `top` px above the base, place them in the stages. Today only trams have standing physics | `assets/sprites/props.png` + `.json` | cells 112 × 64, bottom-centred; trash 15×17, recycling 24×36, phone booth 21×44, kiosk 106×61 | level 4 street, stations | open (code side) |
 
 ### Done
 
@@ -22,6 +23,7 @@ Status of every visual in the game: converted to a pixel-art sprite, or still dr
 | The two girls | `assets/sprites/victoria.png`, `friend.png` |
 | Local trains (pixel) | `assets/sprites/train-green.png`, `train-tomato.png` |
 | Automat Victoria | `assets/sprites/automat.png` |
+| Street props: trash bin, recycling bin, phone booth, kiosk | `assets/sprites/props.png` + `props.json` |
 
 
 Sizes are in game pixels; the screen is 320 × 180. For a code-drawn asset the size is how big it is drawn now, which is a sensible frame size for its sprite.
@@ -77,6 +79,18 @@ All in `drawEnemy` (`src/render/sprites.ts`).
 | Screen flashes (scene cut, ninja, colour change, final hit) | — | full screen | `flash` in `src/render/draw.ts` | |
 | Text: banners, score, pop-ups, title, win screen | — | | `text` in `src/render/draw.ts` | font: Press Start 2P |
 | Lyric subtitles | — | | `src/ui/subtitles.ts` | HTML layer, not canvas |
+
+## Street props
+
+Pixel sprites at girl scale, front view, in `assets/sprites/props.png` + `props.json` (`tools/sprites/props.py`; 112 × 64 cells, bottom-centred; JSON adds `top`, the walkable height). Wiring them in is request 3.
+
+| Prop | Status | Size | Notes |
+|---|---|---|---|
+| Round trash bin (dark green, slatted) | 🎨 | 15 × 17 | |
+| Textile recycling bin (red, no logo) | 🎨 | 24 × 36 | |
+| Phone booth (red «TELEFON») | 🎨 | 21 × 44 | top 44: one jump |
+| Kiosk (freestanding, «KIOSK») | 🎨 | 106 × 61 | top 61: double jump; roof overhangs a pole on the left |
+| Tokyoslo variants, lamp posts, signs, lanterns | ⬜ | | not made yet |
 
 ## Vehicles
 

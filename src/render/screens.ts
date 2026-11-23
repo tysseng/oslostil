@@ -1,5 +1,5 @@
 // Composes a full frame: game view + HUD, title screen, win screen.
-import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, W, barAt, barT } from '../config';
+import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { enemyX } from '../state';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
@@ -77,10 +77,12 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   // HUD
   R(0, 0, W, 14, '#000000aa');
   text('SCORE ' + String(s.score).padStart(6, '0'), 4, 3, '#fff', 6);
-  for (let i = 0; i < 5; i++) R(110 + i * 9, 4, 7, 6, i < s.hp ? '#ff3b6b' : '#442233');
+  R(109, 2, 45, 8, '#ff2bd6');
+  R(110, 3, 43, 6, '#300b3b');
+  R(111, 4, 41 * Math.max(0, Math.min(1, s.hp / PLAYER_MAX_HP)), 4, '#7028b8');
   if (s.combo > 3) text('COMBO x' + s.combo, 202, 3, '#ffe14a', 6);
   if (s.power > t) text('★★★', 262, 3, '#7cf', 6);
-  drawEnemySprite('ticket', 168, 12, 0); // ammo: tickets left to throw
+  drawEnemySprite('ticket', 168, 10, 0); // ammo: tickets left to throw
   text('×' + s.ammo, 177, 3, s.ammo > 0 ? '#ffd84a' : '#ff6060', 6);
   R(286, 5, 30, 4, '#333'); R(286, 5, 30 * Math.min(1, t / FINAL_HIT), 4, '#2bf0ff');
   if (dev) text('DEV', 286, 11, '#ff2bd6', 4, 'left', null);

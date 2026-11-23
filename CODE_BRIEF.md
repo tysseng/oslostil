@@ -211,7 +211,8 @@ Where they live:
 
 - `hurt()` takes a heart; at 0 it calls `die()`. A tram side hit calls `die()` directly.
 - `die()`: `s.down = DEATH_TIME` (0.85 s), hearts 0, combo reset, −1000 points (pop-up), continue counted, burst particles, `sfx('die')` (falling arpeggio). While `s.down > 0` she has no control and can't collide; tram deaths show the tumbling sprite before counting down the respawn delay.
-- `respawn()`: x = max(x, `PX`), feet at `DROP_Y` (100 px up), 3 hearts, `s.inv = s.respawn = RESPAWN_FLASH` (1.2 s), `sfx('respawn')` (rising sparkle). Normal physics land her on the ground or a tram roof. `screens.ts` draws her as a white silhouette every other 1/8 s while `s.respawn > 0` (`Pose.white`, `whiteSheet` in `sprites.ts`).
+- Player health starts and respawns at `PLAYER_MAX_HP` (10). The HUD uses a purple bar with a neon-pink frame and dark-purple empty track. The health bar and ticket icon are vertically centered with the HUD text. Tram side hits remain instantly fatal.
+- `respawn()`: x = max(x, `PX`), feet at `DROP_Y` (100 px up), full health, `s.inv = s.respawn = RESPAWN_FLASH` (1.2 s), `sfx('respawn')` (rising sparkle). Normal physics land her on the ground or a tram roof. `screens.ts` draws her as a white silhouette every other 1/8 s while `s.respawn > 0` (`Pose.white`, `whiteSheet` in `sprites.ts`).
 - With no input, a tram death at the beat lands her on that tram's roof about 1.2 s later.
 
 ## Gotchas
