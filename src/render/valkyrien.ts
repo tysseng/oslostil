@@ -1,7 +1,11 @@
 import { GROUND, H, W } from '../config';
 import type { ValkyrienState } from '../valkyrien';
-import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, manholeX } from '../valkyrien';
-import { R, ctx, text } from './draw';
+import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, manholeX, valkyrienTrainNose } from '../valkyrien';
+import { HIRES_PPM, R, ctx, drawVehicle, loadImage, meta, ready, text } from './draw';
+import subwayOldUrl from '../../assets/vehicles/hires/subway-old.png';
+
+const SUBWAY_OLD = loadImage(subwayOldUrl);
+const SUBWAY_PPM = 10;
 
 function polygon(points: [number, number][], color: string): void {
   ctx.fillStyle = color;
@@ -33,6 +37,16 @@ export function drawValkyrien(t: number, route?: ValkyrienState, minX = 0, maxX 
   const sign = Math.max(25, Math.min(W - 100, entry + 170));
   R(sign, VALKYRIEN_CEILING + 26, 80, 17, '#35393c');
   text('VALKYRIEN', sign + 40, VALKYRIEN_CEILING + 31, '#eee', 7, 'center');
+  const nose = valkyrienTrainNose(t);
+  if (nose !== null && ready(SUBWAY_OLD)) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT);
+    ctx.clip();
+    const width = meta(SUBWAY_OLD).box[2] * SUBWAY_PPM / HIRES_PPM;
+    drawVehicle(SUBWAY_OLD, nose - width, VALKYRIEN_FLOOR + 8.75, SUBWAY_PPM);
+    ctx.restore();
+  }
   R(left, VALKYRIEN_FLOOR, Math.max(0, exit - STAIRS_WIDTH - left), 6, '#bec1bf');
   R(left, VALKYRIEN_FLOOR + 6, Math.max(0, exit - left), 20, '#454a4d');
   R(left, VALKYRIEN_FLOOR - 2, Math.max(0, exit - STAIRS_WIDTH - left), 2, '#d6cd85');

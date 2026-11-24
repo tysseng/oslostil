@@ -1,11 +1,11 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
-import { BEAT, GROUND, H, PH, W } from '../config';
+import { BEAT, GROUND, PH, W } from '../config';
 import { POWERUPS, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
 import { boardFrame, enemyHeight, enemyX, hopPose, type BlobPop, type Enemy, type RainbowState } from '../state';
 import { ribbonLength, ribbonPoints } from '../rainbow';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
 import { PASSENGER_CELL_W, PASSENGER_CELL_H, PASSENGERS, isPassenger, passengerColumn } from '../passengers';
-import { R, ctx, drawVehicle, loadImage, ready, text, meta, HIRES_PPM } from './draw';
+import { R, canvas, ctx, drawVehicle, horizontalBounds, loadImage, ready, text, meta, HIRES_PPM } from './draw';
 
 import friendUrl from '../../assets/sprites/friend.png';
 import victoriaUrl from '../../assets/sprites/victoria.png';
@@ -227,12 +227,13 @@ const LAMP_IMAGE = loadImage(lampsUrl), LIGHT_IMAGE = loadImage(lightsUrl);
 
 export function drawLampLights(enemies: Enemy[], t: number): void {
   ctx.save();
+  const bounds = horizontalBounds(), transform = ctx.getTransform(), top = -transform.f / transform.d;
   if (ready(TRAM_IMG)) {
     const [, , width, height] = meta(TRAM_IMG).box, scale = TRAM_PPM / HIRES_PPM;
     for (const e of enemies) {
       if (e.dead || e.type !== 'tram') continue;
       ctx.beginPath();
-      ctx.rect(0, 0, W, H);
+      ctx.rect(bounds.left, top, bounds.right - bounds.left, canvas.height / transform.d);
       ctx.rect(enemyX(e, t), GROUND - e.y - height * scale, width * scale, height * scale);
       ctx.clip('evenodd');
     }

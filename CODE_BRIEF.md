@@ -105,6 +105,10 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- Valkyrien's `subway-old` train enters from the station's left when the manhole center reaches x=20 in the playfield. It continues through the whole station at a constant 360 px/s relative to the station, without braking or stopping; it renders behind platform items/characters in gameplay and the editor.
+
+- Assets can be placed/dragged below the surface only when their bounds fit inside Valkyrien's chamber before the stairs. Invalid placement is blocked without a message and leaves the item unchanged. Underground items use negative `y`, validated on import, and move with the station at 145 px/s; they interact only with underground players. Surface placement is unchanged.
+
 - The editor canvas extends to both viewport edges at the normal editor scale. A centered pink frame marks the actual 320-pixel play area; assets outside it remain visible and editable, and pointer coordinates account for the extended view. The time slider layout is unchanged.
 - The widened view renders one continuous scene at the original song time and scroll distance. Background layers extend using their own repeat periods/parallax; trains, buses and scripted encounters retain their single gameplay positions rather than repeating at the play-area borders.
 

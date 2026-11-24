@@ -3,6 +3,7 @@ import { BLOB_HOP, BROKEN_BOARD, isPowerup, isTree, itemLayer, treeDepth, TRAM_W
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 import type { ValkyrienState } from './valkyrien';
+import { VALKYRIEN_CEILING } from './valkyrien';
 
 /** Throws you start with, before collecting any tickets. */
 export const START_AMMO = 3;
@@ -26,7 +27,7 @@ export interface Star { x: number; y: number; vx: number; vy: number; a: number;
 export interface Particle { x: number; y: number; vx: number; vy: number; life: number; c: string }
 export interface Pop { x: number; y: number; txt: string; life: number; c: string }
 export interface KnockedEnemy { enemy: Enemy; x: number; y: number; vx: number; vy: number; splash: boolean; squash?: number }
-export interface Dropping { x: number; y: number; vy: number; life: number; landed: boolean }
+export interface Dropping { x: number; y: number; vy: number; life: number; landed: boolean; floor?: number }
 export interface BlobPop { x: number; y: number; age: number }
 export interface RainbowPoint { x: number; y: number; t: number }
 export interface RainbowState {
@@ -120,7 +121,7 @@ export interface GameState {
 
 export const eventSpeed = (e: ScheduledEvent): number =>
   e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : 1);
-const movementSpeed = (e: ScheduledEvent): number => eventSpeed(e) * (isTree(e.type) ? 0.5 + treeDepth(e) * 0.25 : 1);
+const movementSpeed = (e: ScheduledEvent): number => (e.y ?? 0) < 0 ? 145 : eventSpeed(e) * (isTree(e.type) ? 0.5 + treeDepth(e) * 0.25 : 1);
 export const spawnTime = (e: ScheduledEvent): number =>
   e.arr - (W + 100 - PX + (e.type === 'blob_hop' ? 40 * BEAT : 0)) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
 
@@ -148,7 +149,7 @@ export function createState(events: ScheduledEvent[] = loadDefaultLevel()): Game
 
 /** Where an enemy is on screen at song time t. */
 export const enemyX = (e: Enemy, t: number): number => PX + (e.arr - t) * e.rel
-  + (e.type === 'blob_hop' ? 40 * (hopTravel(e, e.arr) - hopTravel(e, t) - 5 / 8 * (e.arr - t)) : 0);
+  + (e.type === 'blob_hop' && e.y >= 0 ? 40 * (hopTravel(e, e.arr) - hopTravel(e, t) - 5 / 8 * (e.arr - t)) : 0);
 
 function hopTravel(e: ScheduledEvent, t: number): number {
   const period = BEAT / (e.hop === 'double' ? 2 : 1), cycles = (t - PH) / period;
@@ -199,5 +200,6 @@ export function enemyHeight(e: Enemy, t: number): number {
   const speed1 = 2.8 + random() * 1.2, speed2 = 4.5 + random() * 1.5;
   const wave = 0.65 * Math.sin((t - e.arr) * speed1 + phase1)
     + 0.35 * Math.sin((t - e.arr) * speed2 + phase2);
+  if (e.y < 0) return Math.min(GROUND - VALKYRIEN_CEILING - TYPES[e.type].h, e.y + 24 * (wave + 1));
   return Math.max(24, Math.min(GROUND - TYPES[e.type].h - 52, e.y)) + 24 * (wave + 1);
 }

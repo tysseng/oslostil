@@ -22,7 +22,7 @@ import passengersUrl from '../../assets/sprites/passengers.png';
 import boardUrl from '../../assets/sprites/board-broken.png';
 import powerupsUrl from '../../assets/sprites/powerups.png';
 import './editor.css';
-import { VALKYRIEN_DEPTH } from '../valkyrien';
+import { VALKYRIEN_DEPTH, stationPlacement } from '../valkyrien';
 import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from '../render/valkyrien';
 
 const STORAGE_KEY = 'oslostil-level-v1';
@@ -422,11 +422,17 @@ export class LevelEditor {
     }) ?? null;
   }
 
-  private position(e: ScheduledEvent, x: number, base: number): void {
+  private position(e: ScheduledEvent, x: number, base: number): boolean {
+    const underground = base > GROUND;
+    if (underground && !stationPlacement(x, base, TYPES[e.type].w, TYPES[e.type].h, this.game.s.lastT)) {
+      return false;
+    }
     if (isTree(e.type)) e.depth = treeDepth(e);
-    e.rel = eventSpeed(e);
+    e.rel = underground ? 145 : eventSpeed(e);
+    e.y = Math.round(underground ? GROUND - base : Math.max(0, Math.min(GROUND - TYPES[e.type].h, GROUND - base)));
     e.arr = eventArrival(e, this.game.s.lastT, x);
-    e.y = Math.round(Math.max(0, Math.min(GROUND - TYPES[e.type].h, GROUND - base)));
+    this.status.textContent = '';
+    return true;
   }
 
   private pointerDown(e: PointerEvent): void {
@@ -447,7 +453,7 @@ export class LevelEditor {
       if (isTree(event.type)) event.depth = treeDepth({ ...event, arr: event.arr + x / W });
       const enemy = createEnemy(event);
       const lift = event.type === 'blob_hop' || isPowerup(event.type) ? enemyHeight(enemy, this.game.s.lastT) - enemy.y : 0;
-      this.position(event, x - (event.type === 'tram' ? TYPES.tram.w / 2 : 0), y + enemyBodyHeight(enemy, this.game.s.lastT) / 2 + lift);
+      if (!this.position(event, x - (event.type === 'tram' ? TYPES.tram.w / 2 : 0), y + enemyBodyHeight(enemy, this.game.s.lastT) / 2 + lift)) return;
       this.game.level.push(event);
       this.hovered = event;
       this.save();

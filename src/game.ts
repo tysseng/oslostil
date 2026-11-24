@@ -7,7 +7,7 @@ import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, ene
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
 import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
-import { belowSurface, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
+import { VALKYRIEN_FLOOR, belowSurface, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, RAINBOW_T0, RAINBOW_T1, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX } from './timeline';
 
 /** seconds she is gone after losing her last heart */
@@ -139,11 +139,10 @@ export class Game {
 
   // ---------- combat ----------
   private attack(): void {
-    if (belowSurface(this.s)) return;
     const { s } = this, p = s.p, reach = isNinja(s.lastT) ? 30 : 20;
     for (const e of s.enemies) {
       const ty = TYPES[e.type];
-      if (e.dead || ty.pickup || ty.solid) continue;
+      if (e.dead || ty.pickup || ty.solid || (e.y < 0) !== belowSurface(s)) continue;
       const ex = enemyX(e, s.lastT), ey = GROUND - enemyHeight(e, s.lastT);
       if (ex > p.x - 4 && ex < p.x + reach + 8 && Math.abs(ey - enemyBodyHeight(e, s.lastT) / 2 - (p.y - 12)) < 26) this.hitEnemy(e, ex, ey, 2);
     }
@@ -227,7 +226,7 @@ export class Game {
   /** She drops in from above (onto a tram roof if one is passing) and flashes white while invincible. */
   private respawn(): void {
     const { s } = this, p = s.p;
-    p.x = Math.max(p.x, PX); p.y = DROP_Y; p.vy = 0; p.jumps = 1;
+    p.x = Math.max(p.x, PX); p.y = playerFloor(s) - 100; p.vy = 0; p.jumps = 1;
     if (s.deathFlight) {
       if (s.deathFlight.friend) {
         s.fx = p.x - 22; s.friend.yHist = [DROP_Y]; s.friend.atk = 0;
@@ -248,7 +247,7 @@ export class Game {
     const { s } = this, p = s.p;
     let ride: Enemy | undefined;
     for (const e of s.enemies) {
-      if (e.type !== 'tram' || e.dead) continue;
+      if (e.type !== 'tram' || e.dead || (e.y < 0) !== belowSurface(s)) continue;
       const x = enemyX(e, t), base = GROUND - e.y, roof = base - TRAM_ROOF;
       if (p.x + 4 < x || p.x - 4 > x + TRAM_LEN) continue;
       if (p.vy >= 0 && prevY <= roof + 0.5 && p.y >= roof) ride = e; // feet came down on (or stayed on) the roof
@@ -276,7 +275,7 @@ export class Game {
     if (s.down > 0 || p.ride || p.vy < 0) return;
     let highest = Infinity;
     for (const e of s.enemies) {
-      if (e.dead || (!isProp(e.type) && !isLamp(e.type) && e.type !== 'board_broken')) continue;
+      if (e.dead || (e.y < 0) !== belowSurface(s) || (!isProp(e.type) && !isLamp(e.type) && e.type !== 'board_broken')) continue;
       const height = e.type === 'board_broken' ? boardTop(e, t) : isLamp(e.type) ? LAMPS[e.type].top : PROPS[e.type].top;
       if (!height) continue; // lantern strings, neon signs: nothing to stand on
       const top = GROUND - e.y - height, x = enemyX(e, t);
@@ -296,7 +295,7 @@ export class Game {
   private boardImpacts(t: number, prevT: number): void {
     const { s } = this, p = s.p;
     for (const e of s.enemies) {
-      if (e.dead || e.type !== 'board_broken' || prevT >= boardImpactAt(e) || t < boardImpactAt(e)) continue;
+      if (e.dead || (e.y < 0) !== belowSurface(s) || e.type !== 'board_broken' || prevT >= boardImpactAt(e) || t < boardImpactAt(e)) continue;
       const x = enemyX(e, t), half = TYPES[e.type].w / 2, bottom = GROUND - e.y;
       if (x + half < 0 || x - half > W) continue;
       s.boardShake = 0.1;
@@ -365,7 +364,7 @@ export class Game {
       if (!routeControlsPlayer(s) && (this.keys.has('ArrowRight') || this.keys.has('KeyD'))) p.x = Math.min(W - 30, p.x + 130 * dt);
       if (p.slide > 0 && p.x !== prevX) p.slideDirection = p.x < prevX ? -1 : 1;
       p.vy += 900 * dt; p.y += p.vy * dt;
-      if (!belowSurface(s)) {
+      if (!routeControlsPlayer(s)) {
         this.tram(t, prevY);
         this.props(t, prevT, prevY);
         this.machines(t, prevY);
@@ -430,29 +429,31 @@ export class Game {
       q.vy += 900 * dt;
       q.x += q.vx * dt;
       q.y += q.vy * dt;
-      if (q.splash && q.y >= GROUND) {
-        q.y = GROUND;
+      const floor = q.enemy.y < 0 ? VALKYRIEN_FLOOR : GROUND;
+      if (q.splash && q.y >= floor) {
+        q.y = floor;
         this.audio.sfx('hit');
         for (let i = 0; i < 14; i++) s.parts.push({
-          x: q.x, y: GROUND - 1, vx: (Math.random() - 0.5) * 180,
+          x: q.x, y: floor - 1, vx: (Math.random() - 0.5) * 180,
           vy: -20 - Math.random() * 70, life: 0.3 + Math.random() * 0.25,
           c: q.enemy.type === 'pigeon' ? '#a9b8ce' : q.enemy.type === 'gull' ? '#f4f8ff' : '#2bf0ff',
         });
       }
     }
-    s.knocked = s.knocked.filter((q) => (q.squash !== undefined ? q.squash > 0 : q.y < GROUND) && q.x > -40 && q.x < W + 40);
+    s.knocked = s.knocked.filter((q) => (q.squash !== undefined ? q.squash > 0 : q.y < (q.enemy.y < 0 ? VALKYRIEN_FLOOR : GROUND)) && q.x > -40 && q.x < W + 40);
 
     // Droppings remain hazardous after their gull has left or been defeated.
     const ph = p.slide > 0 ? 10 : 24;
     for (const drop of s.droppings) {
       const previousY = drop.y;
+      const floor = drop.floor ?? GROUND;
       drop.x -= sectionAt(t).speed * dt;
       if (!drop.landed) {
         drop.vy += 500 * dt;
         drop.y += drop.vy * dt;
-        if (drop.y >= GROUND) { drop.y = GROUND; drop.landed = true; }
+        if (drop.y >= floor) { drop.y = floor; drop.landed = true; }
       } else drop.life -= dt;
-      if (!belowSurface(s) && drop.life > 0 && s.down <= 0 && s.inv <= 0
+      if ((floor > GROUND) === belowSurface(s) && drop.life > 0 && s.down <= 0 && s.inv <= 0
         && Math.abs(drop.x - p.x) < (drop.landed ? 9 : 6)
         && Math.max(previousY, drop.y) + 2 >= Math.min(prevY, p.y) - ph
         && Math.min(previousY, drop.y) - 2 <= Math.max(prevY, p.y)) this.hurt(0.25);
@@ -467,12 +468,12 @@ export class Game {
       if (e.type === 'gull' && x >= 0 && x <= W) {
         e.dropIn = (e.dropIn ?? (0.2 + Math.random() * 0.4)) - dt;
         if (e.dropIn <= 0) {
-          s.droppings.push({ x, y: ey, vy: 30, life: 6, landed: false });
+          s.droppings.push({ x, y: ey, vy: 30, life: 6, landed: false, floor: e.y < 0 ? VALKYRIEN_FLOOR : GROUND });
           e.dropIn = 0.45 + Math.random() * 0.55;
         }
       }
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
-      if (belowSurface(s)) continue;
+      if ((e.y < 0) !== belowSurface(s)) continue;
       if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type)) continue; // scenery has no side damage
       const h = enemyBodyHeight(e, t), top = ey - h;
       const previousTop = GROUND - enemyHeight(e, prevT) - enemyBodyHeight(e, prevT);

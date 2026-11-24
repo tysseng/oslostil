@@ -1,13 +1,18 @@
-import { GROUND } from './config';
+import { GROUND, PX } from './config';
+import { VALKYRIEN_DEPTH, stationPlacement } from './valkyrien';
 import defaultLevel from './level.json';
-import { isTree, treeDepth, TYPES, type ScheduledEvent } from './schedule';
+import { isTree, treeDepth, TYPES, type EnemyKind, type ScheduledEvent } from './schedule';
+
+function isKind(value: unknown): value is EnemyKind {
+  return typeof value === 'string' && Object.hasOwn(TYPES, value);
+}
 
 function isEvent(value: unknown): value is ScheduledEvent {
   if (!value || typeof value !== 'object') return false;
   const e = value as Record<string, unknown>;
-  return typeof e.type === 'string' && Object.hasOwn(TYPES, e.type)
-    && typeof e.arr === 'number' && Number.isFinite(e.arr)
-    && (e.y === undefined || (typeof e.y === 'number' && Number.isFinite(e.y) && e.y >= 0 && e.y <= GROUND))
+  if (!isKind(e.type) || typeof e.arr !== 'number' || !Number.isFinite(e.arr)) return false;
+  return (e.y === undefined || (typeof e.y === 'number' && Number.isFinite(e.y) && e.y >= -VALKYRIEN_DEPTH && e.y <= GROUND
+      && (e.y >= 0 || stationPlacement(PX, GROUND - e.y, TYPES[e.type].w, TYPES[e.type].h, e.arr))))
     && (e.rel === undefined || (typeof e.rel === 'number' && Number.isFinite(e.rel) && e.rel > 0))
     && (e.depth === undefined || (typeof e.depth === 'number' && Number.isFinite(e.depth) && e.depth >= 0 && e.depth <= 1))
     && (e.hop === undefined || e.hop === 'low' || e.hop === 'high' || e.hop === 'double')

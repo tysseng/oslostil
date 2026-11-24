@@ -7,12 +7,13 @@
     <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Extending visible area in level editor outside playfield">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/draw.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/draw.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/valkyrien.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/editor.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/valkyrien.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +154,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added github pages" />
     <MESSAGE value="Added first background graphics" />
     <MESSAGE value="Lots of backgrounds. New trams, added subway" />
     <MESSAGE value="Added level editor" />
@@ -178,6 +178,7 @@
     <MESSAGE value="Added resized powerups, made a better navigation experience in level editor" />
     <MESSAGE value="Started work on valkyrien" />
     <MESSAGE value="Valkyrien outline ok" />
-    <option name="LAST_COMMIT_MESSAGE" value="Valkyrien outline ok" />
+    <MESSAGE value="Extending visible area in level editor outside playfield" />
+    <option name="LAST_COMMIT_MESSAGE" value="Extending visible area in level editor outside playfield" />
   </component>
 </project>

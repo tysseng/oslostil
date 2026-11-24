@@ -13,6 +13,9 @@ export const VALKYRIEN_HEIGHT = VALKYRIEN_FLOOR - VALKYRIEN_CEILING;
 export const CHUTE_HALF_WIDTH = 22;
 export const STAIRS_WIDTH = 140;
 const SPEED = 145;
+export const stationPlacement = (x: number, base: number, width: number, height: number, t: number): boolean =>
+  base <= VALKYRIEN_FLOOR && base - height >= VALKYRIEN_CEILING
+  && x - width / 2 >= manholeX(t) - 50 && x + width / 2 <= exitX(t) - STAIRS_WIDTH;
 
 export interface ValkyrienState {
   phase: 'surface' | 'chute' | 'underground' | 'run-in' | 'stairs' | 'house' | 'exit';
@@ -24,6 +27,11 @@ export interface ValkyrienState {
 
 export const manholeX = (t: number): number => PX + (VALKYRIEN_ENTRY - t) * SPEED;
 export const exitX = (t: number): number => PX + (VALKYRIEN_EXIT - t) * SPEED;
+export const VALKYRIEN_TRAIN_START = VALKYRIEN_ENTRY + (PX - 20) / SPEED;
+export function valkyrienTrainNose(t: number): number | null {
+  if (t < VALKYRIEN_TRAIN_START) return null;
+  return manholeX(t) - 50 + 360 * (t - VALKYRIEN_TRAIN_START);
+}
 export const belowSurface = (s: GameState): boolean =>
   !['surface', 'house', 'exit'].includes(s.valkyrien.phase);
 export const routeControlsPlayer = (s: GameState): boolean =>
