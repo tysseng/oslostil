@@ -1,5 +1,5 @@
-import { GROUND, PLAYER_MAX_HP, PX, W, rng } from './config';
-import { isTree, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
+import { BEAT, GROUND, PH, PLAYER_MAX_HP, PX, W, rng } from './config';
+import { BLOB_HOP, BROKEN_BOARD, isPowerup, isTree, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 
@@ -25,6 +25,7 @@ export interface Particle { x: number; y: number; vx: number; vy: number; life: 
 export interface Pop { x: number; y: number; txt: string; life: number; c: string }
 export interface KnockedEnemy { enemy: Enemy; x: number; y: number; vx: number; vy: number; splash: boolean; squash?: number }
 export interface Dropping { x: number; y: number; vy: number; life: number; landed: boolean }
+export interface BlobPop { x: number; y: number; age: number }
 export interface RainbowPoint { x: number; y: number; t: number }
 export interface RainbowState {
   x: number;
@@ -66,6 +67,8 @@ export interface GameState {
   pops: Pop[];
   knocked: KnockedEnemy[];
   droppings: Dropping[];
+  blobPops: BlobPop[];
+  boardShake: number;
   taggerStoppedAt?: number;
   score: number;
   kills: number;
@@ -79,6 +82,7 @@ export interface GameState {
   bounceChain: number;
   hp: number;
   inv: number;
+  healFlash: number;
   /** friend and machine x positions (they ease after the player) */
   fx: number;
   mx: number;
@@ -115,7 +119,7 @@ export const eventSpeed = (e: ScheduledEvent): number =>
   e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : 1);
 const movementSpeed = (e: ScheduledEvent): number => eventSpeed(e) * (isTree(e.type) ? 0.5 + treeDepth(e) * 0.25 : 1);
 export const spawnTime = (e: ScheduledEvent): number =>
-  e.arr - (W + 100 - PX) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
+  e.arr - (W + 100 - PX + (e.type === 'blob_hop' ? 40 * BEAT : 0)) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
 
 export function createEnemy(e: ScheduledEvent): Enemy {
   return { ...e, rel: movementSpeed(e), hp: TYPES[e.type].hp, y: e.y ?? TYPES[e.type].y };
@@ -128,9 +132,9 @@ export function compareItems(a: Enemy, b: Enemy): number {
 
 export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {
   return {
-    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [], droppings: [],
+    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [], droppings: [], blobPops: [], boardShake: 0,
     score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0, bounceChain: 0,
-    hp: PLAYER_MAX_HP, inv: 0, fx: PX - 22, mx: PX - 46,
+    hp: PLAYER_MAX_HP, inv: 0, healFlash: 0, fx: PX - 22, mx: PX - 46,
     p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, slideDirection: 1, atk: 0, cd: 0, star: 0 },
     friend: { yHist: [], atk: 0, cd: 0 },
     bgx: 0, lastT: 0, shake: 0, power: 0, down: 0, respawn: 0,
@@ -139,10 +143,53 @@ export function createState(events: ScheduledEvent[] = loadDefaultLevel()): Game
 }
 
 /** Where an enemy is on screen at song time t. */
-export const enemyX = (e: Enemy, t: number): number => PX + (e.arr - t) * e.rel;
+export const enemyX = (e: Enemy, t: number): number => PX + (e.arr - t) * e.rel
+  + (e.type === 'blob_hop' ? 40 * (hopTravel(e, e.arr) - hopTravel(e, t) - 5 / 8 * (e.arr - t)) : 0);
+
+function hopTravel(e: ScheduledEvent, t: number): number {
+  const period = BEAT / (e.hop === 'double' ? 2 : 1), cycles = (t - PH) / period;
+  return (Math.floor(cycles) * 5 / 8 + Math.max(0, cycles - Math.floor(cycles) - 3 / 8)) * period;
+}
+
+export function hopPose(e: ScheduledEvent, t: number): { frame: number; lift: number; h: number } {
+  const cycles = (t - PH) / BEAT * (e.hop === 'double' ? 2 : 1);
+  const phase = cycles - Math.floor(cycles), frame = Math.floor(phase * BLOB_HOP.frames_per_hop);
+  const u = Math.max(0, (phase - BLOB_HOP.air[0] / BLOB_HOP.frames_per_hop) / (5 / 8));
+  const height = e.hop === 'low' ? 14 : e.hop === 'high' ? 34 : e.hop === 'double' ? 18 : 26;
+  return { frame, lift: 4 * height * u * (1 - u), h: frame < 2 ? 8 : BLOB_HOP.h };
+}
+
+/** fall frame 6 (impact) lands exactly one beat after the trigger. */
+export const boardFallAt = (e: ScheduledEvent): number => e.fallAt ?? e.arr - BEAT;
+export const boardImpactAt = (e: ScheduledEvent): number => boardFallAt(e) + BEAT;
+export function boardFrame(e: ScheduledEvent, t: number): number {
+  const since = t - boardFallAt(e), { glitch, fall, rest } = BROKEN_BOARD.phases;
+  if (since < 0) return glitch.frames[Math.floor(Math.max(0, t) * glitch.fps) % glitch.frames.length];
+  const frameTime = BEAT / fall.frames.indexOf(BROKEN_BOARD.frames.indexOf('impact'));
+  const frame = Math.floor((since + 1e-9) / frameTime);
+  if (frame < fall.frames.length) return fall.frames[frame];
+  return rest.frames[Math.floor((since - frameTime * fall.frames.length) * rest.fps) % rest.frames.length];
+}
+export const boardTop = (e: ScheduledEvent, t: number): number => BROKEN_BOARD.top[boardFrame(e, t)];
+export const enemyBodyHeight = (e: Enemy, t: number): number =>
+  e.type === 'blob_hop' ? hopPose(e, t).h : e.type === 'board_broken' ? boardTop(e, t) : TYPES[e.type].h;
+
+export function eventArrival(e: ScheduledEvent, t: number, x: number): number {
+  const base = t + (x - PX) / createEnemy(e).rel;
+  if (e.type !== 'blob_hop') return base;
+  let low = base - BEAT, high = base + BEAT;
+  for (let i = 0; i < 40; i++) {
+    const arr = (low + high) / 2;
+    if (enemyX(createEnemy({ ...e, arr }), t) < x) low = arr;
+    else high = arr;
+  }
+  return (low + high) / 2;
+}
 
 /** Song-time flight, seeded from the authored position rather than frame/update order. */
 export function enemyHeight(e: Enemy, t: number): number {
+  if (isPowerup(e.type)) return e.y + 2 * Math.sin(t * 4);
+  if (!e.dead && e.type === 'blob_hop') return e.y + hopPose(e, t).lift;
   if (e.dead || (e.type !== 'pigeon' && e.type !== 'gull')) return e.y;
   const seed = Math.imul(Math.round(e.arr * 1000), 73856093) ^ Math.imul(Math.round(e.y * 1000), 19349663);
   const random = rng(seed);

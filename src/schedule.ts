@@ -3,6 +3,8 @@ import sheetJson from '../assets/sprites/enemies.json';
 import propsJson from '../assets/sprites/props.json';
 import lampsJson from '../assets/sprites/lamps.json';
 import treesJson from '../assets/sprites/trees.json';
+import boardJson from '../assets/sprites/board-broken.json';
+import powerupsJson from '../assets/sprites/powerups.json';
 import { NINJAS, THUGS, type NinjaKind, type ThugKind } from './ninjas';
 import { PASSENGERS, type PassengerKind } from './passengers';
 
@@ -10,7 +12,13 @@ export type LampKind = keyof typeof lampsJson;
 export const LAMPS = lampsJson;
 export const LAMP_CELL_W = 96, LAMP_CELL_H = 80;
 export const isLamp = (kind: EnemyKind): kind is LampKind => Object.hasOwn(LAMPS, kind);
-export const itemLayer = (kind: EnemyKind): number => isTree(kind) ? -1 : kind === 'tram' ? 1 : isProp(kind) || isLamp(kind) ? 0 : 2;
+export const itemLayer = (kind: EnemyKind): number => isTree(kind) ? -1 : kind === 'tram' ? 1 : isProp(kind) || isLamp(kind) || kind === 'board_broken' ? 0 : 2;
+export const BROKEN_BOARD = boardJson;
+export const BLOB_HOP = sheetJson.blob_hop;
+export const BLOB_POP = sheetJson.blob_pop;
+export const POWERUPS = powerupsJson;
+export type PowerupKind = keyof typeof powerupsJson;
+export const isPowerup = (kind: EnemyKind): kind is PowerupKind => Object.hasOwn(POWERUPS, kind);
 
 /** Trees (tools/sprites/trees.py): scenery behind the characters, not standable. */
 export type TreeKind = keyof typeof treesJson;
@@ -24,8 +32,8 @@ export const PROP_CELL_W = 112, PROP_CELL_H = 64;
 export const isProp = (kind: EnemyKind): kind is PropKind => Object.hasOwn(PROPS, kind);
 
 export type EnemyKind =
-  | 'suitcase' | 'snow' | 'pigeon' | 'ticket' | 'blob' | 'ninja' | 'drone' | 'gull'
-  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | PropKind | LampKind | NinjaKind | ThugKind | PassengerKind | 'tagger_spray' | TreeKind;
+  | 'suitcase' | 'snow' | 'pigeon' | 'ticket' | 'blob' | 'blob_hop' | 'board_broken' | 'ninja' | 'drone' | 'gull'
+  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | PowerupKind | PropKind | LampKind | NinjaKind | ThugKind | PassengerKind | 'tagger_spray' | TreeKind;
 
 /** One row of the enemy sprite sheet (assets/sprites/enemies.png, 32 × 32 bottom-centred cells). */
 export interface SheetRow {
@@ -39,7 +47,7 @@ export interface SheetRow {
   dy?: number;
 }
 /** Enemies and pickups use this sheet; trams and props have separate artwork. */
-export type SheetKind = Exclude<EnemyKind, 'tram' | PropKind | LampKind | Exclude<NinjaKind, 'ninja'> | ThugKind | PassengerKind | 'tagger_spray' | TreeKind>;
+export type SheetKind = Exclude<EnemyKind, 'tram' | 'board_broken' | PowerupKind | PropKind | LampKind | Exclude<NinjaKind, 'ninja'> | ThugKind | PassengerKind | 'tagger_spray' | TreeKind>;
 export const SHEET: Record<SheetKind, SheetRow> = sheetJson;
 export const SHEET_CELL = 32;
 
@@ -89,6 +97,8 @@ export const TYPES: Record<EnemyKind, EnemyType> = {
   pigeon: fromSheet('pigeon', { y: 26, hp: 1, own: 40 }),
   ticket: fromSheet('ticket', { y: 34, hp: 0, own: 0, pickup: true }), // collected = one more throw
   blob: fromSheet('blob', { y: 0, hp: 1, own: 20 }),
+  blob_hop: fromSheet('blob_hop', { y: 0, hp: 1, own: 40 * 5 / 8 }),
+  board_broken: { w: BROKEN_BOARD.w, h: Math.max(...BROKEN_BOARD.top), y: 0, hp: 0, own: 0, solid: true },
   ninja: { ...NINJAS.kinds.ninja, y: 0, hp: 1, own: 50 },
   ninja_oni: { ...NINJAS.kinds.ninja_oni, y: 0, hp: 2, own: 45 },
   ninja_kasa: { ...NINJAS.kinds.ninja_kasa, y: 0, hp: 1, own: 60 },
@@ -112,6 +122,8 @@ export const TYPES: Record<EnemyKind, EnemyType> = {
   fireball: fromSheet('fireball', { y: 28, hp: 1, own: 120 }),
   // every prop, lamp and tree in its JSON becomes solid scenery (new art needs no code change)
   ...scenery(PROPS), ...scenery(LAMPS), ...scenery(TREES),
+  ...Object.fromEntries((Object.keys(POWERUPS) as PowerupKind[]).map(kind =>
+    [kind, { w: POWERUPS[kind].w, h: POWERUPS[kind].h, y: 30, hp: 0, own: 0, pickup: true }])) as Record<PowerupKind, EnemyType>,
 };
 
 export interface ScheduledEvent {
@@ -125,6 +137,8 @@ export interface ScheduledEvent {
   rel?: number;
   /** Tree depth: 0 is farthest away, 1 is nearest. */
   depth?: number;
+  fallAt?: number;
+  hop?: 'low' | 'high' | 'double';
 }
 
 export function treeDepth(e: ScheduledEvent): number {

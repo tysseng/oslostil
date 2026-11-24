@@ -550,13 +550,14 @@ if __name__ == '__main__':
     import tokyo_props
     import oslo_props
     import glitch_props
+    import boards
     # (name, frames, fps, top, light image) for every prop; Tokyoslo props come from tokyo_props.py
     entries = []
     for name, fn in PROPS:
         cv = fn()
         full = cv.image()
         entries.append((name, [full], 1, None, LIGHTS[name](full.width, full.height) if name in LIGHTS else None))
-    for name, fn, fps, top, lf in tokyo_props.TOKYO + oslo_props.OSLO + glitch_props.GLITCH:
+    for name, fn, fps, top, lf in tokyo_props.TOKYO + oslo_props.OSLO + glitch_props.GLITCH + boards.BOARDS:
         frames = []
         for cv in fn():
             im = cv.image()

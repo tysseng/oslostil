@@ -1,0 +1,42 @@
+{
+ "cocoa": {
+  "row": 0,
+  "frames": 4,
+  "fps": 6,
+  "w": 20,
+  "h": 28,
+  "hearts": 1
+ },
+ "neon_heart": {
+  "row": 1,
+  "frames": 4,
+  "fps": 8,
+  "w": 26,
+  "h": 21,
+  "hearts": 1
+ },
+ "bun": {
+  "row": 2,
+  "frames": 4,
+  "fps": 6,
+  "w": 26,
+  "h": 19,
+  "hearts": 1
+ },
+ "nigiri": {
+  "row": 3,
+  "frames": 4,
+  "fps": 6,
+  "w": 28,
+  "h": 18,
+  "hearts": 2
+ },
+ "bubble_tea": {
+  "row": 4,
+  "frames": 4,
+  "fps": 6,
+  "w": 20,
+  "h": 30,
+  "hearts": 1
+ }
+}

@@ -105,6 +105,11 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- Health pickups are generated from `powerups.json` and use their own 32-pixel sprite/glow sheets, shared bobbing and editor previews. Cocoa, neon heart, bun and bubble tea restore 1 HP; nigiri restores 2, capped at 10. A PERFECT neon heart restores full health. Full-health pickups give 200 points instead; collection never adds ammo, tickets, kills or combo. Pickups flash the player white and show the actual healing amount. Sparse default placements follow each scene and stop before the boss.
+
+- `board_broken` uses `board-broken.json` for its changing platform top and matching glow frame. `fallAt` defaults to arrival minus one beat; the fall is stretched so impact happens exactly one beat after the trigger. Riders follow the collapsing top, then receive a -120 vy hop and 0.1-second, 2-pixel shake. Bystanders are pushed safely aside without damage. The editor exposes fall time, preserves it in JSON, and shifts it when dragging.
+- `blob_hop` lands on each beat (twice for `hop: "double"`), only adds 40 px/s while airborne, and uses a shared integrated motion curve anchored at arrival for gameplay and editor placement. Variants are normal/low/high/double. Squashed frames 0-1 do no side damage; stomps, melee and projectiles trigger the once-only `blob_pop` burst. The default glitch section mixes ten hopping blobs with two static blobs and two falling boards; Sandvika has two ordinary departure boards with tickets above them.
+
 - In bars 26–33, `rainbow.ts` simulates Automat Victoria's visual-only spring flight with a wandering anchor and beat impulses, even while the player stands still. A time-varying wave offsets the path-length-spaced ribbon; it shrinks for 0.6 seconds and she returns to her ordinary follow position over one second after bar 34. Debug seeks reconstruct her visual history, and tram death flight overrides rainbow mode.
 - The rainbow ribbon and glow use 75% opacity; Victoria and the sprite sparkles retain full brightness. Sparkles appear on the beat and every 0.12 seconds beside the ribbon so they remain visible between beats.
 

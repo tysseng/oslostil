@@ -6,7 +6,7 @@ import { itemLayer } from '../schedule';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
-import { drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
+import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
@@ -14,6 +14,7 @@ const TITLE_LOGO = loadImage(titleLogoUrl);
 export function drawGame(g: Game, t: number, dev: boolean): void {
   const s = g.s, sec = sectionAt(t), beatFlash = Math.max(0, 1 - beatPhase(t, BEAT) * 4);
   if (s.shake > 0) resetTransform(Math.round((Math.random() - 0.5) * 24 * s.shake), Math.round((Math.random() - 0.5) * 24 * s.shake));
+  else if (s.boardShake > 0) resetTransform(Math.round((Math.random() - 0.5) * 4), Math.round((Math.random() - 0.5) * 4));
   drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
   const prev = SECTIONS[SECTIONS.indexOf(sec) - 1];
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
@@ -28,6 +29,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     drawBoss(bossX(t), s.boss.hit > 0, s.boss.hp, s.boss.max, anim, at);
   }
   for (const e of s.enemies) if (!e.dead && itemLayer(e.type) === 2) drawEnemy(e, enemyX(e, t), t);
+  for (const pop of s.blobPops) drawBlobPop(pop);
   for (const drop of s.droppings) {
     if (drop.landed) {
       R(drop.x - 5, drop.y - 2, 10, 2, '#dce3c8');
@@ -57,7 +59,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
   if (!s.deathFlight?.friend) drawGirl('friend', s.fx, fy, t + 0.13, { ninja, air: fy < GROUND, rising: fRising, atk: f.atk > 0 });
   // gone while dead; after respawning she flashes white, after an ordinary hit she blinks
-  const white = s.respawn > 0 && Math.floor(s.respawn * 8) % 2 === 1;
+  const white = s.healFlash > 0 || s.respawn > 0 && Math.floor(s.respawn * 8) % 2 === 1;
   if (s.deathFlight) {
     const flight = s.deathFlight;
     for (const member of ['victoria', 'friend', 'machine'] as const) {
@@ -71,7 +73,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
       ctx.restore();
     }
   }
-  if (s.down <= 0 && (s.respawn > 0 || !(s.inv > 0 && Math.floor(t * 20) % 2))) {
+  if (s.down <= 0 && (s.healFlash > 0 || s.respawn > 0 || !(s.inv > 0 && Math.floor(t * 20) % 2))) {
     drawGirl('victoria', s.p.x, s.p.y, t, { white, ninja, air: s.p.y < GROUND, rising: s.p.vy < 0, slide: s.p.slide > 0, atk: s.p.atk > 0 });
   }
   for (const st of s.stars) {

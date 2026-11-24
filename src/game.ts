@@ -1,9 +1,9 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
-import { LAMPS, PROPS, isLamp, isProp, isTree, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES } from './schedule';
+import { BLOB_POP, LAMPS, POWERUPS, PROPS, isLamp, isPowerup, isProp, isTree, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
 import { loadDefaultLevel } from './level';
-import { createEnemy, createState, enemyHeight, enemyX, spawnTime, type Enemy, type GameState } from './state';
+import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, enemyHeight, enemyX, hopPose, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
 import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
@@ -126,7 +126,7 @@ export class Game {
       const ty = TYPES[e.type];
       if (e.dead || ty.pickup || ty.solid) continue;
       const ex = enemyX(e, s.lastT), ey = GROUND - enemyHeight(e, s.lastT);
-      if (ex > p.x - 4 && ex < p.x + reach + 8 && Math.abs(ey - ty.h / 2 - (p.y - 12)) < 26) this.hitEnemy(e, ex, ey, 2);
+      if (ex > p.x - 4 && ex < p.x + reach + 8 && Math.abs(ey - enemyBodyHeight(e, s.lastT) / 2 - (p.y - 12)) < 26) this.hitEnemy(e, ex, ey, 2);
     }
   }
 
@@ -148,8 +148,22 @@ export class Game {
   private hitEnemy(e: Enemy, x: number, y: number, dmg: number): void {
     e.hp -= dmg;
     this.audio.sfx('hit');
-    if (e.hp <= 0) { e.dead = true; this.award(x, y - 8, e.type === 'bot' || isPassenger(e.type) ? 200 : isNinjaKind(e.type) ? 150 : isFighter(e.type) ? 120 : 100); }
+    if (e.hp <= 0) { this.killEnemy(e, x, y); this.award(x, y - 8, e.type === 'bot' || isPassenger(e.type) ? 200 : isNinjaKind(e.type) ? 150 : isFighter(e.type) ? 120 : 100); }
     else this.burst(x, y - 8, '#fff', 4);
+  }
+
+  private killEnemy(e: Enemy, x: number, y: number): void {
+    e.dead = true;
+    if (e.type === 'blob_hop') this.s.blobPops.push({ x, y, age: 0 });
+  }
+
+  private collectHealth(kind: PowerupKind, x: number, y: number): void {
+    const s = this.s, previousHp = s.hp;
+    if (previousHp >= PLAYER_MAX_HP) s.score += 200;
+    else s.hp = kind === 'neon_heart' && nearBeat(s.lastT) ? PLAYER_MAX_HP
+      : Math.min(PLAYER_MAX_HP, previousHp + POWERUPS[kind].hearts);
+    s.healFlash = 0.15;
+    s.pops.push({ x, y: y - 8, txt: previousHp >= PLAYER_MAX_HP ? '+200' : `+${Number((s.hp - previousHp).toFixed(2))} ♥`, life: 0.8, c: '#fff' });
   }
 
   private award(x: number, y: number, base: number, bounceMultiplier = 1): void {
@@ -236,23 +250,45 @@ export class Game {
     }
   }
 
-  private props(t: number, prevY: number): void {
+  private props(t: number, prevT: number, prevY: number): void {
     const { s } = this, p = s.p;
+    const previousRide = p.propRide;
     p.propRide = undefined;
     if (s.down > 0 || p.ride || p.vy < 0) return;
     let highest = Infinity;
     for (const e of s.enemies) {
-      if (e.dead || (!isProp(e.type) && !isLamp(e.type))) continue;
-      const surface = isLamp(e.type) ? LAMPS[e.type] : PROPS[e.type];
-      if (!surface.top) continue; // lantern strings, neon signs: nothing to stand on
-      const top = GROUND - e.y - surface.top, x = enemyX(e, t);
+      if (e.dead || (!isProp(e.type) && !isLamp(e.type) && e.type !== 'board_broken')) continue;
+      const height = e.type === 'board_broken' ? boardTop(e, t) : isLamp(e.type) ? LAMPS[e.type].top : PROPS[e.type].top;
+      if (!height) continue; // lantern strings, neon signs: nothing to stand on
+      const top = GROUND - e.y - height, x = enemyX(e, t);
+      const previousTop = e.type === 'board_broken' ? GROUND - e.y - boardTop(e, prevT) : top;
+      const riding = e === previousRide && Math.abs(prevY - previousTop) < 0.5;
       const [left, right] = isLamp(e.type) ? LAMPS[e.type].top_span : [-TYPES[e.type].w / 2, TYPES[e.type].w / 2];
       if (p.x + 4 <= x + left || p.x - 4 >= x + right
-        || prevY > top + 0.5 || p.y < top || top >= highest) continue;
+        || (!riding && (prevY > previousTop + 0.5 || p.y < top)) || top >= highest) continue;
       highest = top; p.propRide = e;
     }
     if (p.propRide) {
       p.y = highest; p.vy = 0; p.jumps = 0; p.machineRide = undefined; s.bounceChain = 0;
+    }
+  }
+
+  private boardImpacts(t: number, prevT: number): void {
+    const { s } = this, p = s.p;
+    for (const e of s.enemies) {
+      if (e.dead || e.type !== 'board_broken' || prevT >= boardImpactAt(e) || t < boardImpactAt(e)) continue;
+      const x = enemyX(e, t), half = TYPES[e.type].w / 2, bottom = GROUND - e.y;
+      if (x + half < 0 || x - half > W) continue;
+      s.boardShake = 0.1;
+      if (s.down > 0) continue;
+      if (p.propRide === e) {
+        p.vy = -120; p.jumps = 1; p.slide = 0; p.propRide = undefined;
+        this.audio.sfx('jump');
+      } else if (Math.abs(p.x - x) < half + 4 && p.y > bottom - boardTop(e, t)
+        && p.y - (p.slide > 0 ? 10 : 24) < bottom) {
+        const left = x - half - 4, right = x + half + 4;
+        p.x = left < TRAM_EDGE ? right : right > W - 30 ? left : p.x < x ? left : right;
+      }
     }
   }
 
@@ -262,6 +298,9 @@ export class Game {
     const prevT = s.lastT, prevX = p.x, prevY = p.y;
     s.lastT = t;
     s.bgx += sectionAt(t).speed * dt;
+    s.boardShake = Math.max(0, s.boardShake - dt);
+    for (const pop of s.blobPops) { pop.x -= sectionAt(t).speed * dt; pop.age += dt; }
+    s.blobPops = s.blobPops.filter(pop => pop.age < BLOB_POP.frames / BLOB_POP.fps);
     this.syncToast = Math.max(0, this.syncToast - dt);
     this.musicToast = Math.max(0, this.musicToast - dt);
 
@@ -307,9 +346,10 @@ export class Game {
       if (p.slide > 0 && p.x !== prevX) p.slideDirection = p.x < prevX ? -1 : 1;
       p.vy += 900 * dt; p.y += p.vy * dt;
       this.tram(t, prevY);
-      this.props(t, prevY);
+      this.props(t, prevT, prevY);
       this.machines(t, prevY);
     }
+    this.boardImpacts(t, prevT);
     if (s.deathFlight) {
       const companions = [
         { key: 'friend' as const, x: s.fx, y: s.friend.yHist[0] ?? GROUND, active: true },
@@ -333,6 +373,7 @@ export class Game {
     const dec = (v: number) => Math.max(0, v - dt);
     p.slide = dec(p.slide); p.atk = dec(p.atk); p.cd = dec(p.cd); p.star = dec(p.star);
     s.inv = dec(s.inv); s.shake = dec(s.shake); s.respawn = dec(s.respawn);
+    s.healFlash = dec(s.healFlash);
 
     // friend follows with a delay and helps from chorus 1
     const f = s.friend;
@@ -409,18 +450,18 @@ export class Game {
         }
       }
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
-      if (e.type === 'tram' || isProp(e.type) || isLamp(e.type) || isTree(e.type)) continue; // scenery has no side damage
-      const top = ey - ty.h;
-      const previousTop = GROUND - enemyHeight(e, prevT) - ty.h;
-      if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase') && s.down <= 0 && p.vy > 0 && prevY <= previousTop && p.y >= top) {
+      if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type)) continue; // scenery has no side damage
+      const h = enemyBodyHeight(e, t), top = ey - h;
+      const previousTop = GROUND - enemyHeight(e, prevT) - enemyBodyHeight(e, prevT);
+      if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase' || e.type === 'blob_hop') && s.down <= 0 && p.vy > 0 && prevY <= previousTop && p.y >= top) {
         const crossing = (previousTop - prevY) / ((p.y - prevY) - (top - previousTop));
         const playerX = prevX + (p.x - prevX) * crossing;
         const ex = enemyX(e, prevT) + (x - enemyX(e, prevT)) * crossing;
         if (Math.abs(ex - playerX) < ty.w / 2 + 4) {
-          e.dead = true;
+          this.killEnemy(e, x, ey);
           if (e.type === 'suitcase') {
             s.knocked.push({ enemy: e, x, y: ey, vx: -e.rel, vy: 0, splash: false, squash: 0.6 });
-          } else {
+          } else if (e.type !== 'blob_hop') {
             s.knocked.push({ enemy: e, x, y: ey, vx: -e.rel, vy: 90, splash: true });
           }
           p.y = top; p.vy = -300; p.jumps = 1; p.slide = 0; p.ride = undefined; p.propRide = undefined; p.machineRide = undefined;
@@ -438,22 +479,23 @@ export class Game {
         continue;
       }
       for (const st of s.stars) {
-        if (!ty.pickup && !ty.solid && !st.gone && Math.abs(st.x - x) < ty.w / 2 + 4 && st.y > ey - ty.h - 3 && st.y < ey + 3) {
+        if (!e.dead && !ty.pickup && !ty.solid && !st.gone && Math.abs(st.x - x) < ty.w / 2 + 4 && st.y > ey - h - 3 && st.y < ey + 3) {
           st.gone = true; this.hitEnemy(e, x, ey, 1);
         }
       }
       if (e.dead) continue;
       if (!s.deathFlight?.friend && t > barT(34) && f.cd <= 0 && !ty.pickup && !ty.solid && x > s.fx - 8 && x < s.fx + 16 && e.y === 0) {
-        f.cd = 1.1; f.atk = 0.18; e.dead = true; this.award(x, ey - 8, 75);
+        f.cd = 1.1; f.atk = 0.18; this.killEnemy(e, x, ey); this.award(x, ey - 8, 75);
       }
       if (e.dead) continue;
-      const overlapX = Math.abs(x - p.x) < ty.w / 2 + 4, overlapY = ey > p.y - ph && ey - ty.h < p.y;
+      const overlapX = Math.abs(x - p.x) < ty.w / 2 + 4, overlapY = ey > p.y - ph && ey - h < p.y;
       if (overlapX && overlapY && s.down <= 0) {
         if (ty.pickup) {
           e.dead = true; this.audio.sfx('coin');
-          if (e.type === 'terminal') { s.power = t + 8 * BAR; s.pops.push({ x, y: ey - 20, txt: 'PIP! ★★★', life: 1.2, c: '#7cf' }); }
+          if (isPowerup(e.type)) this.collectHealth(e.type, x, ey);
+          else if (e.type === 'terminal') { s.power = t + 8 * BAR; s.pops.push({ x, y: ey - 20, txt: 'PIP! ★★★', life: 1.2, c: '#7cf' }); }
           else { s.tickets++; s.ammo++; s.score += 50; s.pops.push({ x, y: ey - 8, txt: '+1', life: 0.5, c: '#ffd84a' }); }
-        } else if (s.inv <= 0) this.hurt();
+        } else if (s.inv <= 0 && !(e.type === 'blob_hop' && hopPose(e, t).frame < 2)) this.hurt();
       }
     }
     // Resolve stomp crossings before landing, including fast falls that cross an enemy and the ground in one frame.

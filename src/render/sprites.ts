@@ -1,7 +1,7 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { BEAT, GROUND, H, PH, W } from '../config';
-import { TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
-import { enemyHeight, enemyX, type Enemy, type RainbowState } from '../state';
+import { POWERUPS, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { boardFrame, enemyHeight, enemyX, hopPose, type BlobPop, type Enemy, type RainbowState } from '../state';
 import { ribbonLength, ribbonPoints } from '../rainbow';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
 import { PASSENGER_CELL_W, PASSENGER_CELL_H, PASSENGERS, isPassenger, passengerColumn } from '../passengers';
@@ -19,6 +19,10 @@ import thugsUrl from '../../assets/sprites/thugs.png';
 import passengersUrl from '../../assets/sprites/passengers.png';
 import propLightsUrl from '../../assets/sprites/props-light.png';
 import treesUrl from '../../assets/sprites/trees.png';
+import boardUrl from '../../assets/sprites/board-broken.png';
+import boardLightUrl from '../../assets/sprites/board-broken-light.png';
+import powerupsUrl from '../../assets/sprites/powerups.png';
+import powerupLightsUrl from '../../assets/sprites/powerups-light.png';
 import tramUrl from '../../assets/vehicles/hires/tram-new.png';
 import tokyoTramUrl from '../../assets/vehicles/hires/tram-tokyo.png';
 import { COLOR_T } from '../timeline';
@@ -216,6 +220,8 @@ function drawTram(x: number, y: number, t: number, tokyo = false): void {
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */
 const ENEMIES = loadImage(enemiesUrl);
+const BOARD_IMAGE = loadImage(boardUrl), BOARD_LIGHT = loadImage(boardLightUrl);
+const POWERUP_IMAGE = loadImage(powerupsUrl), POWERUP_LIGHT = loadImage(powerupLightsUrl);
 const PROP_IMAGE = loadImage(propsUrl);
 const LAMP_IMAGE = loadImage(lampsUrl), LIGHT_IMAGE = loadImage(lightsUrl);
 
@@ -231,14 +237,32 @@ export function drawLampLights(enemies: Enemy[], t: number): void {
       ctx.clip('evenodd');
     }
   }
-  for (const e of enemies) if (!e.dead) drawLampLight(e, enemyX(e, t));
+  for (const e of enemies) if (!e.dead) drawLampLight(e, enemyX(e, t), t);
   ctx.restore();
 }
 const NINJA_IMAGE = loadImage(ninjasUrl), THUG_IMAGE = loadImage(thugsUrl), PASSENGER_IMAGE = loadImage(passengersUrl);
 const PROP_LIGHT_IMAGE = loadImage(propLightsUrl), TREE_IMAGE = loadImage(treesUrl);
 
 /** Light from lamps and lit props (the dusk kiosk), drawn in front of the characters. */
-export function drawLampLight(e: Enemy, x: number): void {
+export function drawLampLight(e: Enemy, x: number, t = 0): void {
+  if (isPowerup(e.type)) {
+    if (!ready(POWERUP_LIGHT)) return;
+    const sp = POWERUPS[e.type], C = SHEET_CELL, frame = Math.floor(t * sp.fps) % sp.frames;
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.drawImage(POWERUP_LIGHT, frame * C, sp.row * C, C, C, Math.round(x - C / 2), Math.round(GROUND - enemyHeight(e, t)) - C, C, C);
+    ctx.restore();
+    return;
+  }
+  if (e.type === 'board_broken') {
+    if (!ready(BOARD_LIGHT)) return;
+    const [w, h] = BROKEN_BOARD.cell;
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.drawImage(BOARD_LIGHT, boardFrame(e, t) * w, 0, w, h, Math.round(x - w / 2), Math.round(GROUND - e.y - h), w, h);
+    ctx.restore();
+    return;
+  }
   if (isProp(e.type) && ready(PROP_LIGHT_IMAGE)) {
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
@@ -256,15 +280,35 @@ export function drawLampLight(e: Enemy, x: number): void {
 }
 
 /** Draw one frame of an enemy-sheet sprite with its base at (x, y) (also used for the HUD ticket icon). */
-export function drawEnemySprite(kind: SheetKind, x: number, y: number, t: number): void {
+export function drawEnemySprite(kind: SheetKind, x: number, y: number, t: number, frame?: number): void {
   if (!ready(ENEMIES)) return;
-  const sp = SHEET[kind], f = Math.floor(t * sp.fps) % sp.frames, C = SHEET_CELL;
+  const sp = SHEET[kind], f = frame ?? Math.floor(t * sp.fps) % sp.frames, C = SHEET_CELL;
   ctx.drawImage(ENEMIES, f * C, sp.row * C, C, C, Math.round(x - C / 2), Math.round(y) - C, C, C);
+}
+
+export function drawBlobPop(pop: BlobPop): void {
+  if (!ready(ENEMIES)) return;
+  const C = SHEET_CELL, frame = Math.floor(pop.age * BLOB_POP.fps);
+  ctx.drawImage(ENEMIES, frame * C, BLOB_POP.row * C, C, C, Math.round(pop.x - C / 2), Math.round(pop.y) - C, C, C);
 }
 
 export function drawEnemy(e: Enemy, x: number, t: number): void {
   const y = GROUND - enemyHeight(e, t);
+  if (isPowerup(e.type)) {
+    const sp = POWERUPS[e.type], C = SHEET_CELL, frame = Math.floor(t * sp.fps) % sp.frames;
+    if (ready(POWERUP_IMAGE)) ctx.drawImage(POWERUP_IMAGE, frame * C, sp.row * C, C, C, Math.round(x - C / 2), Math.round(y) - C, C, C);
+    return;
+  }
   if (e.type === 'tram') { drawTram(x, y, t, e.arr >= COLOR_T); return; } // trams due after 1:42 are Tokyoslo trams
+  if (e.type === 'board_broken') {
+    const [w, h] = BROKEN_BOARD.cell;
+    if (ready(BOARD_IMAGE)) ctx.drawImage(BOARD_IMAGE, boardFrame(e, t) * w, 0, w, h, Math.round(x - w / 2), Math.round(y - h), w, h);
+    return;
+  }
+  if (e.type === 'blob_hop') {
+    drawEnemySprite('blob_hop', x, y, t, hopPose(e, t).frame);
+    return;
+  }
   if (isLamp(e.type)) {
     if (ready(LAMP_IMAGE)) ctx.drawImage(LAMP_IMAGE, 0, LAMPS[e.type].row * LAMP_CELL_H, LAMP_CELL_W, LAMP_CELL_H,
       Math.round(x - LAMP_CELL_W / 2), Math.round(y - LAMP_CELL_H), LAMP_CELL_W, LAMP_CELL_H);

@@ -510,60 +510,69 @@
     "y": 26
   },
   {
-    "type": "blob",
-    "arr": 49.218327868852455
+    "type": "blob_hop",
+    "arr": 49.218327868852455,
+    "hop": "low"
   },
   {
     "type": "pigeon",
     "arr": 49.71013114754098
   },
   {
-    "type": "blob",
-    "arr": 50.201934426229506
+    "type": "blob_hop",
+    "arr": 50.201934426229506,
+    "hop": "high"
   },
   {
     "type": "pigeon",
     "arr": 50.69373770491803
   },
   {
-    "type": "blob",
-    "arr": 51.18554098360655
+    "type": "blob_hop",
+    "arr": 51.18554098360655,
+    "hop": "double"
   },
   {
     "type": "blob",
     "arr": 52.1691475409836
   },
   {
-    "type": "blob",
-    "arr": 53.15275409836065
+    "type": "blob_hop",
+    "arr": 53.644557377049175,
+    "hop": "high"
   },
   {
     "type": "pigeon",
     "arr": 53.644557377049175
   },
   {
-    "type": "blob",
-    "arr": 54.136360655737704
+    "type": "blob_hop",
+    "arr": 54.136360655737704,
+    "hop": "low"
   },
   {
-    "type": "blob",
-    "arr": 55.11996721311475
+    "type": "blob_hop",
+    "arr": 55.11996721311475,
+    "hop": "high"
   },
   {
-    "type": "blob",
-    "arr": 56.1035737704918
+    "type": "blob_hop",
+    "arr": 56.1035737704918,
+    "hop": "double"
   },
   {
     "type": "pigeon",
     "arr": 56.59537704918032
   },
   {
-    "type": "blob",
-    "arr": 57.08718032786885
+    "type": "blob_hop",
+    "arr": 57.57898360655737,
+    "hop": "high"
   },
   {
-    "type": "blob",
-    "arr": 58.0707868852459
+    "type": "blob_hop",
+    "arr": 58.0707868852459,
+    "hop": "low"
   },
   {
     "type": "pigeon",
@@ -574,8 +583,9 @@
     "arr": 59.054393442622946
   },
   {
-    "type": "blob",
-    "arr": 60.038
+    "type": "blob_hop",
+    "arr": 60.038,
+    "hop": "high"
   },
   {
     "type": "suitcase",
@@ -2095,5 +2105,102 @@
     "arr": 93.31421091175686,
     "y": 0,
     "rel": 145
+  },
+  {
+    "type": "departure_board",
+    "arr": 33.480622950819665,
+    "y": 0
+  },
+  {
+    "type": "ticket",
+    "arr": 33.480622950819665,
+    "y": 51
+  },
+  {
+    "type": "ticket",
+    "arr": 33.603573770491796,
+    "y": 70
+  },
+  {
+    "type": "departure_board",
+    "arr": 41.34947540983606,
+    "y": 0
+  },
+  {
+    "type": "ticket",
+    "arr": 41.34947540983606,
+    "y": 51
+  },
+  {
+    "type": "ticket",
+    "arr": 41.472426229508186,
+    "y": 70
+  },
+  {
+    "type": "board_broken",
+    "arr": 53.15275409836065,
+    "fallAt": 52.66095081967213,
+    "y": 0
+  },
+  {
+    "type": "ticket",
+    "arr": 53.02980327868853,
+    "y": 95
+  },
+  {
+    "type": "ticket",
+    "arr": 53.27570491803278,
+    "y": 105
+  },
+  {
+    "type": "board_broken",
+    "arr": 57.08718032786885,
+    "fallAt": 56.59537704918033,
+    "y": 0
+  },
+  {
+    "type": "ticket",
+    "arr": 56.96422950819672,
+    "y": 95
+  },
+  {
+    "type": "ticket",
+    "arr": 57.21013114754098,
+    "y": 105
+  },
+  {
+    "type": "cocoa",
+    "arr": 37.414,
+    "y": 32
+  },
+  {
+    "type": "cocoa",
+    "arr": 58.316,
+    "y": 38
+  },
+  {
+    "type": "neon_heart",
+    "arr": 69.1363606557377,
+    "y": 36
+  },
+  {
+    "type": "bun",
+    "arr": 94.7,
+    "y": 32
+  },
+  {
+    "type": "bubble_tea",
+    "arr": 110.4,
+    "y": 30
+  },
+  {
+    "type": "bubble_tea",
+    "arr": 124.2,
+    "y": 38
+  },
+  {
+    "type": "nigiri",
+    "arr": 133.7,
+    "y": 40
   }
 ]

@@ -433,6 +433,75 @@ def blob_frames(n=4):
 
 S['blob'] = blob_frames()
 
+
+# The glitch, hopping version (level 2): the same loose pink/cyan 2 × 2 squares, packed into a blob that
+# squashes, stretches and hops leftwards, one hop per beat. 8 frames per hop (≈ 16 fps at 122 BPM):
+#   0 land (squashed flat, squares spilling out)  1 recover  2 crouch  3 launch (stretched tall)
+#   4 rise (stragglers left behind)  5 apex (loose)  6 fall (stragglers above)  7 about to land
+# The sprite only changes shape; the code moves it along the hop arc (airborne in frames 3–7).
+HOP_SHAPES = [(22, 8, .95, 0), (18, 12, .9, 0), (20, 10, .95, 0), (12, 20, .9, 0),
+              (14, 18, .85, 2), (16, 16, .7, 0), (14, 18, .85, -2), (16, 14, .9, 0)]
+
+
+def blob_hop_frames():
+    out = []
+    G = 24
+    for f, (w, h, dens, trail) in enumerate(HOP_SHAPES):
+        rnd = random.Random(40 + f)
+        grid = [['.'] * G for _ in range(G)]
+
+        def sq(x, y, c):
+            for dx in (0, 1):
+                for dy in (0, 1):
+                    if 0 <= x + dx < G and 0 <= y + dy < G:
+                        grid[y + dy][x + dx] = c
+        cx, cy = G / 2, G - h / 2
+        n = 0
+        for y in range(G - 2, -1, -2):
+            for x in range(0, G - 1, 2):
+                dx, dy = (x + 1 - cx) / (w / 2), (y + 1 - cy) / (h / 2)
+                if dx * dx + dy * dy <= 1.0 and rnd.random() < dens:
+                    sq(x + rnd.choice((0, 0, 1)) - (1 if f % 2 else 0) * (y % 4 == 0), y, '8' if (x // 2 + y // 2 + f) % 2 else 'C')
+                    n += 1
+        if f == 0:                                       # landing: squares spill out sideways
+            for x, c in ((0, 'C'), (1, '8'), (G - 3, '8'), (G - 2, 'C')):
+                sq(x, G - 2 - rnd.randrange(0, 3), c)
+        if trail:                                        # stragglers: below on the way up, above on the way down
+            for i in range(4):
+                x = int(cx) - 6 + rnd.randrange(0, 12)
+                y = (G - 2 - rnd.randrange(0, 3)) if trail > 0 else max(0, int(cy - h / 2) - 3 - 2 * i)
+                sq(x, y, '8' if i % 2 else 'C')
+        out.append([''.join(r) for r in grid])
+    return out
+
+
+def blob_pop_frames():
+    """Hit: the blob bursts into squares that fly out and shrink to single pixels."""
+    out = []
+    G = 24
+    rnd0 = random.Random(77)
+    parts = [(rnd0.uniform(0, 6.283), rnd0.uniform(.5, 1.0), '8' if i % 2 else 'C') for i in range(16)]
+    import math
+    for f in range(5):
+        grid = [['.'] * G for _ in range(G)]
+        r = 3 + f * 2.6
+        size = 2 if f < 3 else 1
+        for a, sp, c in parts:
+            if f == 4 and sp < .7:
+                continue
+            x = int(G / 2 + math.cos(a) * r * sp)
+            y = int(G - 8 + math.sin(a) * r * sp * .8)
+            for dx in range(size):
+                for dy in range(size):
+                    if 0 <= x + dx < G and 0 <= y + dy < G:
+                        grid[y + dy][x + dx] = c
+        out.append([''.join(r_) for r_ in grid])
+    return out
+
+
+S['blob_hop'] = blob_hop_frames()
+S['blob_pop'] = blob_pop_frames()
+
 def gull_frames(n=8):
     """The seagull (replaces the drone): white head and body, grey back and wings, black wing tips,
     yellow beak with a red spot. Side view facing left, an 8-frame flap: the near wing sweeps from high
@@ -517,8 +586,9 @@ def gull_frames(n=8):
 
 S['gull'] = gull_frames()
 
-ORDER = ['suitcase', 'snow', 'pigeon', 'ticket', 'blob', 'ninja', 'drone', 'bot', 'terminal', 'fire', 'coin', 'shot', 'fireball', 'gull']
-FPS = {'gull': 14, 'pigeon': 8, 'ticket': 8, 'blob': 20, 'ninja': 8, 'drone': 16, 'bot': 3, 'terminal': 4, 'fire': 10, 'coin': 10, 'shot': 12, 'fireball': 12, 'snow': 2, 'suitcase': 1}
+ORDER = ['suitcase', 'snow', 'pigeon', 'ticket', 'blob', 'ninja', 'drone', 'bot', 'terminal', 'fire', 'coin', 'shot', 'fireball', 'gull',
+         'blob_hop', 'blob_pop']
+FPS = {'blob_hop': 16, 'blob_pop': 16, 'gull': 14, 'pigeon': 8, 'ticket': 8, 'blob': 20, 'ninja': 8, 'drone': 16, 'bot': 3, 'terminal': 4, 'fire': 10, 'coin': 10, 'shot': 12, 'fireball': 12, 'snow': 2, 'suitcase': 1}
 
 
 def hexrgb(h):
@@ -526,7 +596,7 @@ def hexrgb(h):
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4)) + (255,)
 
 
-NO_OUTLINE = {'blob'}
+NO_OUTLINE = {'blob', 'blob_hop', 'blob_pop'}
 
 
 def render_cell(rows, outline=True):
@@ -569,6 +639,9 @@ if __name__ == '__main__':
     # the gull's wings sweep far above and below its body: its hitbox is the body only, and «dy» is how
     # far below the enemy's base the sheet cell is drawn so that the body's underside sits on the base
     meta['gull'].update({'w': 22, 'h': 12, 'dy': 11})
+    # the hopping glitch: hitbox = its resting size; frames 3–7 are in the air (the code moves it on the arc),
+    # frame 0 is the landing and should fall on the beat
+    meta['blob_hop'].update({'w': 16, 'h': 14, 'air': [3, 7], 'land': 0, 'frames_per_hop': 8})
     sheet.save(root / 'enemies.png')
     (root / 'enemies.json').write_text(json.dumps(meta, indent=1) + '\n')
     print('wrote', root / 'enemies.png', sheet.size)

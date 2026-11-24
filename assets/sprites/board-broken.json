@@ -1,0 +1,62 @@
+{
+ "cell": [
+  64,
+  52
+ ],
+ "frames": [
+  "glitch0",
+  "glitch1",
+  "glitch2",
+  "buckle0",
+  "buckle1",
+  "drop",
+  "impact",
+  "bounce",
+  "rest0",
+  "rest1"
+ ],
+ "top": [
+  45,
+  45,
+  45,
+  38,
+  27,
+  22,
+  12,
+  16,
+  15,
+  15
+ ],
+ "w": 54,
+ "phases": {
+  "glitch": {
+   "frames": [
+    0,
+    1,
+    2
+   ],
+   "fps": 8,
+   "loop": true
+  },
+  "fall": {
+   "frames": [
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "fps": 12,
+   "loop": false
+  },
+  "rest": {
+   "frames": [
+    8,
+    9
+   ],
+   "fps": 4,
+   "loop": true
+  }
+ },
+ "note": "bottom-centred, base on the bottom row minus the 1-px outline; top = walkable height above the base in each frame (0 = none). The light sheet has one glow per frame on the same grid."
+}

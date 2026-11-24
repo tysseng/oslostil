@@ -55,6 +55,7 @@ All in `drawEnemy` (`src/render/sprites.ts`).
 | Snow pile | 🎨 | 16 × 7 | intro, verse 1 | |
 | Pigeon | 🎨 | 10 × 8 | verse 1, pre-chorus 1 | 2-frame wing flap |
 | Glitch blob | 🎨 | 11 × 11 | pre-chorus 1 | flickering pixels |
+| Hopping glitch (`blob_hop`, `blob_pop`) | ✅ | 16 × 14 hitbox | level 2: squash/stretch hop, 8 frames per beat (land on the beat), moves left in the air; `blob_pop` 5-frame burst; `enemies.png` rows 14–15; low/high/double variants in the editor |
 | Enemy ninjas: Shadow (`ninja`), Oni (`ninja_oni`, katana, 2 hp), Wanderer (`ninja_kasa`, straw hat, short sword) | ✅ | 18 × 30 (40 × 32 cells) | chorus 1 → end | `assets/sprites/ninjas.png` + `.json` (`tools/sprites/ninjas.py`): idle, run ×6, crouch, jump up/down, attack ×3; facing left. Jumps and frame choice in `src/ninjas.ts`: Shadow hops once on the way in, Oni leaps and slashes, Wanderer keeps hopping. The level's 82 ninjas are spread evenly over the three kinds |
 | Drone | ✖ | 18 × 8 | | replaced by the seagull (the sprite stays in the sheet) |
 | Seagull (`gull`) | ✅ | 22 × 12 body (wings 26 × 31) | chorus 1 → end | `enemies.png` row 13: 8-frame flap at 14 fps, out of step per gull; JSON `dy` 11 draws the cell lower so the body sits on the base; stompable like the pigeon. All drones in `level.json` are now gulls |
@@ -70,6 +71,7 @@ All in `drawEnemy` (`src/render/sprites.ts`).
 
 | Asset | Status | Size | Code | Notes |
 |---|---|---|---|---|
+| Health power-ups: `cocoa` (Sandvika +1), `neon_heart` (Neon Oslo +1, pulses, glow), `bun` (skolebolle, British Oslo +1), `nigiri` (salmon, Tokyoslo +2), `bubble_tea` (Tokyoslo +1) | ✅ | 20–28 × 18–30 (larger than life on purpose) | `assets/sprites/powerups.png` + `powerups-light.png` + `powerups.json` (`tools/sprites/powerups.py`); available in the editor and placed in the default level; PERFECT neon heart heals fully |
 | Paper ticket (pickup) | 🎨 | 8 × 6 | `drawEnemy` | will also be the ammo (see IDEAS.md) |
 | Coin | 🎨 | 7 × 7 | `drawEnemy` | could spin |
 | Ticket terminal (power-up) | 🎨 | 10 × 14 | `drawEnemy` | «Kort mot terminalen» |
@@ -118,6 +120,8 @@ Pixel sprites at girl scale, front view, in `assets/sprites/props.png` + `props.
 | Glitched machine clone (`glitch_machine`) | ✅ | 28 × 32 | level 2 glitch: the plain ticket machine breaking up, 8 frames @ 8 fps (slipping slices, pink/cyan split, screen static, «A-A-A», missing-texture blocks); top 31, one jump; screen glow in props-light |
 | Copy-pasted machines (`glitch_machine_stack`) | ✅ | 32 × 64 | level 2: a clone pasted on top of another, the top copy slips sideways; top 63, double jump |
 | Smeared machine (`glitch_machine_smear`) | ✅ | 66 × 32 | level 2: a clone dragging three echoes to the left; a long platform, top 31 |
+| Departure board (`departure_board`) | ✅ | 54 × 46 | level 1: amber «OSLO S 21:04 / SPOR 2» board on two posts; top 45, one jump; amber glow in props-light (`tools/sprites/boards.py`) |
+| Broken departure board | ✅ | 64 × 52 frames | level 2: `board-broken.png` + per-frame `board-broken-light.png` + `board-broken.json` (glitch ×3 loop → buckle, buckle, drop, impact, bounce once on the beat → rest ×2 loop; per-frame top 45 … 15); impact is synchronized to one beat after the editor-configurable fall trigger |
 | Fountain, classic Oslo (`fountain`) | ✅ | 64 × 48 | tiered stone, darker for the night; 8 frames of pulsing semi-transparent water (centre jet + an arch to each side); lit from the water upwards (`props-light.png`); stand on the basin rim (`top` 13) |
 | Advertising column, night (`ad_column`) | ✅ | 26 × 48 (48-px-wide canvas so the lamps' glow fits) | posters lit by two small lamps above them (light in `props-light.png`); top 46 = double jump |
 | Cast-iron park railing, night (`railing`) | ✅ | 62 × 16 | spear tips; not standable |

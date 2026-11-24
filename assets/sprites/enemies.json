@@ -97,5 +97,25 @@
   "w": 22,
   "h": 12,
   "dy": 11
+ },
+ "blob_hop": {
+  "row": 14,
+  "frames": 8,
+  "fps": 16,
+  "w": 16,
+  "h": 14,
+  "air": [
+   3,
+   7
+  ],
+  "land": 0,
+  "frames_per_hop": 8
+ },
+ "blob_pop": {
+  "row": 15,
+  "frames": 5,
+  "fps": 16,
+  "w": 23,
+  "h": 15
  }
 }
