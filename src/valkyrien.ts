@@ -3,15 +3,19 @@ import type { GameState } from './state';
 
 export const VALKYRIEN_ENTRY = 87;
 export const VALKYRIEN_EXIT = 95;
-export const VALKYRIEN_DEPTH = H;
-export const VALKYRIEN_FLOOR = GROUND + VALKYRIEN_DEPTH;
-export const VALKYRIEN_CEILING = VALKYRIEN_FLOOR - 110;
+export const SURFACE_STRIP_HEIGHT = H - GROUND;
+export const VALKYRIEN_CAMERA = GROUND - SURFACE_STRIP_HEIGHT / 2 - 14;
+export const VALKYRIEN_CEILING = H + SURFACE_STRIP_HEIGHT / 2;
+export const VALKYRIEN_BOTTOM = 26;
+export const VALKYRIEN_FLOOR = VALKYRIEN_CAMERA + H - VALKYRIEN_BOTTOM;
+export const VALKYRIEN_DEPTH = VALKYRIEN_FLOOR - GROUND;
+export const VALKYRIEN_HEIGHT = VALKYRIEN_FLOOR - VALKYRIEN_CEILING;
 export const CHUTE_HALF_WIDTH = 22;
 export const STAIRS_WIDTH = 140;
 const SPEED = 145;
 
 export interface ValkyrienState {
-  phase: 'surface' | 'chute' | 'underground' | 'run-in' | 'stairs' | 'exit';
+  phase: 'surface' | 'chute' | 'underground' | 'run-in' | 'stairs' | 'house' | 'exit';
   camera: number;
   openedAt?: number;
   coverRider?: boolean;
@@ -21,14 +25,20 @@ export interface ValkyrienState {
 export const manholeX = (t: number): number => PX + (VALKYRIEN_ENTRY - t) * SPEED;
 export const exitX = (t: number): number => PX + (VALKYRIEN_EXIT - t) * SPEED;
 export const belowSurface = (s: GameState): boolean =>
-  s.valkyrien.phase !== 'surface' && s.valkyrien.phase !== 'exit';
+  !['surface', 'house', 'exit'].includes(s.valkyrien.phase);
 export const routeControlsPlayer = (s: GameState): boolean =>
-  !!s.valkyrien.coverRider || ['chute', 'run-in', 'stairs'].includes(s.valkyrien.phase);
+  !!s.valkyrien.coverRider || ['chute', 'run-in', 'stairs', 'house'].includes(s.valkyrien.phase);
 export const playerFloor = (s: GameState): number => belowSurface(s) ? VALKYRIEN_FLOOR : GROUND;
 
 /** Resolve the optional route after ordinary gravity, instead of surface ground landing. */
 export function resolveValkyrien(s: GameState, t: number, dt: number, previousY: number): void {
   const r = s.valkyrien, p = s.p;
+  if (r.phase === 'house') {
+    p.y = GROUND;
+    p.vy = 0;
+    p.x += 130 * dt;
+    if (p.x - 16 > exitX(t) + 40) r.phase = 'exit';
+  }
   if (r.coverRider) {
     if (p.vy < 0 || Math.abs(p.x - manholeX(t)) > 25) r.coverRider = false;
     else p.x = manholeX(t);
@@ -76,10 +86,10 @@ export function resolveValkyrien(s: GameState, t: number, dt: number, previousY:
     p.y = VALKYRIEN_FLOOR - VALKYRIEN_DEPTH * u;
     p.vy = 0;
     p.jumps = 0;
-    r.camera = VALKYRIEN_DEPTH * (1 - u);
-    if (u === 1) r.phase = 'exit';
+    r.camera = VALKYRIEN_CAMERA * (1 - u);
+    if (u === 1) r.phase = 'house';
   } else {
-    const target = belowSurface(s) ? VALKYRIEN_DEPTH : 0;
+    const target = belowSurface(s) ? VALKYRIEN_CAMERA : 0;
     r.camera += (target - r.camera) * Math.min(1, dt * 20);
     if (Math.abs(target - r.camera) < 0.01) r.camera = target;
     const floor = playerFloor(s);

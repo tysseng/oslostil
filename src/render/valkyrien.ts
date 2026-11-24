@@ -1,6 +1,6 @@
-import { GROUND, W } from '../config';
+import { GROUND, H, W } from '../config';
 import type { ValkyrienState } from '../valkyrien';
-import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_FLOOR, exitX, manholeX } from '../valkyrien';
+import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, manholeX } from '../valkyrien';
 import { R, ctx, text } from './draw';
 
 function polygon(points: [number, number][], color: string): void {
@@ -11,16 +11,24 @@ function polygon(points: [number, number][], color: string): void {
   ctx.fill();
 }
 
+export function drawUndergroundFill(x = 0, y = H, width = W, height = VALKYRIEN_DEPTH + 30): void {
+  const gradient = ctx.createLinearGradient(0, H, 0, VALKYRIEN_FLOOR + VALKYRIEN_BOTTOM);
+  gradient.addColorStop(0, '#0a2e33');
+  gradient.addColorStop(1, '#000');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(x, y, width, height);
+}
+
 export function drawValkyrien(t: number, route?: ValkyrienState): void {
   const entry = manholeX(t), exit = exitX(t), left = Math.max(-10, entry - 50);
+  drawUndergroundFill();
   if (exit < -100 || left > W) return;
-  R(left, GROUND + 30, exit + 45 - left, VALKYRIEN_DEPTH + 30, '#55595c');
-  R(left, VALKYRIEN_CEILING, exit + 45 - left, 110, '#898d8f');
+  R(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT, '#898d8f');
   for (let x = entry - 50; x < Math.min(exit + 45, W + 70); x += 70) {
     if (x < -70) continue;
-    R(x, VALKYRIEN_CEILING, 1, 110, '#64696c');
+    R(x, VALKYRIEN_CEILING, 1, VALKYRIEN_HEIGHT, '#64696c');
     R(x + 15, VALKYRIEN_CEILING + 6, 35, 3, '#e2e4da');
-    R(x + 27, VALKYRIEN_CEILING + 70, 8, 40, '#6b7073');
+    R(x + 27, VALKYRIEN_FLOOR - 40, 8, 40, '#6b7073');
   }
   const sign = Math.max(25, Math.min(W - 100, entry + 170));
   R(sign, VALKYRIEN_CEILING + 26, 80, 17, '#35393c');
@@ -31,7 +39,7 @@ export function drawValkyrien(t: number, route?: ValkyrienState): void {
   const bottom = exit - STAIRS_WIDTH;
   ctx.save();
   ctx.beginPath();
-  ctx.rect(bottom, GROUND + 30, STAIRS_WIDTH + 10, VALKYRIEN_DEPTH);
+  ctx.rect(bottom, VALKYRIEN_CEILING, STAIRS_WIDTH + 10, VALKYRIEN_HEIGHT + 30);
   ctx.clip();
   polygon([[bottom, VALKYRIEN_FLOOR], [exit, GROUND], [exit, VALKYRIEN_FLOOR + 30], [bottom, VALKYRIEN_FLOOR + 30]], '#73787b');
   for (let i = 0; i < 20; i++) {
@@ -61,7 +69,7 @@ export function drawValkyrienBalustrade(t: number): void {
   if (top < -50 || bottom > W) return;
   ctx.save();
   ctx.beginPath();
-  ctx.rect(bottom - 2, GROUND + 30, STAIRS_WIDTH + 4, VALKYRIEN_DEPTH + 30);
+  ctx.rect(bottom - 2, VALKYRIEN_CEILING, STAIRS_WIDTH + 4, VALKYRIEN_HEIGHT + 30);
   ctx.clip();
   polygon([[bottom, VALKYRIEN_FLOOR - 12], [top, GROUND - 12],
     [top, VALKYRIEN_FLOOR + 30], [bottom, VALKYRIEN_FLOOR + 30]], '#93989a');

@@ -9,7 +9,7 @@ import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
 import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, belowSurface, exitX, manholeX, playerFloor } from '../valkyrien';
-import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from './valkyrien';
+import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from './valkyrien';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
 
@@ -105,6 +105,8 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.clip();
     drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
     ctx.restore();
+    drawUndergroundFill(exitX(t) - STAIRS_WIDTH - 24, H, STAIRS_WIDTH + 62,
+      VALKYRIEN_CEILING - H);
   }
   drawValkyrienHouse(t);
   resetTransform();

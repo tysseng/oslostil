@@ -22,6 +22,7 @@ import passengersUrl from '../../assets/sprites/passengers.png';
 import boardUrl from '../../assets/sprites/board-broken.png';
 import powerupsUrl from '../../assets/sprites/powerups.png';
 import './editor.css';
+import { VALKYRIEN_DEPTH } from '../valkyrien';
 import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from '../render/valkyrien';
 
 const STORAGE_KEY = 'oslostil-level-v1';
@@ -58,6 +59,7 @@ export class LevelEditor {
   private readonly tools: HTMLButtonElement[] = [];
   private selected: EnemyKind | null = null;
   private hovered: ScheduledEvent | null = null;
+  private cameraY = 0;
   private drag: Drag | null = null;
   private inspected: ScheduledEvent | null = null;
   private readonly hopInput: HTMLSelectElement;
@@ -106,6 +108,7 @@ export class LevelEditor {
       <summary>Editor help</summary>
       <p>To publish this layout as the default: download it, replace src/level.json with the downloaded file, then rebuild/deploy. Use default level discards the browser draft.</p>
       <p>Drag any item to move it. Right-click an item to delete it. Select an item below, then click empty space to place copies. Move / Esc stops placing.</p>
+      <p>Left/right arrows or scrolling move through time. Up/down arrows or Shift + scrolling pan vertically to view Valkyrien.</p>
       <p>Broken boards crumble when landed on. Select a hopping glitch to edit its hop variant; tool settings also apply to new copies.</p>
       </details>`;
     this.entry.after(this.panel);
@@ -318,7 +321,8 @@ export class LevelEditor {
       e.preventDefault();
       const delta = e.deltaY || e.deltaX;
       const scale = e.deltaMode === 1 ? 0.03 : e.deltaMode === 2 ? 1 : 0.001;
-      this.scrub(delta * scale);
+      if (e.shiftKey) this.pan(delta * scale * 100);
+      else this.scrub(delta * scale);
     }, { passive: false });
     canvas.addEventListener('contextmenu', (e) => {
       if (game.mode !== 'editor') return;
@@ -360,10 +364,11 @@ export class LevelEditor {
 
   keyDown(e: KeyboardEvent): boolean {
     if (this.game.mode !== 'editor') return false;
-    if ((e.code === 'ArrowLeft' || e.code === 'ArrowRight') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.code) && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (e.target instanceof HTMLElement && e.target.closest('select')) return true;
       e.preventDefault();
-      this.scrub(e.code === 'ArrowRight' ? 0.1 : -0.1);
+      if (e.code === 'ArrowUp' || e.code === 'ArrowDown') this.pan(e.code === 'ArrowDown' ? 10 : -10);
+      else this.scrub(e.code === 'ArrowRight' ? 0.1 : -0.1);
     }
     if (e.code === 'Escape') {
       this.selected = null;
@@ -380,11 +385,17 @@ export class LevelEditor {
     this.tick();
   }
 
+  private pan(delta: number): void {
+    if (this.drag || delta === 0) return;
+    this.cameraY = Math.max(0, Math.min(VALKYRIEN_DEPTH, this.cameraY + delta));
+    this.hovered = null;
+  }
+
   private point(e: MouseEvent): [number, number] {
     const rect = canvas.getBoundingClientRect();
     return [
       ((e.clientX - rect.left) * canvas.offsetWidth / rect.width - canvas.clientLeft) / canvas.clientWidth * W,
-      ((e.clientY - rect.top) * canvas.offsetHeight / rect.height - canvas.clientTop) / canvas.clientHeight * H,
+      ((e.clientY - rect.top) * canvas.offsetHeight / rect.height - canvas.clientTop) / canvas.clientHeight * H + this.cameraY,
     ];
   }
 
@@ -503,6 +514,7 @@ export class LevelEditor {
   draw(): void {
     const t = this.game.s.lastT;
     resetTransform();
+    ctx.translate(0, -this.cameraY);
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0);
     drawValkyrien(t);
     const events = this.layeredEvents();

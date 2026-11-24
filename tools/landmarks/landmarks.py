@@ -434,98 +434,135 @@ def nationaltheatret():
 
 
 def opera():
-    """Operahuset, side elevation traced from «opera3» (checked against «opera seaside», «opera1», «opera2»):
-    the marble ramp rising left to right in front of the foyer, the foyer glass under a roof that rises
-    towards the LEFT, the fly tower behind, the top plateau and the white office block on the right."""
+    """Operahuset, south elevation traced from «opera 2/operasilhouette.png» (the architects' facade drawing):
+    the long marble ramp from the fjord up to the roof plateau, the foyer's glass wall under a roof that rises
+    towards the left and ends in the slanted glass gable, the fly tower and the step behind it, the dark lower
+    glazing under the ramp, and the white office wing with louvres on the right. Textures after the photos in
+    the same folder (white marble and aluminium, green-teal glass)."""
     b = B('opera', 'Operahuset')
-    C = dict(mar='#eef0f1', mar_lo='#d0d6dc', mar_dk='#aeb7c0', glass='#3f8f9e', glass_hi='#7cc0c8', glass_ln='#2f6f7c',
-             dk='#2c3944', dk_ln='#40505e', alu='#e6e8ea', alu_lo='#cdd1d5', slat='#9aa3ad', win='#3a4652')
-    m = lambda x, y: ((x - 80) * 0.075, (520 - y) * 0.1)            # opera3 px -> metres (x a little compressed)
-    X = lambda x: m(x, 0)[0]
-    Y = lambda y: m(0, y)[1]
-    # ramp top line: steep-ish run-in from the ground, then the long straight rise
-    ra, rb, rc = m(80, 520), m(480, 368), m(2505, 182)
-
-    def ramp(x):
-        if x <= rb[0]:
-            return ra[1] + (rb[1] - ra[1]) * (x - ra[0]) / (rb[0] - ra[0])
-        return rb[1] + (rc[1] - rb[1]) * (x - rb[0]) / (rc[0] - rb[0])
-
-    th = 2.0
-    gx0, gx1 = X(464), X(1550)
-    roof = lambda x: Y(160) + (Y(195) - Y(160)) * (x - gx0) / (gx1 - gx0)    # rises to the left
-    # rear stage block + fly tower (behind)
-    b.rect(X(600), 20, X(1060) - X(600), 18.0, C['alu'])
-    b.rect(X(1000), 20, X(1060) - X(1000), 18.0, C['alu_lo'], 'shade')
-    for i in range(1, 10):
-        b.line(X(600), 38.0 - i * 1.4, X(1000), 38.0 - i * 1.4, C['alu_lo'], 0.1, 'shade')
-    fx0, fx1, ftop = X(1088), X(1432), 54.0
-    b.rect(fx0, 20, fx1 - fx0, ftop - 20, C['alu'])
-    b.rect(fx1 - 4, 20, 4, ftop - 20, C['alu_lo'], 'shade')
-    for i in range(1, 16):
-        b.line(fx0, ftop - i * 1.5, fx1 - 4, ftop - i * 1.5, C['alu_lo'], 0.1, 'shade')
-    # foyer glass
-    gl = [(gx0, ramp(gx0)), (gx1, ramp(gx1)), (gx1, roof(gx1)), (gx0, roof(gx0))]
-    b.poly(gl, C['glass'], 'win')
-    cl = b.clip(gl)
-    b.poly([(gx0 + 18, 40), (gx0 + 26, 40), (gx0 + 14, 0), (gx0 + 6, 0)], C['glass_hi'], 'win', ' opacity=".35"')
-    b.group('win', 1, cl)
+    C = dict(mar='#eef0f1', mar_lo='#d3d9de', mar_dk='#aeb7c0', alu='#e4e6e8', alu_lo='#c8ccd0', alu_dk='#a9aeb4',
+             glass='#4f9aa2', glass_hi='#8fc8c8', glass_ln='#2f6f78', glass_dk='#2f6870', gable='#3c6e78',
+             dk='#2b3842', dk_ln='#46586a', win='#33404c', louvre='#bfc5cc', post='#c9cfd5')
+    K = 0.172                                                     # drawing px -> m (1201 px ≈ 207 m)
+    m = lambda x, y: ((x - 105) * K, (347 - y) * K)
+    X = lambda x: (x - 105) * K
+    Y = lambda y: (347 - y) * K
+    ramp = lambda x: Y(346.5) + (Y(227.5) - Y(346.5)) * (x - X(105)) / (X(995) - X(105))      # top of the ramp
+    TH = 11 * K                                                    # ramp slab thickness
+    thick = lambda x: min(TH, max(0.0, (x - X(105)) * TH / (X(400) - X(105))))
+    roof_t = lambda x: Y(215) + (Y(232.5) - Y(215)) * (x - X(346.5)) / (X(920) - X(346.5))     # foyer roof top
+    RT = 6 * K                                                     # foyer roof thickness
+    # fly tower and the step box behind the foyer roof
+    ft0, ft1 = X(612), X(750)
+    b.rect(ft0, Y(240), ft1 - ft0, Y(140) - Y(240), C['alu'])
+    b.rect(ft1 - 3.2, Y(240), 3.2, Y(140) - Y(240), C['alu_lo'], 'shade')
+    for i in range(1, 12):                                        # the fly tower's aluminium relief panels
+        y = Y(140) - i * 1.5
+        b.line(ft0, y, ft1 - 3.2, y, C['alu_lo'], 0.09, 'shade')
+    for x in range(int(ft0) + 2, int(ft1 - 3), 3):
+        b.line(x, Y(225), x, Y(141), C['alu_lo'], 0.06, 'shade')
+    b.rect(X(750), Y(240), X(856) - X(750), Y(207) - Y(240), C['alu'])
+    b.rect(X(856) - 1.6, Y(240), 1.6, Y(207) - Y(240), C['alu_lo'], 'shade')
+    # office wing (right), behind the ramp and the roof plateau
+    o0, o1, otop = X(802), X(1284), Y(220)
+    b.poly([(o0, 0), (X(1282), 0), (X(1282), Y(288)), (X(1306), Y(288)), (X(1306), Y(245)), (o1, Y(245)), (o1, otop),
+            (X(942), otop), (X(942), ramp(X(942)) - .3), (o0, ramp(o0) - .3)], C['alu'])
+    b.rect(o1 - 1.2, 0, 1.2, otop, C['alu_lo'], 'shade')
+    for y0, y1 in ((Y(296), Y(289)), (Y(318), Y(312)), (Y(338), Y(332))):     # window rows
+        b.rect(X(875), y0, X(1282) - X(875), y1 - y0, C['win'], 'win')
+        x = X(875) + 1.0
+        while x < X(1282):
+            b.line(x, y0, x, y1, C['alu'], 0.35)
+            x += 3.4
+    cl = b.clip([(X(875), Y(288)), (X(1306), Y(288)), (X(1306), Y(245)), (X(875), Y(245))])
     k = 0
-    x = gx0 + 1.6
-    while x < gx1:
-        b.line(x, 0, x, 40, C['glass_ln'], 0.14)
-        x += 2.4
-        k += 1
-    for dy in (4, 8):
-        b.line(gx0, roof(gx0) - dy, gx1, roof(gx1) - dy, C['glass_ln'], 0.14)
+    y = Y(288) + 0.5
+    while y < Y(245):                                             # louvre band
+        b.line(X(875), y, X(1306), y, C['louvre'], 0.22)
+        y += 0.8
         k += 1
     b.group('detail', k, cl)
-    rf = [(gx0 - .5, roof(gx0)), (gx1, roof(gx1)), (gx1, roof(gx1) + 1.4), (gx0 - .5, roof(gx0) + 1.4)]
+    b.rect(X(875), Y(270), X(1282) - X(875), Y(262) - Y(270), C['win'], 'win', ' opacity=".55"')
+    # louvred screen between the foyer and the office (802–875)
+    cl = b.clip([(o0, 0), (X(875), 0), (X(875), ramp(X(875))), (o0, ramp(o0))])
+    k = 0
+    y = 0.6
+    while y < 14:
+        b.line(o0, y, X(875), y, C['alu_dk'], 0.14)
+        y += 0.7
+        k += 1
+    b.group('detail', k, cl)
+    # roof plateau where the ramp arrives
+    b.poly([(X(995), Y(227.5)), (X(1134), Y(227.5)), (X(1134), Y(237.5)), (X(1125), Y(237.5)), (X(1125), Y(239)),
+            (X(980), Y(239))], C['mar'])
+    b.rect(X(980), Y(239), X(1125) - X(980), 0.4, C['mar_lo'], 'shade')
+    # foyer glass between the ramp and its own roof
+    g0 = X(335)
+    gl = [(X(346.5), roof_t(X(346.5)) - RT + .3)]
+    gl += [(X(950), roof_t(X(950)) - RT + .3), (X(950), ramp(X(950)) - .3), (g0, ramp(g0) - .3)]
+    b.poly(gl, C['glass'], 'win')
+    cl = b.clip(gl)
+    b.poly([(X(430), 40), (X(470), 40), (X(440), 0), (X(400), 0)], C['glass_hi'], 'win', ' opacity=".35"')
+    b.poly([(X(640), 40), (X(660), 40), (X(630), 0), (X(610), 0)], C['glass_hi'], 'win', ' opacity=".25"')
+    b.group('win', 2, cl)
+    k = 0
+    x = X(380)
+    while x < X(950):                                             # mullions and transoms
+        b.line(x, 0, x, 40, C['glass_ln'], 0.14)
+        x += 2.3
+        k += 1
+    for dy in (2.6, 5.2):
+        b.line(X(346.5), roof_t(X(346.5)) - RT - dy, X(950), roof_t(X(950)) - RT - dy, C['glass_ln'], 0.12)
+        k += 1
+    for xa in (X(378), X(395)):                                   # the diagonal struts near the gable
+        b.line(xa, ramp(xa), xa + 2.6, roof_t(xa) - RT, C['glass_ln'], 0.16)
+        b.line(xa + 2.6, ramp(xa), xa, roof_t(xa) - RT, C['glass_ln'], 0.16)
+        k += 2
+    b.group('detail', k, cl)
+    # the slanted glass gable at the left end of the foyer
+    gab = [(X(335), ramp(X(335))), (X(346.5), roof_t(X(346.5))), (X(376), roof_t(X(376)) - RT), (X(366), ramp(X(366)))]
+    b.poly(gab, C['gable'], 'win')
+    cl = b.clip(gab)
+    k = 0
+    x = X(330)
+    while x < X(380):
+        b.line(x, 0, x + 1.8, 40, C['glass_dk'], 0.12, 'win')
+        x += 0.7
+        k += 1
+    b.group('win', k, cl)
+    # foyer roof slab (rises towards the left)
+    rf = [(X(346.5), roof_t(X(346.5))), (X(950), roof_t(X(950))), (X(950), roof_t(X(950)) - RT), (X(349), roof_t(X(349)) - RT)]
     b.poly(rf, C['mar'], 'trim')
-    b.poly(rf[:2] + [(gx1, roof(gx1) + .35), (gx0 - .5, roof(gx0) + .35)], C['mar_lo'], 'shade')
-    b.rect(gx0 - .5, ramp(gx0), .5, roof(gx0) - ramp(gx0), C['mar_lo'], 'trim')
-    # office block (right) + top plateau where the ramp ends
-    ox0, ox1, otop = X(1547), X(2984), Y(243)
-    b.rect(ox0, 0, ox1 - ox0, otop, C['alu'])
-    b.rect(ox1 - 1.2, 0, 1.2, otop, C['alu_lo'], 'shade')
-    px0, px1 = X(2505), X(2805)
-    b.rect(px0, otop, px1 - px0, Y(172) - otop, C['mar'])
-    b.rect(px0, Y(227), px1 - px0, 0.6, C['mar_lo'], 'shade')
-    n = 0
-    rows = [(3.0, 5.4, 'win'), (8.0, 10.4, 'win'), (13.0, 15.6, 'slat'), (17.8, 20.6, 'slat'), (22.6, 25.2, 'slat')]
-    for ya, yb, kind in rows:
-        x = ox0 + 2
-        i = 0
-        while x < ox1 - 3:
-            w = 6.0 if kind == 'slat' else 2.6
-            col = C['slat'] if kind == 'slat' else C['win']
-            if not (kind == 'slat' and i % 4 == 3):
-                b.rect(x, ya, w, yb - ya, col, 'win')
-                n += 1
-            x += w + (1.4 if kind == 'slat' else 0.8)
-            i += 1
-    for ya, yb, kind in rows:
-        if kind == 'slat':
-            y = ya + .45
-            while y < yb:
-                b.line(ox0, y, ox1, y, C['alu_lo'], 0.08)
-                y += .5
+    b.poly([rf[0], rf[1], (X(950), roof_t(X(950)) - .35), (X(346.5), roof_t(X(346.5)) - .35)], C['mar_lo'], 'shade')
     # dark lower glazing under the ramp
-    dx0 = X(300)
-    b.poly([(dx0, 1.2), (ox0, 1.2), (ox0, ramp(ox0) - th + .3), (rb[0], rb[1] - th + .3), (dx0, max(1.2, ramp(dx0) - th + .3))],
-           C['dk'], 'win')
-    for x in range(int(dx0) + 2, int(ox0), 3):
-        b.line(x, 1.2, x, ramp(x) - th, C['dk_ln'], 0.12)
-    # the ramp slab (in front of everything), ending at the plateau
-    xs = [ra[0], rb[0], px0]
-    top = [(x, ramp(x)) for x in xs]
-    slab = top + [(px0, ramp(px0) - th), (rb[0], rb[1] - th), (ra[0] + th / ((rb[1] - ra[1]) / (rb[0] - ra[0])), 0)]
+    d0 = X(365)
+    dk = [(d0, 0.8), (o0 + .3, 0.8), (o0 + .3, ramp(o0) - thick(o0) + .3), (d0, ramp(d0) - thick(d0) + .3)]
+    b.poly(dk, C['dk'], 'win')
+    cl = b.clip(dk)
+    k = 0
+    x = d0 + 1.2
+    while x < o0:
+        b.line(x, 0, x, 30, C['dk_ln'], 0.12)
+        x += 2.0
+        k += 1
+    b.line(d0, 3.2, o0, 3.2, C['dk_ln'], 0.12)
+    b.group('detail', k + 1, cl)
+    # thin posts under the low end of the ramp
+    for px in (X(262), X(310), X(352)):
+        b.rect(px - .2, 0.8, .4, ramp(px) - thick(px) - 0.8, C['post'])
+    # the marble ramp
+    xs = [X(105) + i * (X(995) - X(105)) / 40 for i in range(41)]
+    slab = [(x, ramp(x)) for x in xs] + [(x, ramp(x) - thick(x)) for x in xs[::-1]]
     b.poly(slab, C['mar'], 'trim')
-    b.poly(top + [(px0, ramp(px0) - .45), (rb[0], rb[1] - .45), (ra[0] + .45 / ((rb[1] - ra[1]) / (rb[0] - ra[0])), 0)],
-           C['mar_lo'], 'shade')
-    # quay / plinth
-    b.rect(-6, 0, ox1 + 8, 1.2, C['mar'])
-    b.rect(-6, 0, ox1 + 8, 0.3, C['mar_dk'], 'shade')
+    b.poly([(x, ramp(x)) for x in xs] + [(x, ramp(x) - min(.4, thick(x))) for x in xs[::-1]], C['mar_lo'], 'shade')
+    b.poly([(x, ramp(x) - thick(x) + min(.3, thick(x))) for x in xs] + [(x, ramp(x) - thick(x)) for x in xs[::-1]],
+           C['mar_dk'], 'shade')
+    for i in range(1, 9):                                         # marble panel joints on the ramp face
+        x = X(105) + i * (X(995) - X(105)) / 9
+        b.line(x, ramp(x), x, ramp(x) - thick(x), C['mar_lo'], 0.08)
+    # plinth along the quay
+    b.rect(X(100), 0, X(1306) - X(100), 0.8, C['mar'])
+    b.rect(X(100), 0, X(1306) - X(100), 0.25, C['mar_dk'], 'shade')
     return b
 
 

@@ -196,7 +196,7 @@ Flat elevations from `tools/landmarks/landmarks.py` → `assets/landmarks/hires/
 | Universitetet | ✅ v1 | 81 × 24 | `universitetet.v1.*` | |
 | Monolitten | ✅ v1 | 1.5 × life (51 × 33) | `monolitten.v1.*` | |
 | Holmenkollbakken | 🎨 redo | | `holmenkollen.*` | to redo later (Joakim may trace the shape); current: constant-thickness S-curve, flat ends, no supports |
-| Operahuset | 🎨 redo | | `opera.*` | to redo later (Joakim may trace the shape); the foyer glass roof rises towards the left |
+| Operahuset | 🎨 review | 207 × 36 | `opera.*` | traced from `inspiration/landmarks/opera 2/operasilhouette.png` (south facade drawing), textures from the photos there; foyer roof rises to the left, slanted glass gable, fly tower + step, office wing with louvres |
 | Domkirken | ✅ v1 | 44 × 57 | `domkirken.v1.*` | west front: brick tower, clock, portal, copper spire; nave wings + stair turret |
 | Grand Hotel | ✅ v1 | 96 × 47 | `grand.v1.*` | white facade, mansard with green dormers, corner turret, clock tower + copper cupola; grey annex right. No flags |
 | Postgirobygget | ✅ v1 | 69 × 111 | `postgiro.v1.*` | two bronze/glass slabs, 32.4 m wide each (103 m / 111 m) + glazed core just below the left one; window bands stop at the same height on both, glass above; no signs |
