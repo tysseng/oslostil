@@ -113,10 +113,50 @@
  },
  "fountain": {
   "row": 14,
-  "frames": 4,
-  "fps": 6,
+  "frames": 8,
+  "fps": 10,
   "w": 64,
-  "h": 42,
+  "h": 48,
   "top": 13
+ },
+ "ad_column": {
+  "row": 15,
+  "frames": 1,
+  "fps": 1,
+  "w": 26,
+  "h": 48,
+  "top": 46
+ },
+ "railing": {
+  "row": 16,
+  "frames": 1,
+  "fps": 1,
+  "w": 62,
+  "h": 16,
+  "top": 0
+ },
+ "statue": {
+  "row": 17,
+  "frames": 1,
+  "fps": 1,
+  "w": 72,
+  "h": 45,
+  "top": 17
+ },
+ "planter": {
+  "row": 18,
+  "frames": 1,
+  "fps": 1,
+  "w": 28,
+  "h": 16,
+  "top": 9
+ },
+ "bikes": {
+  "row": 19,
+  "frames": 1,
+  "fps": 1,
+  "w": 57,
+  "h": 21,
+  "top": 0
  }
 }

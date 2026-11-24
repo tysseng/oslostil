@@ -10,7 +10,7 @@ export type LampKind = keyof typeof lampsJson;
 export const LAMPS = lampsJson;
 export const LAMP_CELL_W = 96, LAMP_CELL_H = 80;
 export const isLamp = (kind: EnemyKind): kind is LampKind => Object.hasOwn(LAMPS, kind);
-export const itemLayer = (kind: EnemyKind): number => kind === 'tram' ? 1 : isProp(kind) || isLamp(kind) || isTree(kind) ? 0 : 2;
+export const itemLayer = (kind: EnemyKind): number => isTree(kind) ? -1 : kind === 'tram' ? 1 : isProp(kind) || isLamp(kind) ? 0 : 2;
 
 /** Trees (tools/sprites/trees.py): scenery behind the characters, not standable. */
 export type TreeKind = keyof typeof treesJson;
@@ -123,4 +123,13 @@ export interface ScheduledEvent {
   fromBoss?: boolean;
   /** Fixed relative speed for manually positioned items. */
   rel?: number;
+  /** Tree depth: 0 is farthest away, 1 is nearest. */
+  depth?: number;
+}
+
+export function treeDepth(e: ScheduledEvent): number {
+  if (e.depth !== undefined) return e.depth;
+  const seed = Math.imul(Math.round(e.arr * 1000), 73856093) ^ Math.imul(Math.round((e.y ?? 0) * 1000), 19349663)
+    ^ Math.imul(isTree(e.type) ? TREES[e.type].row + 1 : 0, 83492791);
+  return (seed >>> 0) / 0xffffffff;
 }

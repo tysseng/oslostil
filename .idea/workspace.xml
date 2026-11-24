@@ -4,26 +4,50 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Lots of new sprites. Tagging tagger">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So much more including celebration">
+      <change afterPath="$PROJECT_DIR$/Claude outputs/batch7-contact.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/celebrate-contact.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/fountain.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/oslo-night-contact.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/sakura-contact.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/statue-fountain.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/statue2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/tiger.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/tokyo-contact.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/automat-celebrate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/celebrate.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/celebrate.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/trees.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/trees.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-tokyo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-tokyo.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/Japanese tram/japan tram 2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/Japanese tram/japan tram 3.webp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/Japanese tram/japan tram.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/celebrate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/oslo_props.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/ref/rearing_horse.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/ref/tiger.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/tokyo_props.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/trees.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ART_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/_refsheet.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/_refsheet.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/lamps-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/lamps-light.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/lamps.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/lamps.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/lamps.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/lamps.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/sprites/props-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props-light.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/sprites/props.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/sprites/props.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inspiration/holmenkollen 2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/inspiration/landmark holmenkollen 1.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/level.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/sprites/lamps.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/lamps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/sprites/props.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/props.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/vehicles/trams.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/vehicles/trams.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -41,23 +65,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0199217204320443" />
-      <entry key="MS500" value="1.942092377391738" />
-      <entry key="S2" value="4.824441556667464" />
-      <entry key="S5" value="7.3953537169674375" />
-      <entry key="S10" value="8.903133728726463" />
-      <entry key="S30" value="10.220448774067311" />
-      <entry key="S60" value="10.599009655383753" />
-      <entry key="M2" value="10.79660706172561" />
-      <entry key="M5" value="10.917936574915794" />
-      <entry key="M10" value="10.961865326696564" />
-      <entry key="M15" value="11.014133621597747" />
-      <entry key="M30" value="11.891416071198492" />
-      <entry key="H1" value="19.502382724786543" />
-      <entry key="H2" value="52.601440276914296" />
-      <entry key="H4" value="124.16067697794077" />
-      <entry key="D1" value="546.2014295077903" />
-      <entry key="W1" value="899.153595826171" />
+      <entry key="MS100" value="1.0027645845940611" />
+      <entry key="MS500" value="1.593880651941633" />
+      <entry key="S2" value="3.8805213742709532" />
+      <entry key="S5" value="6.039595221575946" />
+      <entry key="S10" value="7.290099781006119" />
+      <entry key="S30" value="8.368290329816077" />
+      <entry key="S60" value="8.675636711113118" />
+      <entry key="M2" value="8.835630827784353" />
+      <entry key="M5" value="8.954372571783663" />
+      <entry key="M10" value="9.328514848063229" />
+      <entry key="M15" value="9.985698236692226" />
+      <entry key="M30" value="12.46469548541058" />
+      <entry key="H1" value="18.784720377027107" />
+      <entry key="H2" value="43.03243526300118" />
+      <entry key="H4" value="106.99259969257304" />
+      <entry key="D1" value="535.0859025015274" />
+      <entry key="W1" value="907.8941466446095" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -79,23 +103,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.958883806486932" />
-      <entry key="MS500" value="1.8842090138663834" />
-      <entry key="S2" value="4.635973404630722" />
-      <entry key="S5" value="7.256005791519599" />
-      <entry key="S10" value="8.81719514005157" />
-      <entry key="S30" value="10.187457292812105" />
-      <entry key="S60" value="10.5819181903297" />
-      <entry key="M2" value="10.78790816593705" />
-      <entry key="M5" value="10.914419701671893" />
-      <entry key="M10" value="10.96009963711161" />
-      <entry key="M15" value="11.01294763511845" />
-      <entry key="M30" value="11.890764063619583" />
-      <entry key="H1" value="19.501901204487737" />
-      <entry key="H2" value="52.60096310701906" />
-      <entry key="H4" value="124.16020093649638" />
-      <entry key="D1" value="546.2012252774326" />
-      <entry key="W1" value="899.1535582934345" />
+      <entry key="MS100" value="0.13759384533910402" />
+      <entry key="MS500" value="1.2604493759328603" />
+      <entry key="S2" value="3.780671004176032" />
+      <entry key="S5" value="5.9970488929963395" />
+      <entry key="S10" value="7.268208385547291" />
+      <entry key="S30" value="8.360828050543535" />
+      <entry key="S60" value="8.671882794211816" />
+      <entry key="M2" value="8.833747997038161" />
+      <entry key="M5" value="8.953617733302389" />
+      <entry key="M10" value="9.328133445591407" />
+      <entry key="M15" value="9.985431561047507" />
+      <entry key="M30" value="12.464501751845805" />
+      <entry key="H1" value="18.78450396009715" />
+      <entry key="H2" value="43.0321354245577" />
+      <entry key="H4" value="106.99222722277688" />
+      <entry key="D1" value="535.0857051013925" />
+      <entry key="W1" value="907.8941089588275" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -184,6 +208,8 @@
     <MESSAGE value="Added new assets, fixed lives" />
     <MESSAGE value="Added lamps" />
     <MESSAGE value="Lots of new sprites. Tagging tagger" />
-    <option name="LAST_COMMIT_MESSAGE" value="Lots of new sprites. Tagging tagger" />
+    <MESSAGE value="Lots of work on japan" />
+    <MESSAGE value="So much more including celebration" />
+    <option name="LAST_COMMIT_MESSAGE" value="So much more including celebration" />
   </component>
 </project>

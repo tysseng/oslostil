@@ -6,8 +6,8 @@ import { drawScene } from '../render/scenes';
 import { drawEnemy, drawLampLights } from '../render/sprites';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
 import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
-import { TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, itemLayer, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
-import { createEnemy, enemyHeight, enemyX, eventSpeed } from '../state';
+import { TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
+import { compareItems, createEnemy, enemyHeight, enemyX, eventSpeed } from '../state';
 import { sectionAt } from '../timeline';
 import { fmtTime } from './devpanel';
 import enemiesUrl from '../../assets/sprites/enemies.png';
@@ -302,7 +302,7 @@ export class LevelEditor {
   }
 
   private layeredEvents(): ScheduledEvent[] {
-    return this.game.level.slice().sort((a, b) => itemLayer(a.type) - itemLayer(b.type));
+    return this.game.level.slice().sort((a, b) => compareItems(createEnemy(a), createEnemy(b)));
   }
 
   private hit(x: number, y: number): ScheduledEvent | null {
@@ -313,6 +313,7 @@ export class LevelEditor {
   }
 
   private position(e: ScheduledEvent, x: number, base: number): void {
+    if (isTree(e.type)) e.depth = treeDepth(e);
     e.rel = eventSpeed(e);
     e.arr = this.game.s.lastT + (x - PX) / createEnemy(e).rel;
     e.y = Math.round(Math.max(0, Math.min(GROUND - TYPES[e.type].h, GROUND - base)));
@@ -331,6 +332,7 @@ export class LevelEditor {
       canvas.setPointerCapture(e.pointerId);
     } else if (this.selected) {
       const event: ScheduledEvent = { type: this.selected, arr: this.game.s.lastT };
+      if (isTree(event.type)) event.depth = treeDepth({ ...event, arr: event.arr + x / W });
       this.position(event, x - (event.type === 'tram' ? TYPES.tram.w / 2 : 0), y + TYPES[event.type].h / 2);
       this.game.level.push(event);
       this.hovered = event;
@@ -354,6 +356,7 @@ export class LevelEditor {
     if (cancel) {
       delete drag.event.rel;
       delete drag.event.y;
+      delete drag.event.depth;
       Object.assign(drag.event, drag.before);
     } else this.save();
     if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);

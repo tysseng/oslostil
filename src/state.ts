@@ -1,5 +1,5 @@
 import { GROUND, PLAYER_MAX_HP, PX, W, rng } from './config';
-import { isTree, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
+import { isTree, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 
@@ -88,17 +88,29 @@ export interface GameState {
   boss: { hp: number; max: number; hit: number };
   final: boolean;
   won: boolean;
+  celebration?: {
+    elapsed: number;
+    bgx: number;
+    victoria: { x: number; y: number };
+    friend: { x: number; y: number };
+    machine: { x: number; y: number };
+  };
   best?: number;
 }
 
 export const eventSpeed = (e: ScheduledEvent): number =>
   e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : 1);
-const movementSpeed = (e: ScheduledEvent): number => eventSpeed(e) * (isTree(e.type) ? 0.9 : 1);
+const movementSpeed = (e: ScheduledEvent): number => eventSpeed(e) * (isTree(e.type) ? 0.5 + treeDepth(e) * 0.25 : 1);
 export const spawnTime = (e: ScheduledEvent): number =>
   e.arr - (W + 100 - PX) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
 
 export function createEnemy(e: ScheduledEvent): Enemy {
   return { ...e, rel: movementSpeed(e), hp: TYPES[e.type].hp, y: e.y ?? TYPES[e.type].y };
+}
+
+export function compareItems(a: Enemy, b: Enemy): number {
+  return itemLayer(a.type) - itemLayer(b.type)
+    || (isTree(a.type) && isTree(b.type) ? a.rel - b.rel : 0);
 }
 
 export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {

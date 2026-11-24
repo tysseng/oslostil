@@ -13,7 +13,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 4. They turn into ninjas at 1:40 («Plutselig er vi ninjaer»).
 5. The screen changes colour at 1:42.
 6. The fighting intensifies through the second chorus, with a boss (Kaos-trikken) at the end.
-7. The final hit lands on «Oslo-STIL!» at 2:27.6, then the win screen.
+7. The final hit lands on «Oslo-STIL!» at 2:27.6, immediately braking into the celebration, then the win summary.
 
 **How it plays:** auto-run with keyboard actions. The text is bilingual, Norwegian and English.
 
@@ -105,7 +105,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
-- Trees move at 90% of their authored speed for subtle background parallax, including existing editor drafts. Spawn timing and editor positioning use the same adjusted speed; saved `rel` remains the unscaled authored value.
+- Trees move at 50-75% of their authored speed, varied by a stable per-tree `depth` (0-1, seeded for older layouts). Trees are drawn back-to-front by their actual adjusted speed, so the front tree always moves faster, even across different authored speeds. All trees stay behind props and trams. Spawn timing and editor positioning use the same adjusted speed; saved `rel` remains unscaled, and depth survives dragging and JSON round trips.
 
 - Pigeons and gulls use `enemyHeight` for deterministic smooth flight: two blended sine waves seeded by authored arrival time and height, at 2.8–6 radians/second for visible swoops during short screen crossings. Height varies up to 48 px above the safe base, never below 24 px off the ground. Rendering, attacks, stomps, droppings and editor bounds share the same position; defeated birds use their separate falling animation.
 
@@ -129,6 +129,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 ### Highscores
 
 - Seven seconds on the win screen (or Enter) advances to `highscore` mode. `Game.tickWin` uses wall-clock time; gameplay and dev shortcuts do not handle keys during initials entry.
+- On the final hit, `celebrate` mode starts immediately and lasts seven seconds: background scrolling brakes to a stop in 0.25 seconds, the party walks to the center in 1.8 seconds, then turns forward, waves and jumps once using `celebrate.json` and the two celebration sheets. They keep waving afterward. Gameplay/collisions are frozen; the summary's seven-second timer starts afterward.
 - The win summary keeps both girls at the left edge and Automat Victoria at the right, clear of the centered results.
 - `ui/highscores.ts` offers a focusable arcade letter control (no login/form input) only for top-ten runs, starting AAA and saving on Enter. Its shared `place(score)` calculation drives summary and entry placement. Only the win summary announces NEW HIGHSCORE for first place; runs outside the top ten show GAME OVER instead of placement. The leaderboard has no placement announcement. It stores scores descending under `oslostil-highscores-v1` and shows ten rows with placeholders. Ties follow existing scores; storage errors are shown explicitly.
 - Entry has no timeout. After submission the table remains for seven seconds before returning to startup automatically, without a return message or button. Key instructions stay on one line. The win screen's existing BEST value remains separate for compatibility.
@@ -150,7 +151,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 | 1:42.0 → end | The same street swaps to Tokyoslo style in place (`tokyoslo-v2-buildings.png`, same layout and scroll anchor) plus the far skyline; also in Kollektivkaos and the boss. `TOKYO_VERSION = 1` brings back the first draft | `drawTokyoslo`, `streetX` |
 | 1:40.15 | Ninja mode, white flash, girls switch to ninja sprites | `NINJA_T` |
 | 1:42.0 | Screen changes colour (map → red), red flash, no text | `COLOR_T` |
-| bar 70 → 76 | Boss Kaos-trikken, final hit 2:27.6, win screen 2.2 s later | `BOSS_AT`, `FINAL_HIT`, `WIN_AT` |
+| bar 70 → 76 | Boss Kaos-trikken, final hit 2:27.6 immediately starts the seven-second celebration before the win summary | `BOSS_AT`, `FINAL_HIT` |
 
 ## Joakim's rules so far (gameplay and presentation)
 

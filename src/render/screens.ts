@@ -1,12 +1,12 @@
 // Composes a full frame: game view + HUD, title screen, win screen.
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } from '../config';
 import type { Game } from '../game';
-import { enemyX } from '../state';
+import { compareItems, enemyX } from '../state';
 import { itemLayer } from '../schedule';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
-import { drawBoss, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, type Mood } from './sprites';
+import { drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
@@ -19,9 +19,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
   flash(t, NINJA_T, 0.4, '#fff'); // ninja transformation
-  for (const layer of [0, 1]) {
-    for (const e of s.enemies) if (!e.dead && itemLayer(e.type) === layer) drawEnemy(e, enemyX(e, t), t);
-  }
+  for (const e of s.enemies.slice().sort(compareItems)) if (!e.dead && itemLayer(e.type) <= 1) drawEnemy(e, enemyX(e, t), t);
   if (bossVisible(t)) {
     // walks in for a bar, then fires its coupler cannon on every beat and idles in between
     const walking = t - BOSS_AT < BAR, ph = beatPhase(t, BEAT);
@@ -159,6 +157,26 @@ export function drawTitle(t: number, loading: boolean): void {
   text('C KAST·THROW   ←→ FLYTT·MOVE   P PAUSE   M MUSIKK·MUSIC', W / 2, GROUND + 18, '#ccc', 5, 'center');
 }
 
+export function drawCelebration(g: Game): void {
+  const c = g.s.celebration;
+  if (!c) return;
+  drawScene(sectionAt(FINAL_HIT).scene, FINAL_HIT, g.s.bgx, 0, g.s.taggerStoppedAt);
+  text('OSLO-STIL!', W / 2, 45, '#ff2bd6', 20, 'center', '#2bf0ff');
+  const walkTime = 1.8, walk = Math.min(1, c.elapsed / walkTime);
+  for (const [member, target, delay] of [['friend', 134, 0.15], ['victoria', 160, 0], ['machine', 186, 0.3]] as const) {
+    const start = c[member], x = start.x + (target - start.x) * walk;
+    const y = start.y + (GROUND - start.y) * Math.min(1, c.elapsed / 0.45);
+    if (c.elapsed >= walkTime) drawCelebrating(member, x, GROUND, Math.max(0, c.elapsed - walkTime - delay));
+    else if (member === 'machine') drawMachine(x, y, c.elapsed, 'cheer', 0);
+    else {
+      ctx.save();
+      if (target < start.x) { ctx.translate(x * 2, 0); ctx.scale(-1, 1); }
+      drawGirl(member, x, y, c.elapsed, { ninja: true, air: y < GROUND, rising: false });
+      ctx.restore();
+    }
+  }
+}
+
 export function drawWin(g: Game, t: number, place: number): void {
   const s = g.s;
   sky(SKY.neon); R(0, GROUND, W, H - GROUND, '#160022');
@@ -175,9 +193,9 @@ export function drawWin(g: Game, t: number, place: number): void {
   rows.forEach(([k, v], i) => { text(k, 70, 58 + i * 11, '#ccc', 6); text(String(v), 250, 58 + i * 11, '#fff', 6, 'right'); });
   const rank = s.continues === 0 && s.score > 30000 ? 'OSLOSTIL-MESTER' : s.continues <= 1 ? 'TIGERSTADEN-NINJA' : 'TRIKKETURIST';
   text(rank, W / 2, 128, '#ff2bd6', 8, 'center');
-  drawGirl('friend', 16, GROUND, t, { ninja: true, idle: true });
-  drawGirl('victoria', 42, GROUND, t + 0.2, { ninja: true, idle: true, atk: Math.floor(t * 2) % 2 === 1 });
-  drawMachine(286, GROUND - 4, t, 'cheer', 2, true);
+  drawCelebrating('friend', 16, GROUND, t);
+  drawCelebrating('victoria', 42, GROUND, t + 0.2);
+  drawCelebrating('machine', 286, GROUND, t + 0.4);
   text(place > 10 ? 'GAME OVER' : place === 1 ? 'NEW HIGHSCORE!' : `YOU PLACED #${place}`, W / 2, 154, place === 1 ? '#ffe14a' : '#ccc', 6, 'center');
   if (Math.floor(t * 2) % 2) text('ENTER: HIGHSCORE', W / 2, 166, '#fff', 5, 'center');
 }

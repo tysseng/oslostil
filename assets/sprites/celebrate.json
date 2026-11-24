@@ -1,0 +1,129 @@
+{
+ "girls": {
+  "file": "celebrate.png",
+  "frame": [
+   24,
+   32
+  ],
+  "rows": {
+   "victoria": 0,
+   "friend": 1
+  },
+  "columns": [
+   "turn0",
+   "turn1",
+   "front0",
+   "front1",
+   "wave0",
+   "wave1",
+   "wave2",
+   "wave3",
+   "takeoff",
+   "rise",
+   "fall",
+   "land"
+  ],
+  "anims": {
+   "turn": {
+    "frames": [
+     0,
+     1,
+     2
+    ],
+    "fps": 10,
+    "loop": false
+   },
+   "idle": {
+    "frames": [
+     2,
+     3
+    ],
+    "fps": 2,
+    "loop": true
+   },
+   "wave": {
+    "frames": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "jump": {
+    "frames": [
+     8,
+     9,
+     10,
+     11
+    ],
+    "loop": false,
+    "durations": [
+     0.1,
+     null,
+     null,
+     0.14
+    ],
+    "note": "takeoff and land are timed; rise while going up, fall while coming down"
+   }
+  }
+ },
+ "automat": {
+  "file": "automat-celebrate.png",
+  "frame": [
+   24,
+   32
+  ],
+  "columns": [
+   "front",
+   "wave0",
+   "wave1",
+   "wave2",
+   "wave3",
+   "takeoff",
+   "rise",
+   "fall",
+   "land",
+   "blink"
+  ],
+  "anims": {
+   "idle": {
+    "frames": [
+     0,
+     0,
+     0,
+     9
+    ],
+    "fps": 3,
+    "loop": true
+   },
+   "wave": {
+    "frames": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "fps": 8,
+    "loop": true
+   },
+   "jump": {
+    "frames": [
+     5,
+     6,
+     7,
+     8
+    ],
+    "loop": false,
+    "durations": [
+     0.1,
+     null,
+     null,
+     0.14
+    ]
+   }
+  }
+ },
+ "alignment": "feet (base) on the bottom row, body centred on x = 12; in-air frames are lifted by the game"
+}

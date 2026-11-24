@@ -15,7 +15,7 @@ const RESPAWN_FLASH = 1.2;
 /** she drops back in from this height (screen y of her feet) */
 const DROP_Y = GROUND - 100;
 
-export type Mode = 'loading' | 'title' | 'play' | 'pause' | 'win' | 'editor' | 'highscore';
+export type Mode = 'loading' | 'title' | 'play' | 'pause' | 'celebrate' | 'win' | 'editor' | 'highscore';
 const BEST_KEY = 'oslostil-best';
 
 export class Game {
@@ -36,7 +36,18 @@ export class Game {
 
   start(): void { this.seek(0); }
 
-  tickWin(now: number): void {
+  tickWin(now: number, dt = 0): void {
+    if (this.mode === 'celebrate' && this.s.celebration) {
+      const c = this.s.celebration;
+      c.elapsed += dt;
+      const braking = Math.min(1, c.elapsed / 0.25);
+      this.s.bgx = c.bgx + sectionAt(FINAL_HIT).speed * 0.25 / 3 * (1 - (1 - braking) ** 3);
+      if (c.elapsed >= 7) {
+        this.mode = 'win';
+        this.winReturnAt = now + 7000;
+      }
+      return;
+    }
     if (this.mode !== 'win' || now < this.winReturnAt) return;
     this.audio.pause();
     this.keys.clear();
@@ -464,9 +475,15 @@ export class Game {
       for (let i = 0; i < 6; i++) this.burst(bossX(t) + (Math.random() - 0.5) * 60, GROUND - 40 + (Math.random() - 0.5) * 50, ['#ff0', '#f5d', '#6ff', '#fff'][i % 4], 24);
       s.enemies.forEach((e) => (e.dead = true));
     }
-    if (t >= WIN_AT && !s.won) {
-      s.won = true; this.mode = 'win';
-      this.winReturnAt = performance.now() + 7000;
+    if (t >= FINAL_HIT && !s.won) {
+      s.won = true; this.mode = 'celebrate';
+      this.keys.clear();
+      s.celebration = {
+        elapsed: 0, bgx: s.bgx,
+        victoria: { x: p.x, y: p.y },
+        friend: { x: s.fx, y: s.friend.yHist[0] ?? GROUND },
+        machine: { x: s.mx, y: GROUND - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t) },
+      };
       try { s.best = Math.max(Number(localStorage.getItem(BEST_KEY)) || 0, s.score); localStorage.setItem(BEST_KEY, String(s.best)); }
       catch { s.best = s.score; }
     }

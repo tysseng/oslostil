@@ -39,7 +39,7 @@ Sizes are in game pixels; the screen is 320 × 180. For a code-drawn asset the s
 | Victoria | ✅ | 24 × 32 frames | `assets/sprites/victoria.png` | idle ×2, run ×4, jump up/down, slide, attack; normal + ninja |
 | Friend | ✅ | 24 × 32 frames | `assets/sprites/friend.png` | same layout as Victoria |
 | Automat Victoria (companion) | ✅ | 24 × 32 frames | `assets/sprites/automat.png` (`tools/sprites/automat.py`) | idle0 idle1(blink) talk0 talk1 cheer0 cheer1 plain; talks when the lyrics are about her, cheers on the chorus calls and the win screen |
-| Celebration (ending): both girls in ninja outfits, Automat Victoria | 🎨 | 24 × 32 frames | `assets/sprites/celebrate.png` (rows Victoria, friend: turn ×3, front idle ×2, wave ×4, jump takeoff/rise/fall/land), `automat-celebrate.png` (front, wave ×4, jump ×4, blink) + `celebrate.json` (layout, fps, jump timing), from `tools/sprites/celebrate.py`; not wired in (no gameplay change) |
+| Celebration (ending): both girls in ninja outfits, Automat Victoria | ✅ | 24 × 32 frames | `assets/sprites/celebrate.png` (rows Victoria, friend: turn ×3, front idle ×2, wave ×4, jump takeoff/rise/fall/land), `automat-celebrate.png` (front, wave ×4, jump ×4, blink) + `celebrate.json` (layout, fps, jump timing), from `tools/sprites/celebrate.py`; used for the centered ending celebration and score summary |
 | Kaos-trikken (boss) | ⬜ | 80 × 70 | `drawBoss` in `src/render/sprites.ts` | white hit flash; damage and explosion frames |
 
 ## Enemies and obstacles
@@ -114,7 +114,12 @@ Pixel sprites at girl scale, front view, in `assets/sprites/props.png` + `props.
 | Tokyoslo stone lantern (`toro`) | ✅ | 19 × 37 | `lamps.png` row 6; firelight sideways and down; flat top, one jump |
 | Park bench, European (`bench_park`) | ✅ | 38 × 18 | dark green cast-iron ends, wooden slats; one jump |
 | Station bench, Sandvika (`bench_station`) | ✅ | 43 × 17 | steel frame, light wood slats; one jump |
-| Fountain, classic Oslo (`fountain`) | ✅ | 64 × 42 | tiered stone; 4 frames of semi-transparent water; stand on the basin rim (`top` 13) |
+| Fountain, classic Oslo (`fountain`) | ✅ | 64 × 48 | tiered stone, darker for the night; 8 frames of pulsing semi-transparent water (centre jet + an arch to each side); lit from the water upwards (`props-light.png`); stand on the basin rim (`top` 13) |
+| Advertising column, night (`ad_column`) | ✅ | 26 × 48 (48-px-wide canvas so the lamps' glow fits) | posters lit by two small lamps above them (light in `props-light.png`); top 46 = double jump |
+| Cast-iron park railing, night (`railing`) | ✅ | 62 × 16 | spear tips; not standable |
+| Tiger statue on a wide granite plinth, night (`statue`) | ✅ | 72 × 45 | a walking gilded-bronze tiger traced from Joakim's photo (`tools/sprites/ref/tiger.png`), facing left; the carved stripes come through as five bronze tones; stand on the plinth (`top` 17). Replaces the horse |
+| Stone planter with flowers, night (`planter`) | ✅ | 28 × 16 | brighter flowers; `top` 9 |
+| Bike rack with two bikes, night (`bikes`) | ✅ | 57 × 21 | red and blue bikes in profile, silver rims and spokes; not standable |
 | Tea-house bench under a red parasol, Tokyoslo (`bench_asian`) | ✅ | 35 × 43 | red felt seat (`top` 13) |
 | Old wooden shop, Tokyoslo (`shop_wood`) | ✅ | 84 × 54 | tiled roof, lattice, indigo noren, paper lanterns; warm light |
 | Konbini light | ✅ | | sign band and light dimmed (Joakim: too bright) |
@@ -166,6 +171,28 @@ No company marks or logos on the vehicles. References are in `inspiration/vehicl
 | Tram, Italian | ⬜ | | |
 | Tram in the game (enemy obstacle) | ⬜ | `drawEnemy` | could use the new tram master |
 | Kaos-trikken (boss) | ⬜ | `drawBoss` | could build on one of the tram masters |
+
+## Landmarks (hi-res masters, for the title logo, silhouettes and backgrounds)
+
+Flat elevations from `tools/landmarks/landmarks.py` → `assets/landmarks/hires/<name>.svg` + `.png` (10 SVG px/m, PNG 20 px/m, one shared scale; layers `base`/`shade`/`trim`/`win`/`detail`). Approved versions are frozen as `<name>.v1.svg/.png`; the generator only rewrites the unversioned files. Contact sheet: `python3 tools/landmarks/contact.py <out.png>`.
+
+| Landmark | Status | Size (m) | File | Notes |
+|---|---|---|---|---|
+| MUNCH | ✅ v1 | 67 × 60 | `munch.v1.*` | upper third leans left, both sides at the same angle; low wing to the left |
+| Radisson Blu Plaza | ✅ v1 | 13 × 117 | `plaza.v1.*` | only the knife-edge sliver, slanted top to a sharp point |
+| Tryvannstårnet | ✅ v1 | 16 × 118 | `tryvann.v1.*` | |
+| Rådhuset | ✅ v2 | 96 × 73 | `radhuset.v2.*` (v1 superseded) | towers the same size (18 × 66 m), 12 m in from each end, each with its own face (west: slit + spire, east: clock); stone ground floor as wide as the brick block |
+| Slottet | ✅ v1 | 110 × 31 | `slottet.v1.*` | no flag |
+| Stortinget | ✅ v1 | 74 × 21 | `stortinget.v1.*` | no flag |
+| Nationaltheatret | ✅ v1 | 55 × 32 | `nationaltheatret.v1.*` | no flag, blank name plaques |
+| Universitetet | ✅ v1 | 81 × 24 | `universitetet.v1.*` | |
+| Monolitten | ✅ v1 | 1.5 × life (51 × 33) | `monolitten.v1.*` | |
+| Holmenkollbakken | 🎨 redo | | `holmenkollen.*` | to redo later (Joakim may trace the shape); current: constant-thickness S-curve, flat ends, no supports |
+| Operahuset | 🎨 redo | | `opera.*` | to redo later (Joakim may trace the shape); the foyer glass roof rises towards the left |
+| Domkirken | 🎨 review | 44 × 57 | `domkirken.*` | west front: brick tower, clock, portal, copper spire; nave wings + stair turret |
+| Grand Hotel | 🎨 review | 96 × 47 | `grand.*` | white facade, mansard with green dormers, corner turret, clock tower + copper cupola; grey annex right. No flags |
+| Postgirobygget | ✅ v1 | 69 × 111 | `postgiro.v1.*` | two bronze/glass slabs, 32.4 m wide each (103 m / 111 m) + glazed core just below the left one; window bands stop at the same height on both, glass above; no signs |
+| Oslostil title logo | ⬜ | | `assets/ui/title-logo.png` | redo: smoother, same pixel size as the sprites (measure from the displayed logo), synthwave/80s neon, «Oslostil», sun in the middle, Munch + Holmenkollen silhouettes instead of palm trees |
 
 ## Backgrounds
 

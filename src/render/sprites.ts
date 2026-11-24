@@ -23,6 +23,9 @@ import tokyoTramUrl from '../../assets/vehicles/hires/tram-tokyo.png';
 import { COLOR_T } from '../timeline';
 import bossUrl from '../../assets/sprites/kaostrikken.png';
 import bossMeta from '../../assets/sprites/kaostrikken.json';
+import celebrationUrl from '../../assets/sprites/celebrate.png';
+import automatCelebrationUrl from '../../assets/sprites/automat-celebrate.png';
+import celebrationMeta from '../../assets/sprites/celebrate.json';
 
 // The girls are pixel-art sprite sheets (made by tools/sprites/girls.py, editable in any pixel editor):
 // 24×32 frames, row 0 = normal clothes, row 1 = ninja; feet on the bottom row, body centred on x = 12.
@@ -31,6 +34,35 @@ const FRAMES = ['idle0', 'idle1', 'run0', 'run1', 'run2', 'run3', 'jumpUp', 'jum
 type FrameName = (typeof FRAMES)[number];
 
 export type Girl = 'victoria' | 'friend';
+const CELEBRATION = loadImage(celebrationUrl), AUTOMAT_CELEBRATION = loadImage(automatCelebrationUrl);
+
+export function drawCelebrating(member: Girl | 'machine', x: number, y: number, t: number): void {
+  const machine = member === 'machine', data = machine ? celebrationMeta.automat : celebrationMeta.girls;
+  const img = machine ? AUTOMAT_CELEBRATION : CELEBRATION;
+  if (!ready(img)) return;
+  const [w, h] = data.frame, turn = celebrationMeta.girls.anims.turn;
+  const turnTime = turn.frames.length / turn.fps;
+  const takeoff = data.anims.jump.durations[0]!, land = data.anims.jump.durations[3]!, air = 0.6;
+  let col: number, lift = 0;
+  if (!machine && t < turnTime) col = turn.frames[Math.min(turn.frames.length - 1, Math.floor(Math.max(0, t) * turn.fps))];
+  else {
+    const elapsed = Math.max(0, t - turnTime);
+    if (elapsed < 1.2 || elapsed >= 1.2 + takeoff + air + land) {
+      const wave = data.anims.wave;
+      col = wave.frames[Math.floor(elapsed * wave.fps) % wave.frames.length];
+    } else {
+      const jump = elapsed - 1.2, frames = data.anims.jump.frames;
+      col = jump < takeoff ? frames[0] : jump < takeoff + air / 2 ? frames[1]
+        : jump < takeoff + air ? frames[2] : jump < takeoff + air + land ? frames[3] : data.anims.idle.frames[0];
+      if (jump >= takeoff && jump < takeoff + air) {
+        const u = (jump - takeoff) / air;
+        lift = 4 * 22 * u * (1 - u);
+      }
+    }
+  }
+  const row = member === 'machine' ? 0 : celebrationMeta.girls.rows[member];
+  ctx.drawImage(img, col * w, row * h, w, h, Math.round(x - w / 2), Math.round(y - lift - h), w, h);
+}
 const SHEETS: Record<Girl, HTMLImageElement> = { victoria: sheet(victoriaUrl), friend: sheet(friendUrl) };
 /** ninja trim colour, used for the second line of the katana slash */
 const TRIM: Record<Girl, string> = { victoria: '#ff3b6b', friend: '#a64dff' };
@@ -124,7 +156,7 @@ const TOKYO_TRAM_IMG = loadImage(tokyoTramUrl);
 
 function drawTram(x: number, y: number, t: number, tokyo = false): void {
   if (x > W && Math.floor(t * 8) % 2) text('!', W - 12, GROUND - 52, '#ff4040', 16); // warning before it rolls in
-  drawVehicle(tokyo && ready(TOKYO_TRAM_IMG) ? TOKYO_TRAM_IMG : TRAM_IMG, x, y, TRAM_PPM);
+  drawVehicle(tokyo ? TOKYO_TRAM_IMG : TRAM_IMG, x, y, TRAM_PPM);
 }
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */

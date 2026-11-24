@@ -4,7 +4,7 @@ import { AudioEngine } from './audio';
 import { H, W } from './config';
 import { Game } from './game';
 import { canvas, resetTransform } from './render/draw';
-import { drawGame, drawHighscore, drawPause, drawTitle, drawWin } from './render/screens';
+import { drawCelebration, drawGame, drawHighscore, drawPause, drawTitle, drawWin } from './render/screens';
 import { lyricAt } from './timeline';
 import { DevPanel } from './ui/devpanel';
 import { Subtitles } from './ui/subtitles';
@@ -55,15 +55,16 @@ let last = performance.now();
 function frame(now: number): void {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
-  game.tickWin(now);
+  game.tickWin(now, dt);
   highscores.tick(now);
+  if (game.mode === 'play') game.update(audio.time(), dt);
   resetTransform();
   if (game.mode === 'loading' || game.mode === 'title') { subtitles.set(null); drawTitle(now / 1000, game.mode === 'loading'); }
+  else if (game.mode === 'celebrate') { subtitles.set(null); drawCelebration(game); }
   else if (game.mode === 'win') { subtitles.set(null); drawWin(game, now / 1000, highscores.place(game.s.score)); }
   else if (game.mode === 'highscore') { subtitles.set(null); drawHighscore(now / 1000); }
   else if (game.mode === 'editor') { subtitles.set(null); editor.draw(); }
   else {
-    if (game.mode === 'play') game.update(audio.time(), dt);
     const t = game.s.lastT;
     drawGame(game, t, dev.enabled);
     subtitles.set(game.mode === 'play' || game.cleanPause ? lyricAt(t)?.text ?? null : null);

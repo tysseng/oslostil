@@ -102,6 +102,13 @@ Automat Victoria and the platform machines are seen from the front. They have **
 - **Heights relative to a girl (30 px):** round trash bin ≈ 55 % (17 px), recycling bin > girl (36 px), phone booth between recycling and kiosk (44 px), kiosk ≈ 2 × girl (61 px).
 - No real marks: the kiosk is a generic «KIOSK» (after narvesen 3, colours from the other kiosk photos); the textile bin is plain red with dots for writing, no Red Cross logo.
 
+### Landmarks (Joakim, 24 Nov)
+
+- Flat elevations: flat colour, no outlines, 3–4 tones per material, windows and details on their own layers so silhouettes, night versions and lit windows can be derived.
+- No flags on any building. No inscriptions (blank plaques).
+- Follow the reference photos closely; when a shape is iconic (ski jump, opera) trace it rather than invent it.
+- Approved landmarks are frozen as `<name>.v1.*`; never overwrite a versioned file.
+
 ## Technical contract
 
 ### Scale
@@ -113,6 +120,7 @@ Automat Victoria and the platform machines are seen from the front. They have **
 ### Files
 
 - **Hi-res vehicles:** `assets/vehicles/hires/<name>.svg` plus `.png`, with transparent backgrounds.
+- **Hi-res landmarks:** `assets/landmarks/hires/<name>.svg` plus `.png` (approved: `<name>.v1.*`), drawn in metres, 10 SVG px/m, PNG 20 px/m, ground at the bottom, transparent background. Made by `python3 tools/landmarks/landmarks.py`.
 - **Game sprites:** `assets/sprites/<name>.png` with transparent backgrounds, using only the design's own colours (no blended edge pixels).
 
 ### Props (`assets/sprites/props.png` + `props.json`)
