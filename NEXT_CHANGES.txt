@@ -1,5 +1,8 @@
 Create svg of the opera
 
+Backgrounds for neon level
+Better backgrounds for kollektivkaos level
+
 Important before the 3rd
 - pixelate vehicles
 - drones -> seagulls

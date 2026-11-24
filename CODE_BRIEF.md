@@ -105,6 +105,11 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- The upper Valkyrien stairs and balustrade are clipped below the surface ground. During ascent, the surface scene overlays the party at the top of the stairs; the foreground house hides their arrival until they emerge to its right.
+- The final-hit explosion particles, screen shake and half-second white flash continue rendering and advancing during the immediate celebration transition, synchronized to the final musical hit.
+
+- **Valkyrien prototype:** a scripted vector manhole reaches the player at 1:27. Landing slides the cover down in 0.22 seconds and reveals the chute only after triggering. The station ceiling is below the surface viewport; world rendering pans up 180 pixels while the HUD stays fixed. A fast chute descent locks the party horizontally to the scrolling shaft and clips their sprites to its width, even offscreen left. The chute ends at the station ceiling; an offscreen player runs back to x=80 after landing. The optional surface route remains unchanged if skipped. The underground platform leads to concrete stairs near 1:35; the party automatically walks up and emerges inside an opaque foreground house, then continues on the surface. The stair balustrade hides the lower half of the player and extends solidly to the underground ground. `valkyrien.ts` owns route geometry/state/landing and `render/valkyrien.ts` draws placeholders, also visible in the editor. Seeking/restarting resets the route; surface enemies cannot interact with underground players.
+
 - The palette groups items under Enemies, Power-ups, Tickets & coins, Lights, Props & platforms, Trees, Vehicles and Hazards. Move stays above the groups, and selecting any item clears selection across all categories.
 - The editor fits within the viewport: the level canvas uses at most half the viewport height, and the palette scrolls independently below the fixed action/time controls. Help is collapsible so it does not push the level map out of view.
 - Left/right arrows scrub the editor song position by 0.1 seconds per keypress; holding an arrow repeats. Time stays within the song-position slider bounds, and scrubbing is disabled during item dragging.

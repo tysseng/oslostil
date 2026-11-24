@@ -22,6 +22,7 @@ import passengersUrl from '../../assets/sprites/passengers.png';
 import boardUrl from '../../assets/sprites/board-broken.png';
 import powerupsUrl from '../../assets/sprites/powerups.png';
 import './editor.css';
+import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from '../render/valkyrien';
 
 const STORAGE_KEY = 'oslostil-level-v1';
 const kinds = Object.keys(TYPES) as EnemyKind[];
@@ -503,6 +504,7 @@ export class LevelEditor {
     const t = this.game.s.lastT;
     resetTransform();
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0);
+    drawValkyrien(t);
     const events = this.layeredEvents();
     for (const event of events) {
       const b = this.bounds(event);
@@ -511,6 +513,8 @@ export class LevelEditor {
       drawEnemy(enemy, enemyX(enemy, t), t);
     }
     drawLampLights(events.map(createEnemy), t);
+    drawValkyrienBalustrade(t);
+    drawValkyrienHouse(t);
     for (const event of events) {
       const b = this.bounds(event);
       if (b.x > W || b.x + b.w < 0) continue;

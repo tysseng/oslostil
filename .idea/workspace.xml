@@ -4,33 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added broken board and powerups">
-      <change afterPath="$PROJECT_DIR$/Claude outputs/powerups-boards-contact.png" afterDir="false" />
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added resized powerups, made a better navigation experience in level editor">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ART_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Claude outputs/copilot-board-and-hopping-glitch.md" beforeDir="false" afterPath="$PROJECT_DIR$/Claude outputs/copilot-board-and-hopping-glitch.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Claude outputs/copilot-health-powerups.md" beforeDir="false" afterPath="$PROJECT_DIR$/Claude outputs/copilot-health-powerups.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/board-broken-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/board-broken-light.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/board-broken.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/board-broken.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/board-broken.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/board-broken.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/powerups-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/powerups-light.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/powerups.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/powerups.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/powerups.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/powerups.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/props-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props-light.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/props.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NEXT_CHANGES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rainbow.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rainbow.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/editor.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/highscores.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/highscores.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/sprites/boards.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/boards.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/sprites/powerups.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/powerups.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,23 +29,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.096962450025575" />
-      <entry key="MS500" value="2.1376971712785915" />
-      <entry key="S2" value="4.931648751939615" />
-      <entry key="S5" value="7.2650042079210895" />
-      <entry key="S10" value="8.471255302953956" />
-      <entry key="S30" value="9.449199811168198" />
-      <entry key="S60" value="9.71906735343148" />
-      <entry key="M2" value="9.85812026885144" />
-      <entry key="M5" value="9.947460575239115" />
-      <entry key="M10" value="10.199346930476736" />
-      <entry key="M15" value="10.901982908303696" />
-      <entry key="M30" value="14.137261242886185" />
-      <entry key="H1" value="19.42425909794536" />
-      <entry key="H2" value="25.559992675764686" />
-      <entry key="H4" value="36.97878767687164" />
-      <entry key="D1" value="364.6689414394352" />
-      <entry key="W1" value="890.5323738313564" />
+      <entry key="MS100" value="1.000000000001016" />
+      <entry key="MS500" value="1.0041710212812365" />
+      <entry key="S2" value="1.519678081318217" />
+      <entry key="S5" value="3.1121862640133795" />
+      <entry key="S10" value="5.170684822934394" />
+      <entry key="S30" value="8.671791120822064" />
+      <entry key="S60" value="10.78710186608432" />
+      <entry key="M2" value="14.642520874477203" />
+      <entry key="M5" value="21.70033570731124" />
+      <entry key="M10" value="26.028693396453605" />
+      <entry key="M15" value="27.940855572044168" />
+      <entry key="M30" value="31.42464841237345" />
+      <entry key="H1" value="37.48308484401398" />
+      <entry key="H2" value="46.34734578460288" />
+      <entry key="H4" value="59.966520246872605" />
+      <entry key="D1" value="380.63271909135227" />
+      <entry key="W1" value="916.8402654888479" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -71,37 +53,37 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="1.2867508767960694E-261" />
-      <entry key="S60" value="3.5871309939784305E-131" />
-      <entry key="M2" value="5.989266227158737E-66" />
-      <entry key="M5" value="8.146094563909732E-27" />
-      <entry key="M10" value="9.025571762447922E-14" />
-      <entry key="M15" value="2.01210118004002E-9" />
-      <entry key="M30" value="4.4856450818583655E-5" />
-      <entry key="H1" value="0.006697495861781753" />
-      <entry key="H2" value="0.08183822983045114" />
-      <entry key="H4" value="0.28607381884830235" />
-      <entry key="D1" value="0.8117326577404188" />
-      <entry key="W1" value="0.9706418284659148" />
+      <entry key="S30" value="1.0870156E-317" />
+      <entry key="S60" value="3.296992077802767E-159" />
+      <entry key="M2" value="5.741943989454064E-80" />
+      <entry key="M5" value="2.0119796358635562E-32" />
+      <entry key="M10" value="1.418442679794836E-16" />
+      <entry key="M15" value="2.7198264540475605E-11" />
+      <entry key="M30" value="5.215195541921274E-6" />
+      <entry key="H1" value="0.002283680262629005" />
+      <entry key="H2" value="0.04778786731618182" />
+      <entry key="H4" value="0.21860436252779128" />
+      <entry key="D1" value="0.776145488549137" />
+      <entry key="W1" value="0.9644452779341435" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0669659541412393" />
-      <entry key="MS500" value="2.125838139005606" />
-      <entry key="S2" value="4.924499111212004" />
-      <entry key="S5" value="7.260718274111947" />
-      <entry key="S10" value="8.468743002916364" />
-      <entry key="S30" value="9.44826253625788" />
-      <entry key="S60" value="9.718584939396578" />
-      <entry key="M2" value="9.857875512544016" />
-      <entry key="M5" value="9.947361741659625" />
-      <entry key="M10" value="10.199294018052978" />
-      <entry key="M15" value="10.901933976868968" />
-      <entry key="M30" value="14.137224624568702" />
-      <entry key="H1" value="19.43084889679022" />
-      <entry key="H2" value="25.641721272694063" />
-      <entry key="H4" value="37.264748938746635" />
-      <entry key="D1" value="365.48052556826354" />
-      <entry key="W1" value="891.5029757608906" />
+      <entry key="MS100" value="0.9726549474132671" />
+      <entry key="MS500" value="0.9986124704945686" />
+      <entry key="S2" value="1.5174074984649923" />
+      <entry key="S5" value="3.110155806902322" />
+      <entry key="S10" value="5.168910328431881" />
+      <entry key="S30" value="8.670619844583351" />
+      <entry key="S60" value="10.784518564955805" />
+      <entry key="M2" value="14.636970800675874" />
+      <entry key="M5" value="21.694527094721145" />
+      <entry key="M10" value="26.02466750281258" />
+      <entry key="M15" value="27.93786117428736" />
+      <entry key="M30" value="31.422974174137025" />
+      <entry key="H1" value="37.484449795686444" />
+      <entry key="H2" value="46.39461637825911" />
+      <entry key="H4" value="60.184808843345074" />
+      <entry key="D1" value="381.4086838301856" />
+      <entry key="W1" value="917.8046655785083" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -171,7 +153,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="First version of oslostil game" />
     <MESSAGE value="Added bus station and plenty more" />
     <MESSAGE value="More and more and more" />
     <MESSAGE value="Added github pages" />
@@ -196,6 +177,7 @@
     <MESSAGE value="Added nyancat-automat and glitch assets" />
     <MESSAGE value="Added sparkles to tail" />
     <MESSAGE value="Added broken board and powerups" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added broken board and powerups" />
+    <MESSAGE value="Added resized powerups, made a better navigation experience in level editor" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added resized powerups, made a better navigation experience in level editor" />
   </component>
 </project>

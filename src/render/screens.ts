@@ -8,6 +8,8 @@ import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from
 import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
+import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, belowSurface, exitX, manholeX, playerFloor } from '../valkyrien';
+import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from './valkyrien';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
 
@@ -15,7 +17,9 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   const s = g.s, sec = sectionAt(t), beatFlash = Math.max(0, 1 - beatPhase(t, BEAT) * 4);
   if (s.shake > 0) resetTransform(Math.round((Math.random() - 0.5) * 24 * s.shake), Math.round((Math.random() - 0.5) * 24 * s.shake));
   else if (s.boardShake > 0) resetTransform(Math.round((Math.random() - 0.5) * 4), Math.round((Math.random() - 0.5) * 4));
+  ctx.translate(0, -s.valkyrien.camera);
   drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
+  drawValkyrien(t, s.valkyrien);
   const prev = SECTIONS[SECTIONS.indexOf(sec) - 1];
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
@@ -51,13 +55,20 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   // companions
+  const inChute = s.valkyrien.phase === 'chute';
+  ctx.save();
+  if (inChute) {
+    ctx.beginPath();
+    ctx.rect(manholeX(t) - CHUTE_HALF_WIDTH, GROUND, CHUTE_HALF_WIDTH * 2, VALKYRIEN_CEILING - GROUND + 32);
+    ctx.clip();
+  }
   if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) {
     if (s.rainbow) drawRainbowMachine(s.rainbow, t, machineMood(t));
-    else drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
+    else drawMachine(inChute ? s.p.x : s.mx, (belowSurface(s) ? s.p.y : GROUND) - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
   }
   const ninja = isNinja(t), f = s.friend, fy = f.yHist.length ? f.yHist[0] : GROUND;
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
-  if (!s.deathFlight?.friend) drawGirl('friend', s.fx, fy, t + 0.13, { ninja, air: fy < GROUND, rising: fRising, atk: f.atk > 0 });
+  if (!s.deathFlight?.friend) drawGirl('friend', inChute ? s.p.x : s.fx, inChute ? s.p.y : fy, t + 0.13, { ninja, air: fy < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: fRising, atk: f.atk > 0 });
   // gone while dead; after respawning she flashes white, after an ordinary hit she blinks
   const white = s.healFlash > 0 || s.respawn > 0 && Math.floor(s.respawn * 8) % 2 === 1;
   if (s.deathFlight) {
@@ -74,8 +85,9 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     }
   }
   if (s.down <= 0 && (s.healFlash > 0 || s.respawn > 0 || !(s.inv > 0 && Math.floor(t * 20) % 2))) {
-    drawGirl('victoria', s.p.x, s.p.y, t, { white, ninja, air: s.p.y < GROUND, rising: s.p.vy < 0, slide: s.p.slide > 0, atk: s.p.atk > 0 });
+    drawGirl('victoria', s.p.x, s.p.y, t, { white, ninja, air: s.p.y < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: s.p.vy < 0, slide: s.p.slide > 0, atk: s.p.atk > 0 });
   }
+  ctx.restore();
   for (const st of s.stars) {
     ctx.save(); ctx.translate(st.x, st.y); ctx.rotate(st.a);
     if (st.ninja) { R(-3, -1, 6, 2, '#dfe6ee'); R(-1, -3, 2, 6, '#dfe6ee'); } // shuriken
@@ -85,6 +97,16 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   for (const q of s.parts) R(q.x, q.y, 2, 2, q.c);
   drawLampLights(s.enemies, t);
   for (const q of s.pops) text(q.txt, q.x, q.y, q.c, 6, 'center');
+  drawValkyrienBalustrade(t);
+  if (s.valkyrien.phase === 'stairs') {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(exitX(t) - STAIRS_WIDTH - 24, 0, STAIRS_WIDTH + 62, GROUND + 30);
+    ctx.clip();
+    drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
+    ctx.restore();
+  }
+  drawValkyrienHouse(t);
   resetTransform();
 
   if (t >= FINAL_HIT) { // «-STIL!»
@@ -165,7 +187,11 @@ export function drawTitle(t: number, loading: boolean): void {
 export function drawCelebration(g: Game): void {
   const c = g.s.celebration;
   if (!c) return;
+  if (g.s.shake > 0) resetTransform(Math.round((Math.random() - 0.5) * 24 * g.s.shake), Math.round((Math.random() - 0.5) * 24 * g.s.shake));
   drawScene(sectionAt(FINAL_HIT).scene, FINAL_HIT, g.s.bgx, 0, g.s.taggerStoppedAt);
+  for (const q of g.s.parts) R(q.x, q.y, 2, 2, q.c);
+  flash(FINAL_HIT + c.elapsed, FINAL_HIT, 0.5, '#fff');
+  resetTransform();
   text('OSLO-STIL!', W / 2, 45, '#ff2bd6', 20, 'center', '#2bf0ff');
   const walkTime = 1.8, walk = Math.min(1, c.elapsed / walkTime);
   for (const [member, target, delay] of [['friend', 134, 0.15], ['victoria', 160, 0], ['machine', 186, 0.3]] as const) {
@@ -202,7 +228,6 @@ export function drawWin(g: Game, t: number, place: number): void {
   drawCelebrating('victoria', 42, GROUND, t + 0.2);
   drawCelebrating('machine', 286, GROUND, t + 0.4);
   text(place > 10 ? 'GAME OVER' : place === 1 ? 'NEW HIGHSCORE!' : `YOU PLACED #${place}`, W / 2, 154, place === 1 ? '#ffe14a' : '#ccc', 6, 'center');
-  if (Math.floor(t * 2) % 2) text('ENTER: HIGHSCORE', W / 2, 166, '#fff', 5, 'center');
 }
 
 export function drawHighscore(t: number): void {

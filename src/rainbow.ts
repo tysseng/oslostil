@@ -2,6 +2,7 @@ import { BEAT, GROUND, PH, W } from './config';
 import type { GameState, RainbowPoint, RainbowState } from './state';
 import { RAINBOW_T0, RAINBOW_T1, sectionAt, victoriaBob, victoriaLift } from './timeline';
 import rainbowMeta from '../assets/sprites/rainbow.json';
+import { belowSurface } from './valkyrien';
 
 const LANDING_TIME = 1;
 const TRAIL_TIME = 1.2;
@@ -9,7 +10,7 @@ const TRAIL_LENGTH = 150;
 
 export function machinePosition(s: GameState, t: number): { x: number; y: number } {
   if (s.rainbow && !s.deathFlight?.machine) return { x: s.rainbow.x, y: s.rainbow.y };
-  return { x: s.mx, y: GROUND - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t) };
+  return { x: s.mx, y: (belowSurface(s) ? s.p.y : GROUND) - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t) };
 }
 
 function anchor(r: RainbowState): RainbowPoint {

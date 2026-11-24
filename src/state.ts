@@ -2,6 +2,7 @@ import { BEAT, GROUND, PH, PLAYER_MAX_HP, PX, W, rng } from './config';
 import { BLOB_HOP, BROKEN_BOARD, isPowerup, isTree, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
+import type { ValkyrienState } from './valkyrien';
 
 /** Throws you start with, before collecting any tickets. */
 export const START_AMMO = 3;
@@ -59,6 +60,7 @@ export interface Player {
 }
 
 export interface GameState {
+  valkyrien: ValkyrienState;
   ev: ScheduledEvent[];
   /** index of the next event to spawn */
   ei: number;
@@ -133,6 +135,7 @@ export function compareItems(a: Enemy, b: Enemy): number {
 
 export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {
   return {
+    valkyrien: { phase: 'surface', camera: 0 },
     ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [], droppings: [], blobPops: [], boardShake: 0,
     score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0, bounceChain: 0,
     hp: PLAYER_MAX_HP, inv: 0, healFlash: 0, fx: PX - 22, mx: PX - 46,

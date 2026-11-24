@@ -7,6 +7,7 @@ import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, ene
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
 import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
+import { belowSurface, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, RAINBOW_T0, RAINBOW_T1, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX } from './timeline';
 
 /** seconds she is gone after losing her last heart */
@@ -54,6 +55,8 @@ export class Game {
     if (this.mode === 'celebrate' && this.s.celebration) {
       const c = this.s.celebration;
       c.elapsed += dt;
+      this.s.shake = Math.max(0, this.s.shake - dt);
+      this.updateParticles(dt);
       const braking = Math.min(1, c.elapsed / 0.25);
       this.s.bgx = c.bgx + sectionAt(FINAL_HIT).speed * 0.25 / 3 * (1 - (1 - braking) ** 3);
       if (c.elapsed >= 7) {
@@ -117,12 +120,13 @@ export class Game {
     if (this.mode === 'play' && (c === 'KeyP' || c === 'Escape')) return this.pause();
     if (this.mode === 'pause' && (c === 'KeyP' || c === 'Escape' || c === 'Enter')) return this.resume();
     if (this.mode !== 'play' || this.s.down > 0) return; // no control while dead
+    if (routeControlsPlayer(this.s)) return;
     const p = this.s.p;
     if (c === 'Space' || c === 'ArrowUp' || c === 'KeyW') {
       if (p.jumps < 2) { p.vy = p.jumps ? -250 : -300; p.jumps++; p.slide = 0; this.audio.sfx('jump'); }
     }
     if (c === 'ArrowDown' || c === 'KeyS') {
-      if (p.y >= GROUND || p.ride || p.propRide || p.machineRide !== undefined) {
+      if (p.y >= playerFloor(this.s) || p.ride || p.propRide || p.machineRide !== undefined) {
         p.slide = 0.45;
         p.slideDirection = this.keys.has('ArrowLeft') || this.keys.has('KeyA') ? -1 : 1;
       } else p.vy = 340;
@@ -135,6 +139,7 @@ export class Game {
 
   // ---------- combat ----------
   private attack(): void {
+    if (belowSurface(this.s)) return;
     const { s } = this, p = s.p, reach = isNinja(s.lastT) ? 30 : 20;
     for (const e of s.enemies) {
       const ty = TYPES[e.type];
@@ -353,16 +358,18 @@ export class Game {
       if (p.machineRide !== undefined && p.vy >= 0 && platformMachines(t).includes(p.machineRide)) {
         p.x = Math.max(TRAM_EDGE, p.x - STATION_VX * dt);
       }
-      if (this.keys.has('ArrowLeft') || this.keys.has('KeyA')) {
+      if (!routeControlsPlayer(s) && (this.keys.has('ArrowLeft') || this.keys.has('KeyA'))) {
         const backwardSpeed = sectionAt(t).speed + 80;
         p.x = Math.max(TRAM_EDGE, p.x - backwardSpeed * dt);
       }
-      if (this.keys.has('ArrowRight') || this.keys.has('KeyD')) p.x = Math.min(W - 30, p.x + 130 * dt);
+      if (!routeControlsPlayer(s) && (this.keys.has('ArrowRight') || this.keys.has('KeyD'))) p.x = Math.min(W - 30, p.x + 130 * dt);
       if (p.slide > 0 && p.x !== prevX) p.slideDirection = p.x < prevX ? -1 : 1;
       p.vy += 900 * dt; p.y += p.vy * dt;
-      this.tram(t, prevY);
-      this.props(t, prevT, prevY);
-      this.machines(t, prevY);
+      if (!belowSurface(s)) {
+        this.tram(t, prevY);
+        this.props(t, prevT, prevY);
+        this.machines(t, prevY);
+      }
     }
     this.boardImpacts(t, prevT);
     if (s.deathFlight) {
@@ -398,9 +405,9 @@ export class Game {
     f.cd -= dt; f.atk = dec(f.atk);
 
     for (const st of s.stars) { st.x += st.vx * dt; st.y += st.vy * dt; st.a += dt * 20; }
-    s.stars = s.stars.filter((st) => st.x < W + 10 && st.y > 0 && st.y < H && !st.gone);
+    s.stars = s.stars.filter((st) => st.x < W + 10 && st.y > 0 && st.y < H + s.valkyrien.camera && !st.gone);
     const taggerX = subwayTaggerX(t), previousTaggerX = subwayTaggerX(prevT) ?? taggerX;
-    if (s.taggerStoppedAt === undefined && taggerX !== null && previousTaggerX !== null) {
+    if (!belowSurface(s) && s.taggerStoppedAt === undefined && taggerX !== null && previousTaggerX !== null) {
       for (const star of s.stars) {
         const previousX = star.x - star.vx * dt, previousY = star.y - star.vy * dt;
         const relative = star.x - taggerX, previousRelative = previousX - previousTaggerX;
@@ -445,7 +452,7 @@ export class Game {
         drop.y += drop.vy * dt;
         if (drop.y >= GROUND) { drop.y = GROUND; drop.landed = true; }
       } else drop.life -= dt;
-      if (drop.life > 0 && s.down <= 0 && s.inv <= 0
+      if (!belowSurface(s) && drop.life > 0 && s.down <= 0 && s.inv <= 0
         && Math.abs(drop.x - p.x) < (drop.landed ? 9 : 6)
         && Math.max(previousY, drop.y) + 2 >= Math.min(prevY, p.y) - ph
         && Math.min(previousY, drop.y) - 2 <= Math.max(prevY, p.y)) this.hurt(0.25);
@@ -465,6 +472,7 @@ export class Game {
         }
       }
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
+      if (belowSurface(s)) continue;
       if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type)) continue; // scenery has no side damage
       const h = enemyBodyHeight(e, t), top = ey - h;
       const previousTop = GROUND - enemyHeight(e, prevT) - enemyBodyHeight(e, prevT);
@@ -514,9 +522,7 @@ export class Game {
       }
     }
     // Resolve stomp crossings before landing, including fast falls that cross an enemy and the ground in one frame.
-    if (s.down <= 0 && p.y >= GROUND) {
-      p.y = GROUND; p.vy = 0; p.jumps = 0; s.bounceChain = 0;
-    }
+    resolveValkyrien(s, t, dt, prevY);
     s.enemies = s.enemies.filter((e) => !e.gone && !(e.dead && enemyX(e, t) < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)));
     if (p.ride?.dead) p.ride = undefined;
 
@@ -548,10 +554,14 @@ export class Game {
       catch { s.best = s.score; }
     }
 
-    for (const q of s.parts) { q.x += q.vx * dt; q.y += q.vy * dt; q.vy += 300 * dt; q.life -= dt; }
-    s.parts = s.parts.filter((q) => q.life > 0);
+    this.updateParticles(dt);
     for (const q of s.pops) { q.y -= 20 * dt; q.life -= dt; }
     s.pops = s.pops.filter((q) => q.life > 0);
+  }
+
+  private updateParticles(dt: number): void {
+    for (const q of this.s.parts) { q.x += q.vx * dt; q.y += q.vy * dt; q.vy += 300 * dt; q.life -= dt; }
+    this.s.parts = this.s.parts.filter((q) => q.life > 0);
   }
 }
 
