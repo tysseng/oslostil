@@ -31,7 +31,20 @@ if (__DEV_MODE_DEFAULT__) {
 }
 
 addEventListener('keydown', (e) => {
-  if (game.mode === 'highscore') return;
+  if (e.code === 'Home' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    e.preventDefault();
+    if (!e.repeat && game.mode !== 'loading') {
+      game.intro();
+      canvas.focus();
+    }
+    return;
+  }
+  if (highscores.keyDown(e)) return;
+  if (e.code === 'Enter' && (game.mode === 'celebrate' || game.mode === 'win')) {
+    e.preventDefault();
+    game.keyDown(e);
+    return;
+  }
   if (e.target instanceof HTMLElement && (e.target.isContentEditable || e.target.closest('textarea, input:not([type="range"])'))) return;
   if (dev.keyDown(e)) return;
   if (editor.keyDown(e)) return;
@@ -42,7 +55,8 @@ addEventListener('keyup', (e) => game.keyUp(e));
 addEventListener('blur', () => game.pause());
 
 function fit(): void {
-  const s = Math.max(1, Math.floor(Math.min((innerWidth * 0.96) / W, (innerHeight * 0.7) / H)));
+  const height = game.mode === 'editor' ? 0.5 : 0.7;
+  const s = Math.max(1, Math.floor(Math.min((innerWidth * 0.96) / W, (innerHeight * height) / H)));
   canvas.style.width = W * s + 'px';
   canvas.style.height = H * s + 'px';
   subtitles.fit(canvas.getBoundingClientRect().width / W);
@@ -52,12 +66,17 @@ addEventListener('resize', fit);
 fit();
 
 let last = performance.now();
+let fittedEditor = false;
 function frame(now: number): void {
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
   game.tickWin(now, dt);
   highscores.tick(now);
   if (game.mode === 'play') game.update(audio.time(), dt);
+  if (fittedEditor !== (game.mode === 'editor')) {
+    fittedEditor = game.mode === 'editor';
+    fit();
+  }
   resetTransform();
   if (game.mode === 'loading' || game.mode === 'title') { subtitles.set(null); drawTitle(now / 1000, game.mode === 'loading'); }
   else if (game.mode === 'celebrate') { subtitles.set(null); drawCelebration(game); }

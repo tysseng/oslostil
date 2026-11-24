@@ -16,6 +16,7 @@ export interface Enemy extends ScheduledEvent {
   /** a ninja's base height; y is this plus its jump */
   y0?: number;
   dropIn?: number;
+  crumbledAt?: number;
   dead?: boolean;
   gone?: boolean;
 }
@@ -159,18 +160,16 @@ export function hopPose(e: ScheduledEvent, t: number): { frame: number; lift: nu
   return { frame, lift: 4 * height * u * (1 - u), h: frame < 2 ? 8 : BLOB_HOP.h };
 }
 
-/** fall frame 6 (impact) lands exactly one beat after the trigger. */
-export const boardFallAt = (e: ScheduledEvent): number => e.fallAt ?? e.arr - BEAT;
-export const boardImpactAt = (e: ScheduledEvent): number => boardFallAt(e) + BEAT;
-export function boardFrame(e: ScheduledEvent, t: number): number {
-  const since = t - boardFallAt(e), { glitch, fall, rest } = BROKEN_BOARD.phases;
-  if (since < 0) return glitch.frames[Math.floor(Math.max(0, t) * glitch.fps) % glitch.frames.length];
-  const frameTime = BEAT / fall.frames.indexOf(BROKEN_BOARD.frames.indexOf('impact'));
+export const boardImpactAt = (e: Enemy): number => (e.crumbledAt ?? Infinity) + BEAT / 2;
+export function boardFrame(e: Enemy, t: number): number {
+  const since = t - (e.crumbledAt ?? Infinity), { glitch, fall, rest } = BROKEN_BOARD.phases;
+  if (since <= 0) return glitch.frames[Math.floor(Math.max(0, t) * glitch.fps) % glitch.frames.length];
+  const frameTime = BEAT / (2 * fall.frames.indexOf(BROKEN_BOARD.frames.indexOf('impact')));
   const frame = Math.floor((since + 1e-9) / frameTime);
   if (frame < fall.frames.length) return fall.frames[frame];
   return rest.frames[Math.floor((since - frameTime * fall.frames.length) * rest.fps) % rest.frames.length];
 }
-export const boardTop = (e: ScheduledEvent, t: number): number => BROKEN_BOARD.top[boardFrame(e, t)];
+export const boardTop = (e: Enemy, t: number): number => BROKEN_BOARD.top[boardFrame(e, t)];
 export const enemyBodyHeight = (e: Enemy, t: number): number =>
   e.type === 'blob_hop' ? hopPose(e, t).h : e.type === 'board_broken' ? boardTop(e, t) : TYPES[e.type].h;
 

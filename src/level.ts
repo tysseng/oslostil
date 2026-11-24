@@ -10,7 +10,6 @@ function isEvent(value: unknown): value is ScheduledEvent {
     && (e.y === undefined || (typeof e.y === 'number' && Number.isFinite(e.y) && e.y >= 0 && e.y <= GROUND))
     && (e.rel === undefined || (typeof e.rel === 'number' && Number.isFinite(e.rel) && e.rel > 0))
     && (e.depth === undefined || (typeof e.depth === 'number' && Number.isFinite(e.depth) && e.depth >= 0 && e.depth <= 1))
-    && (e.fallAt === undefined || (typeof e.fallAt === 'number' && Number.isFinite(e.fallAt)))
     && (e.hop === undefined || e.hop === 'low' || e.hop === 'high' || e.hop === 'double')
     && (e.label === undefined || typeof e.label === 'string')
     && (e.fromBoss === undefined || typeof e.fromBoss === 'boolean');
@@ -21,8 +20,8 @@ export function parseLevel(value: unknown): ScheduledEvent[] {
   if (!Array.isArray(value) || !value.every(isEvent)) {
     throw new Error('Expected a JSON array of level items with a valid type, arrival time and optional height/speed.');
   }
-  return value.map(({ type, arr, y, rel, label, fromBoss, depth, fallAt, hop }) => {
-    const e: ScheduledEvent = { type, arr, y, rel, label, fromBoss, fallAt, hop };
+  return value.map(({ type, arr, y, rel, label, fromBoss, depth, hop }) => {
+    const e: ScheduledEvent = { type, arr, y, rel, label, fromBoss, hop };
     if (isTree(type)) e.depth = treeDepth({ ...e, depth });
     return e;
   });

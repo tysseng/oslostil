@@ -23,7 +23,7 @@ from props import Canvas, RAMP, rgb, mix
 PINK, CYAN = rgb('#ff2bd6'), rgb('#2bf0ff')
 AMBER, AMBER_D, AMBER_L = rgb('#ffb000'), rgb('#7a4e08'), rgb('#ffd36a')
 SCREEN = rgb('#0a0b10')
-BW, BH = 52, 16                       # housing incl. its frame (the canvas outline adds 1 px round it)
+BW, BH = 52, 19                       # housing incl. its frame (the canvas outline adds 1 px round it)
 
 FONT = {
     'O': ['010', '101', '101', '101', '010'], 'S': ['011', '100', '010', '001', '110'],
@@ -67,23 +67,23 @@ def board_grid(mode='ok', rnd=None):
         g[2][x] = ('screen', rgb('#1a1c26'))
     if mode in ('ok', 'dim'):
         a = AMBER if mode == 'ok' else AMBER_D
-        write(g, glyphs('OSLO S'), 4, 4, a)
-        write(g, glyphs('21:04'), BW - 4 - 17, 4, a)
-        write(g, glyphs('SPOR 2'), 4, 10, AMBER_D if mode == 'ok' else rgb('#4a3006'))
+        write(g, glyphs('OSLO S'), 4, 5, a)
+        write(g, glyphs('21:04'), BW - 4 - 17, 5, a)
+        write(g, glyphs('SPOR 2'), 4, 11, AMBER_D if mode == 'ok' else rgb('#4a3006'))
         for x in range(BW - 14, BW - 4, 2):               # «on time» dots
-            g[12][x] = ('screen', AMBER_D)
+            g[15][x] = ('screen', AMBER_D)
     elif mode == 'garble':
         x = 4
         for i in range(6):
-            x = write(g, [rnd.choice(GARBLE)], x, 4, AMBER if i % 3 else PINK)
-        write(g, glyphs('88:88'), BW - 4 - 17, 4, AMBER)
+            x = write(g, [rnd.choice(GARBLE)], x, 5, AMBER if i % 3 else PINK)
+        write(g, glyphs('88:88'), BW - 4 - 17, 5, AMBER)
         x = 4
         for i in range(5):
-            x = write(g, [rnd.choice(GARBLE)], x, 10, AMBER_D if i % 2 else CYAN)
+            x = write(g, [rnd.choice(GARBLE)], x, 11, AMBER_D if i % 2 else CYAN)
     elif mode == 'aaa':
-        write(g, glyphs('A-A-A'), 4, 4, PINK)
-        write(g, glyphs('88:88'), BW - 4 - 17, 4, AMBER)
-        write(g, glyphs('A-A-A'), 4, 10, CYAN)
+        write(g, glyphs('A-A-A'), 4, 5, PINK)
+        write(g, glyphs('88:88'), BW - 4 - 17, 5, AMBER)
+        write(g, glyphs('A-A-A'), 4, 11, CYAN)
     elif mode == 'static':
         for y in range(3, BH - 2):
             for x in range(2, BW - 2):
@@ -187,9 +187,9 @@ def broken_frame(name, rnd):
         i = int(name[-1])
         g = board_grid(['garble', 'aaa', 'static'][i], rnd)
         if i == 0:
-            slip(g, 4, 8, 3)
+            slip(g, 5, 9, 3)
         if i == 2:
-            slip(g, 9, 12, -4)
+            slip(g, 10, 14, -4)
         top = G - 45
         for px in (pl, pr):
             post(cv, [(px, top + BH), (px, G)])
@@ -201,7 +201,7 @@ def broken_frame(name, rnd):
                 cv.c(bx + BW, y, CYAN, 'dark')
         if i == 2:
             sparks = [(pl + 2, top + BH + 3), (pl + 4, top + BH + 1), (pl + 1, top + BH + 6)]
-        rect_top = 45
+        rect_top = G - top
     elif name in ('buckle0', 'buckle1'):
         k = 1 if name == 'buckle0' else 2
         drop = 7 if k == 1 else 18
@@ -213,7 +213,7 @@ def broken_frame(name, rnd):
         g = board_grid('static' if k == 1 else 'garble', rnd)
         blit(cv, g, bx, top, tilt=3 if k == 1 else -4)
         sparks = [(pl + 4, knee), (pr - 4, knee - 2)] if k == 2 else [(pl + 3, knee)]
-        rect_top = 45 - drop
+        rect_top = G - top
     elif name == 'drop':
         top = G - BH - 6
         for px, s in ((pl, -1), (pr, 1)):                 # posts folded flat, splayed out
@@ -225,7 +225,7 @@ def broken_frame(name, rnd):
             for y in range(top - 8, top - 2):
                 if (x + y) % 3:
                     cv.c(x, y, PINK if (x // 7) % 2 else CYAN, 'dark')
-        rect_top = 22
+        rect_top = G - top
     elif name == 'impact':
         top = G - (BH - 4) - 1
         for px, s in ((pl, -1), (pr, 1)):
@@ -236,15 +236,15 @@ def broken_frame(name, rnd):
             for d in range(5):
                 cv.c((bx - 3 if s < 0 else bx + BW + 2) + s * d, G - (d % 3), rgb('#c9c3b5') if d % 2 else AMBER_L, 'dark')
         sparks = [(bx - 4, G - 8), (bx + BW + 3, G - 9), (bx + 8, top - 3), (bx + BW - 8, top - 4)]
-        rect_top = 12
+        rect_top = G - top
     elif name == 'bounce':
         top = G - BH - 2
         for px, s in ((pl, -1), (pr, 1)):
             post(cv, [(px + s * 7, G), (px + s * 1, G - 3), (px + s * 1, top + BH)])
         g = board_grid('dim', rnd)
-        slip(g, 4, 6, 2)
+        slip(g, 5, 7, 2)
         blit(cv, g, bx, top, tilt=-2)
-        rect_top = 16
+        rect_top = G - top
     else:                                                  # rest0 / rest1: lying on its folded legs
         i = int(name[-1])
         top = G - BH - 1
@@ -252,9 +252,9 @@ def broken_frame(name, rnd):
             post(cv, [(px + s * 8, G), (px + s * 2, G - 1), (px + s * 1, top + BH)])
         g = board_grid('aaa' if i == 0 else 'dim', rnd)
         if i == 1:
-            slip(g, 10, 12, 3)
+            slip(g, 11, 14, 3)
         blit(cv, g, bx, top)
-        rect_top = 15
+        rect_top = G - top
     finish(cv)
     for x, y in sparks:                                     # sparks after the outline: bare bright pixels
         for dx, dy, c in ((0, 0, rgb('#ffffff')), (1, 0, AMBER_L), (-1, 0, AMBER_L), (0, -1, AMBER), (0, 1, AMBER)):

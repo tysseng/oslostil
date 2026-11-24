@@ -25,6 +25,19 @@ import './editor.css';
 
 const STORAGE_KEY = 'oslostil-level-v1';
 const kinds = Object.keys(TYPES) as EnemyKind[];
+const categories = ['Enemies', 'Power-ups', 'Tickets & coins', 'Lights', 'Props & platforms', 'Trees', 'Vehicles', 'Hazards'] as const;
+type Category = (typeof categories)[number];
+
+function itemCategory(kind: EnemyKind): Category {
+  if (isPowerup(kind) || kind === 'terminal') return 'Power-ups';
+  if (isLamp(kind)) return 'Lights';
+  if (isTree(kind)) return 'Trees';
+  if (isProp(kind) || kind === 'board_broken') return 'Props & platforms';
+  if (kind === 'tram') return 'Vehicles';
+  if (TYPES[kind].pickup) return 'Tickets & coins';
+  if (kind === 'suitcase' || kind === 'snow' || kind === 'fire' || kind === 'shot' || kind === 'fireball') return 'Hazards';
+  return 'Enemies';
+}
 
 interface Drag {
   event: ScheduledEvent;
@@ -36,6 +49,7 @@ interface Drag {
 
 export class LevelEditor {
   private readonly entry = document.createElement('button');
+  private readonly intro = document.createElement('button');
   private readonly panel = document.createElement('section');
   private readonly slider: HTMLInputElement;
   private readonly time: HTMLOutputElement;
@@ -44,21 +58,26 @@ export class LevelEditor {
   private selected: EnemyKind | null = null;
   private hovered: ScheduledEvent | null = null;
   private drag: Drag | null = null;
-  private testing = false;
-  private editTime = 0;
   private inspected: ScheduledEvent | null = null;
-  private readonly fallInput: HTMLInputElement;
   private readonly hopInput: HTMLSelectElement;
 
   constructor(private readonly game: Game, screen: HTMLElement) {
     this.entry.className = 'editor-entry';
     this.entry.textContent = 'Level editor';
     this.entry.addEventListener('click', () => {
-      game.edit(this.testing ? this.editTime : 0);
-      this.testing = false;
+      game.edit(game.mode === 'title' ? 0 : game.s.lastT);
+      canvas.focus();
       this.tick();
     });
     screen.after(this.entry);
+    this.intro.className = 'editor-entry';
+    this.intro.textContent = 'Intro';
+    this.intro.addEventListener('click', () => {
+      game.intro();
+      canvas.focus();
+      this.tick();
+    });
+    this.entry.after(this.intro);
     this.panel.className = 'level-editor';
     this.panel.hidden = true;
     this.panel.setAttribute('aria-label', 'Level editor');
@@ -77,30 +96,22 @@ export class LevelEditor {
         <input id="editor-time" type="range" min="0" max="${WIN_AT - 0.5}" step="0.01" value="0">
         <output class="editor-time"></output>
       </div>
-      <div class="editor-palette" role="group" aria-label="Items"></div>
+      <div class="editor-palette" role="group" aria-label="Items" tabindex="0"></div>
       <div class="editor-row editor-item-options" hidden>
-        <label class="editor-fall" hidden>Fall at (song seconds; blank = one beat before arrival)
-          <input type="number" step="any" aria-label="Board fall time"></label>
         <label class="editor-hop" hidden>Hop
           <select aria-label="Glitch hop variant"><option value="">Normal</option><option value="low">Low</option><option value="high">High</option><option value="double">Double</option></select></label>
       </div>
+      <details class="editor-help">
+      <summary>Editor help</summary>
       <p>To publish this layout as the default: download it, replace src/level.json with the downloaded file, then rebuild/deploy. Use default level discards the browser draft.</p>
       <p>Drag any item to move it. Right-click an item to delete it. Select an item below, then click empty space to place copies. Move / Esc stops placing.</p>
-      <p>Select a broken board or hopping glitch to edit its fall time or hop variant. Tool settings also apply to new copies. Dragging a board shifts its fall time with its arrival.</p>`;
+      <p>Broken boards crumble when landed on. Select a hopping glitch to edit its hop variant; tool settings also apply to new copies.</p>
+      </details>`;
     this.entry.after(this.panel);
     this.slider = this.panel.querySelector('input[type="range"]')!;
     this.time = this.panel.querySelector('.editor-time')!;
     this.status = this.panel.querySelector('.editor-status')!;
-    this.fallInput = this.panel.querySelector('.editor-fall input')!;
     this.hopInput = this.panel.querySelector('.editor-hop select')!;
-    this.fallInput.addEventListener('change', () => {
-      if (!this.fallInput.validity.valid) { this.status.textContent = 'Invalid fall time: enter song seconds or leave blank.'; return; }
-      if (this.inspected?.type === 'board_broken') {
-        if (this.fallInput.value === '') delete this.inspected.fallAt;
-        else this.inspected.fallAt = this.fallInput.valueAsNumber;
-        this.save();
-      }
-    });
     this.hopInput.addEventListener('change', () => {
       if (this.inspected?.type !== 'blob_hop') return;
       this.inspected.hop = this.hopVariant();
@@ -112,16 +123,13 @@ export class LevelEditor {
       this.tick();
     });
     this.panel.querySelector('[data-action="title"]')!.addEventListener('click', () => {
-      game.audio.pause();
-      game.keys.clear();
-      game.mode = 'title';
+      game.intro();
+      canvas.focus();
       this.tick();
     });
     this.panel.querySelector('[data-action="test"]')!.addEventListener('click', () => {
-      this.editTime = game.s.lastT;
-      this.testing = true;
       game.keys.clear();
-      game.start();
+      game.seek(game.s.lastT);
       canvas.focus();
       this.tick();
     });
@@ -159,6 +167,7 @@ export class LevelEditor {
       }
     });
     const palette = this.panel.querySelector('.editor-palette')!;
+    const groups = new Map<Category, HTMLElement>();
     const addTool = (name: string, kind: EnemyKind | null): HTMLButtonElement => {
       const button = document.createElement('button');
       button.type = 'button';
@@ -173,10 +182,20 @@ export class LevelEditor {
       label.textContent = name;
       button.append(label);
       this.tools.push(button);
-      palette.append(button);
+      (kind === null ? palette : groups.get(itemCategory(kind))!).append(button);
       return button;
     };
     addTool('Move', null);
+    for (const category of categories) {
+      if (!kinds.some(kind => itemCategory(kind) === category)) continue;
+      const group = document.createElement('fieldset');
+      group.className = 'editor-category';
+      const heading = document.createElement('legend');
+      heading.textContent = category;
+      group.append(heading);
+      groups.set(category, group);
+      palette.append(group);
+    }
     const sheet = new Image();
     sheet.src = enemiesUrl;
     const props = new Image();
@@ -293,6 +312,13 @@ export class LevelEditor {
     canvas.addEventListener('pointercancel', (e) => this.finishDrag(e, true));
     canvas.addEventListener('lostpointercapture', (e) => this.finishDrag(e, true));
     canvas.addEventListener('pointerleave', () => { if (!this.drag) this.hovered = null; });
+    canvas.addEventListener('wheel', (e) => {
+      if (game.mode !== 'editor' || e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      const delta = e.deltaY || e.deltaX;
+      const scale = e.deltaMode === 1 ? 0.03 : e.deltaMode === 2 ? 1 : 0.001;
+      this.scrub(delta * scale);
+    }, { passive: false });
     canvas.addEventListener('contextmenu', (e) => {
       if (game.mode !== 'editor') return;
       e.preventDefault();
@@ -333,12 +359,24 @@ export class LevelEditor {
 
   keyDown(e: KeyboardEvent): boolean {
     if (this.game.mode !== 'editor') return false;
+    if ((e.code === 'ArrowLeft' || e.code === 'ArrowRight') && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.target instanceof HTMLElement && e.target.closest('select')) return true;
+      e.preventDefault();
+      this.scrub(e.code === 'ArrowRight' ? 0.1 : -0.1);
+    }
     if (e.code === 'Escape') {
       this.selected = null;
       this.inspect(null);
       this.tools.forEach((tool, i) => tool.setAttribute('aria-pressed', String(i === 0)));
     }
     return true;
+  }
+
+  private scrub(delta: number): void {
+    if (this.drag || delta === 0) return;
+    this.game.edit(this.game.s.lastT + delta);
+    this.hovered = null;
+    this.tick();
   }
 
   private point(e: MouseEvent): [number, number] {
@@ -372,9 +410,7 @@ export class LevelEditor {
   private position(e: ScheduledEvent, x: number, base: number): void {
     if (isTree(e.type)) e.depth = treeDepth(e);
     e.rel = eventSpeed(e);
-    const previousArr = e.arr;
     e.arr = eventArrival(e, this.game.s.lastT, x);
-    if (e.fallAt !== undefined) e.fallAt += e.arr - previousArr;
     e.y = Math.round(Math.max(0, Math.min(GROUND - TYPES[e.type].h, GROUND - base)));
   }
 
@@ -391,17 +427,12 @@ export class LevelEditor {
       };
       canvas.setPointerCapture(e.pointerId);
     } else if (this.selected) {
-      if (this.selected === 'board_broken' && !this.fallInput.validity.valid) {
-        this.status.textContent = 'Invalid fall time: enter song seconds or leave blank.';
-        return;
-      }
       const event: ScheduledEvent = { type: this.selected, arr: this.game.s.lastT };
       if (event.type === 'blob_hop') event.hop = this.hopVariant();
       if (isTree(event.type)) event.depth = treeDepth({ ...event, arr: event.arr + x / W });
       const enemy = createEnemy(event);
       const lift = event.type === 'blob_hop' || isPowerup(event.type) ? enemyHeight(enemy, this.game.s.lastT) - enemy.y : 0;
       this.position(event, x - (event.type === 'tram' ? TYPES.tram.w / 2 : 0), y + enemyBodyHeight(enemy, this.game.s.lastT) / 2 + lift);
-      if (event.type === 'board_broken' && this.fallInput.value !== '') event.fallAt = this.fallInput.valueAsNumber;
       this.game.level.push(event);
       this.hovered = event;
       this.save();
@@ -425,7 +456,6 @@ export class LevelEditor {
       delete drag.event.rel;
       delete drag.event.y;
       delete drag.event.depth;
-      delete drag.event.fallAt;
       Object.assign(drag.event, drag.before);
     } else this.save();
     this.inspect(drag.event);
@@ -450,18 +480,16 @@ export class LevelEditor {
   private inspect(event: ScheduledEvent | null): void {
     this.inspected = event;
     const kind = event?.type ?? this.selected;
-    this.panel.querySelector<HTMLElement>('.editor-item-options')!.hidden = kind !== 'board_broken' && kind !== 'blob_hop';
-    this.panel.querySelector<HTMLElement>('.editor-fall')!.hidden = kind !== 'board_broken';
+    this.panel.querySelector<HTMLElement>('.editor-item-options')!.hidden = kind !== 'blob_hop';
     this.panel.querySelector<HTMLElement>('.editor-hop')!.hidden = kind !== 'blob_hop';
-    this.fallInput.value = event?.fallAt?.toString() ?? '';
     this.hopInput.value = event?.hop ?? '';
   }
 
   tick(): void {
     const mode = this.game.mode, editing = mode === 'editor';
     this.panel.hidden = !editing;
-    this.entry.hidden = mode === 'loading' || editing || !(mode === 'title' || this.testing);
-    this.entry.textContent = this.testing ? 'Back to editor' : 'Level editor';
+    this.entry.hidden = !(mode === 'title' || mode === 'play' || mode === 'pause');
+    this.intro.hidden = mode === 'loading' || mode === 'title' || editing;
     document.body.classList.toggle('editing', editing);
     canvas.style.touchAction = editing ? 'none' : '';
     canvas.style.cursor = editing ? (this.drag ? 'grabbing' : this.hovered ? 'grab' : this.selected ? 'crosshair' : 'default') : '';

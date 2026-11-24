@@ -21,7 +21,7 @@ Files:
 - `assets/sprites/board-broken-light.png`: the same grid, **one glow per frame**. Draw it with `'screen'` in front, like `drawLampLight`.
 - `assets/sprites/board-broken.json`:
   - `frames`: `glitch0 glitch1 glitch2 buckle0 buckle1 drop impact bounce rest0 rest1`
-  - `top`: walkable height per frame, `[45, 45, 45, 38, 27, 22, 12, 16, 15, 15]`
+  - `top`: walkable height per frame, `[45, 45, 45, 38, 27, 25, 16, 21, 20, 20]`
   - `phases`:
     - `glitch`: frames 0–2, loop, 8 fps
     - `fall`: frames 3–7, play once, 12 fps (≈ 0.42 s, one beat)
@@ -36,7 +36,7 @@ Behaviour:
 - **Editor:** add `board_broken` to the editor palette with a `fallAt` field. Use the first frame as its icon.
 - **Placement:**
   - 2–3 in level 2, e.g. one at bar 27 that falls on beat 1 of bar 28, and one at bar 30.
-  - Put pigeons or hopping glitches right after them, so the low platform (top 15) is useful.
+  - Put pigeons or hopping glitches right after them, so the low platform (top 20) is useful.
   - Put tickets high above a standing board, so the player has to be on it before it falls.
 
 ---

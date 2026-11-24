@@ -3,40 +3,40 @@
   "row": 0,
   "frames": 4,
   "fps": 6,
-  "w": 20,
-  "h": 28,
+  "w": 14,
+  "h": 20,
   "hearts": 1
  },
  "neon_heart": {
   "row": 1,
   "frames": 4,
   "fps": 8,
-  "w": 26,
-  "h": 21,
+  "w": 18,
+  "h": 14,
   "hearts": 1
  },
  "bun": {
   "row": 2,
   "frames": 4,
   "fps": 6,
-  "w": 26,
-  "h": 19,
+  "w": 19,
+  "h": 12,
   "hearts": 1
  },
  "nigiri": {
   "row": 3,
   "frames": 4,
   "fps": 6,
-  "w": 28,
-  "h": 18,
+  "w": 19,
+  "h": 13,
   "hearts": 2
  },
  "bubble_tea": {
   "row": 4,
   "frames": 4,
   "fps": 6,
-  "w": 20,
-  "h": 30,
+  "w": 14,
+  "h": 21,
   "hearts": 1
  }
 }

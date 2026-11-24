@@ -137,7 +137,6 @@ export interface ScheduledEvent {
   rel?: number;
   /** Tree depth: 0 is farthest away, 1 is nearest. */
   depth?: number;
-  fallAt?: number;
   hop?: 'low' | 'high' | 'double';
 }
 

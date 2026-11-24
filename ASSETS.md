@@ -71,7 +71,7 @@ All in `drawEnemy` (`src/render/sprites.ts`).
 
 | Asset | Status | Size | Code | Notes |
 |---|---|---|---|---|
-| Health power-ups: `cocoa` (Sandvika +1), `neon_heart` (Neon Oslo +1, pulses, glow), `bun` (skolebolle, British Oslo +1), `nigiri` (salmon, Tokyoslo +2), `bubble_tea` (Tokyoslo +1) | ✅ | 20–28 × 18–30 (larger than life on purpose) | `assets/sprites/powerups.png` + `powerups-light.png` + `powerups.json` (`tools/sprites/powerups.py`); available in the editor and placed in the default level; PERFECT neon heart heals fully |
+| Health power-ups: `cocoa` (Sandvika +1), `neon_heart` (Neon Oslo +1, pulses, glow), `bun` (skolebolle, British Oslo +1), `nigiri` (salmon, Tokyoslo +2), `bubble_tea` (Tokyoslo +1) | ✅ | 14–19 × 12–21 (66 % of the first version; still larger than life) | `assets/sprites/powerups.png` + `powerups-light.png` + `powerups.json` (`tools/sprites/powerups.py`); available in the editor and placed in the default level; PERFECT neon heart heals fully |
 | Paper ticket (pickup) | 🎨 | 8 × 6 | `drawEnemy` | will also be the ammo (see IDEAS.md) |
 | Coin | 🎨 | 7 × 7 | `drawEnemy` | could spin |
 | Ticket terminal (power-up) | 🎨 | 10 × 14 | `drawEnemy` | «Kort mot terminalen» |
@@ -121,7 +121,7 @@ Pixel sprites at girl scale, front view, in `assets/sprites/props.png` + `props.
 | Copy-pasted machines (`glitch_machine_stack`) | ✅ | 32 × 64 | level 2: a clone pasted on top of another, the top copy slips sideways; top 63, double jump |
 | Smeared machine (`glitch_machine_smear`) | ✅ | 66 × 32 | level 2: a clone dragging three echoes to the left; a long platform, top 31 |
 | Departure board (`departure_board`) | ✅ | 54 × 46 | level 1: amber «OSLO S 21:04 / SPOR 2» board on two posts; top 45, one jump; amber glow in props-light (`tools/sprites/boards.py`) |
-| Broken departure board | ✅ | 64 × 52 frames | level 2: `board-broken.png` + per-frame `board-broken-light.png` + `board-broken.json` (glitch ×3 loop → buckle, buckle, drop, impact, bounce once on the beat → rest ×2 loop; per-frame top 45 … 15); impact is synchronized to one beat after the editor-configurable fall trigger |
+| Broken departure board | ✅ | 64 × 52 frames | level 2: `board-broken.png` + per-frame `board-broken-light.png` + `board-broken.json` (glitch ×3 loop → buckle, buckle, drop, impact, bounce → rest ×2 loop; per-frame top 45 … 20; taller screen so both text lines fit); landing on it triggers collapse, with impact half a beat later |
 | Fountain, classic Oslo (`fountain`) | ✅ | 64 × 48 | tiered stone, darker for the night; 8 frames of pulsing semi-transparent water (centre jet + an arch to each side); lit from the water upwards (`props-light.png`); stand on the basin rim (`top` 13) |
 | Advertising column, night (`ad_column`) | ✅ | 26 × 48 (48-px-wide canvas so the lamps' glow fits) | posters lit by two small lamps above them (light in `props-light.png`); top 46 = double jump |
 | Cast-iron park railing, night (`railing`) | ✅ | 62 × 16 | spear tips; not standable |

@@ -109,7 +109,7 @@ Automat Victoria and the platform machines are seen from the front. They have **
 
 ### Power-ups (Joakim, 24 Nov)
 
-- Pickups must be large enough to read clearly, so they are NOT in proportion to the girls (≈ 20–28 px against 30). One health item per part: hot chocolate (Sandvika), neon heart (Neon Oslo), skolebolle (British Oslo), salmon nigiri and bubble tea (Tokyoslo). No brands.
+- Pickups must be large enough to read clearly, so they are NOT in proportion to the girls, but not huge either: 66 % of the first version, ≈ 13–21 px against 30. One health item per part: hot chocolate (Sandvika), neon heart (Neon Oslo), skolebolle (British Oslo), salmon nigiri and bubble tea (Tokyoslo). No brands.
 
 ### Landmarks (Joakim, 24 Nov)
 

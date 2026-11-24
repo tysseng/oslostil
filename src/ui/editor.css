@@ -3,17 +3,25 @@
   border: 1px solid var(--muted); border-radius: 4px; padding: 8px; cursor: pointer;
 }
 .editor-entry { border-color: var(--cyan); }
-.level-editor { width: min(96vw, 1100px); font-size: 10px; line-height: 1.7; }
+.level-editor { width: min(100%, 1100px); font-size: 10px; line-height: 1.7; display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .editor-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+.level-editor > .editor-row { flex-shrink: 0; }
 .editor-row input { flex: 1; min-width: 100px; accent-color: var(--cyan); }
 .editor-status { color: var(--cyan); }
 .editor-time { min-width: 9ch; }
-.editor-palette { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 2px 8px; }
+.editor-palette { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-gutter: stable; gap: 10px; padding: 4px 2px 8px; }
+.editor-palette > * { flex-shrink: 0; }
+.editor-palette > button { align-self: flex-start; flex-basis: auto; width: 78px; }
+.editor-category { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; margin: 0; padding: 8px; border: 1px solid var(--muted); border-radius: 4px; }
+.editor-category legend { padding: 0 6px; color: var(--cyan); }
 .editor-palette button { flex: 0 0 78px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; font-size: 8px; }
 .editor-palette canvas, .editor-palette img { width: 64px; height: 40px; object-fit: contain; image-rendering: pixelated; }
 .level-editor button[aria-pressed="true"] { border-color: var(--cyan); background: #193744; box-shadow: 0 0 0 1px var(--cyan); }
 .level-editor button:focus-visible, .editor-entry:focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
 .level-editor p { color: var(--muted); margin: 4px 0; font-size: 9px; }
-body.editing { overflow-y: auto; justify-content: flex-start; }
+.editor-help { flex-shrink: 0; max-height: 20vh; overflow-y: auto; }
+.editor-help summary { color: var(--cyan); cursor: pointer; }
+body.editing { overflow: hidden; justify-content: flex-start; }
+body.editing .screen { flex-shrink: 0; }
 body.editing .note, body.editing .devpanel { display: none; }
 [hidden] { display: none !important; }

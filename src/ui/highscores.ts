@@ -34,7 +34,7 @@ export class Highscores {
         <div class="score-entry"><div id="score-initials" class="arcade-initials" tabindex="0" role="textbox"
           aria-label="Three player initials" aria-describedby="initials-help"><div class="initials-letters" aria-hidden="true"><span></span><span></span><span></span></div></div>
           <span class="current-score"></span></div>
-        <div id="initials-help">UP/DOWN: LETTER &nbsp; LEFT/RIGHT: SLOT &nbsp; ENTER: SAVE</div>
+        <div id="initials-help">UP/DOWN: LETTER &nbsp; LEFT/RIGHT: SLOT</div>
       </div>
       <table><thead><tr><th scope="col">PLACE</th><th scope="col">PLAYER</th><th scope="col">SCORE</th></tr></thead><tbody></tbody></table>
       <p role="status"></p>`;
@@ -56,11 +56,6 @@ export class Highscores {
     });
     this.input.addEventListener('keydown', (e) => {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        if (!e.repeat) this.save();
-        return;
-      }
       if (/^[a-z]$/i.test(e.key)) {
         e.preventDefault();
         this.initials = this.initials.slice(0, this.letterIndex) + e.key.toUpperCase() + this.initials.slice(this.letterIndex + 1);
@@ -99,6 +94,19 @@ export class Highscores {
 
   place(score: number): number {
     return 1 + this.scores.filter((entry) => entry.score >= score).length;
+  }
+
+  keyDown(e: KeyboardEvent): boolean {
+    if (this.game.mode !== 'highscore') return false;
+    if (e.code === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      if (!e.repeat) {
+        this.tick(performance.now());
+        if (this.returnAt === null) this.save();
+        else this.finish();
+      }
+    }
+    return true;
   }
 
   private save(): void {
@@ -164,8 +172,10 @@ export class Highscores {
   }
 
   private finish(): void {
-    this.game.keys.clear();
-    this.game.mode = 'title';
+    this.game.intro();
+    this.active = false;
+    this.el.hidden = true;
+    document.body.classList.remove('showing-highscores');
     document.getElementById('game')?.focus();
   }
 

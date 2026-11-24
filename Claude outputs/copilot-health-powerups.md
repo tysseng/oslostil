@@ -5,7 +5,7 @@ The art is in `assets/sprites/powerups.png` + `powerups-light.png` + `powerups.j
 - `powerups.json` gives `{name: {row, frames, fps, w, h, hearts}}`; `w × h` is the hitbox
 - `powerups-light.png` is a glow on the same grid, one per frame; draw it with `'screen'` in front, like the lamp lights
 
-The power-ups are deliberately drawn larger than life, about 20–28 px against the girls' 30 px, so they read clearly. Don't scale them.
+The power-ups are drawn somewhat larger than life, about 13–21 px against the girls' 30 px, so they read clearly. Don't scale them.
 
 | Type | Part of the song | Hearts | Animation |
 |---|---|---|---|

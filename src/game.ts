@@ -37,6 +37,19 @@ export class Game {
 
   start(): void { this.seek(0); }
 
+  intro(): void {
+    this.audio.pause();
+    this.keys.clear();
+    this.cleanPause = false;
+    this.winReturnAt = 0;
+    this.mode = 'title';
+  }
+
+  private showWin(now: number): void {
+    this.mode = 'win';
+    this.winReturnAt = now + 7000;
+  }
+
   tickWin(now: number, dt = 0): void {
     if (this.mode === 'celebrate' && this.s.celebration) {
       const c = this.s.celebration;
@@ -44,8 +57,7 @@ export class Game {
       const braking = Math.min(1, c.elapsed / 0.25);
       this.s.bgx = c.bgx + sectionAt(FINAL_HIT).speed * 0.25 / 3 * (1 - (1 - braking) ** 3);
       if (c.elapsed >= 7) {
-        this.mode = 'win';
-        this.winReturnAt = now + 7000;
+        this.showWin(now);
       }
       return;
     }
@@ -89,10 +101,12 @@ export class Game {
   // ---------- input ----------
   keyDown(e: KeyboardEvent): void {
     if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) e.preventDefault();
+    if (e.repeat) return;
     if (this.keys.has(e.code)) return;
     this.keys.add(e.code);
     const c = e.code;
     if (this.mode === 'title' && (c === 'Enter' || c === 'Space')) return this.start();
+    if (this.mode === 'celebrate' && c === 'Enter') return this.showWin(performance.now());
     if (this.mode === 'win' && c === 'Enter') {
       this.audio.pause();
       this.keys.clear();
@@ -269,6 +283,7 @@ export class Game {
       highest = top; p.propRide = e;
     }
     if (p.propRide) {
+      if (p.propRide.type === 'board_broken') p.propRide.crumbledAt ??= t;
       p.y = highest; p.vy = 0; p.jumps = 0; p.machineRide = undefined; s.bounceChain = 0;
     }
   }
