@@ -1,7 +1,7 @@
 import { GROUND, H, W, WIN_AT } from '../config';
 import type { Game } from '../game';
 import { loadDefaultLevel, parseLevel } from '../level';
-import { canvas, ctx, resetTransform } from '../render/draw';
+import { RES, canvas, ctx, resetTransform } from '../render/draw';
 import { drawScene } from '../render/scenes';
 import { drawEnemy, drawLampLights } from '../render/sprites';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
@@ -394,10 +394,13 @@ export class LevelEditor {
   private point(e: MouseEvent): [number, number] {
     const rect = canvas.getBoundingClientRect();
     return [
-      ((e.clientX - rect.left) * canvas.offsetWidth / rect.width - canvas.clientLeft) / canvas.clientWidth * W,
+      ((e.clientX - rect.left) * canvas.offsetWidth / rect.width - canvas.clientLeft) / canvas.clientWidth * this.viewWidth - this.viewOffset,
       ((e.clientY - rect.top) * canvas.offsetHeight / rect.height - canvas.clientTop) / canvas.clientHeight * H + this.cameraY,
     ];
   }
+
+  private get viewWidth(): number { return canvas.width / RES; }
+  private get viewOffset(): number { return (this.viewWidth - W) / 2; }
 
   private bounds(e: ScheduledEvent): { x: number; y: number; w: number; h: number } {
     const type = TYPES[e.type], enemy = createEnemy(e), h = enemyBodyHeight(enemy, this.game.s.lastT);
@@ -514,22 +517,23 @@ export class LevelEditor {
   draw(): void {
     const t = this.game.s.lastT;
     resetTransform();
+    ctx.translate(this.viewOffset, 0);
     ctx.translate(0, -this.cameraY);
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0);
-    drawValkyrien(t);
+    drawValkyrien(t, undefined, -this.viewOffset, W + this.viewOffset);
     const events = this.layeredEvents();
     for (const event of events) {
       const b = this.bounds(event);
-      if (b.x > W || b.x + b.w < 0) continue;
+      if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) continue;
       const enemy = createEnemy(event);
       drawEnemy(enemy, enemyX(enemy, t), t);
     }
     drawLampLights(events.map(createEnemy), t);
-    drawValkyrienBalustrade(t);
-    drawValkyrienHouse(t);
+    drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
+    drawValkyrienHouse(t, -this.viewOffset, W + this.viewOffset);
     for (const event of events) {
       const b = this.bounds(event);
-      if (b.x > W || b.x + b.w < 0) continue;
+      if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) continue;
       ctx.strokeStyle = event === this.drag?.event || event === this.hovered ? '#ffe14a' : '#2bf0ff88';
       ctx.lineWidth = 0.5;
       ctx.strokeRect(b.x - 1, b.y - 1, b.w + 2, b.h + 2);

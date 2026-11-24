@@ -3,7 +3,7 @@ import songUrl from '../assets/oslostil.mp3';
 import { AudioEngine } from './audio';
 import { H, W } from './config';
 import { Game } from './game';
-import { canvas, resetTransform } from './render/draw';
+import { RES, canvas, resetTransform } from './render/draw';
 import { drawCelebration, drawGame, drawHighscore, drawPause, drawTitle, drawWin } from './render/screens';
 import { lyricAt } from './timeline';
 import { DevPanel } from './ui/devpanel';
@@ -57,8 +57,12 @@ addEventListener('blur', () => game.pause());
 function fit(): void {
   const height = game.mode === 'editor' ? 0.5 : 0.7;
   const s = Math.max(1, Math.floor(Math.min((innerWidth * 0.96) / W, (innerHeight * height) / H)));
-  canvas.style.width = W * s + 'px';
+  const width = game.mode === 'editor' ? innerWidth : W * s;
+  canvas.width = Math.round(width / s * RES);
+  canvas.getContext('2d')!.imageSmoothingEnabled = false;
+  canvas.style.width = width + 'px';
   canvas.style.height = H * s + 'px';
+  screen.style.setProperty('--play-width', W * s + 'px');
   subtitles.fit(canvas.getBoundingClientRect().width / W);
   screen.style.setProperty('--game-scale', String(canvas.clientWidth / W));
 }

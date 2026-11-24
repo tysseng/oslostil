@@ -19,6 +19,11 @@ export function resetTransform(dx = 0, dy = 0): void {
 }
 resetTransform();
 
+export function horizontalBounds(): { left: number; right: number } {
+  const transform = ctx.getTransform();
+  return { left: -transform.e / transform.a, right: (canvas.width - transform.e) / transform.a };
+}
+
 /** Draw a hi-res image smoothly at (x, y) with size w × h in game pixels. */
 export function drawHiRes(img: HTMLImageElement, x: number, y: number, w: number, h: number): void {
   ctx.imageSmoothingEnabled = true;
@@ -98,7 +103,8 @@ export function meta(img: HTMLImageElement): VehicleMeta {
 export function drawVehicle(img: HTMLImageElement, x: number, y: number, ppm: number, flip = false): void {
   if (!ready(img)) return;
   const { box: [sx, sy, sw, sh], sign } = meta(img), k = ppm / HIRES_PPM, w = sw * k, h = sh * k;
-  if (x > W || x + w < 0) return;
+  const bounds = horizontalBounds();
+  if (x > bounds.right || x + w < bounds.left) return;
   ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
   if (!flip) ctx.drawImage(img, sx, sy, sw, sh, x, y - h, w, h);
   else {

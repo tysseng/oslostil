@@ -19,13 +19,13 @@ export function drawUndergroundFill(x = 0, y = H, width = W, height = VALKYRIEN_
   ctx.fillRect(x, y, width, height);
 }
 
-export function drawValkyrien(t: number, route?: ValkyrienState): void {
-  const entry = manholeX(t), exit = exitX(t), left = Math.max(-10, entry - 50);
-  drawUndergroundFill();
-  if (exit < -100 || left > W) return;
+export function drawValkyrien(t: number, route?: ValkyrienState, minX = 0, maxX = W): void {
+  const entry = manholeX(t), exit = exitX(t), left = Math.max(minX - 10, entry - 50);
+  drawUndergroundFill(minX, H, maxX - minX);
+  if (exit < minX - 100 || left > maxX) return;
   R(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT, '#898d8f');
-  for (let x = entry - 50; x < Math.min(exit + 45, W + 70); x += 70) {
-    if (x < -70) continue;
+  for (let x = entry - 50; x < Math.min(exit + 45, maxX + 70); x += 70) {
+    if (x < minX - 70) continue;
     R(x, VALKYRIEN_CEILING, 1, VALKYRIEN_HEIGHT, '#64696c');
     R(x + 15, VALKYRIEN_CEILING + 6, 35, 3, '#e2e4da');
     R(x + 27, VALKYRIEN_FLOOR - 40, 8, 40, '#6b7073');
@@ -47,7 +47,7 @@ export function drawValkyrien(t: number, route?: ValkyrienState): void {
     R(bottom + STAIRS_WIDTH * u, VALKYRIEN_FLOOR - VALKYRIEN_DEPTH * u, STAIRS_WIDTH / 20, 2, '#c2c5c4');
   }
   ctx.restore();
-  if (entry > -30 && entry < W + 30) {
+  if (entry > minX - 30 && entry < maxX + 30) {
     if (route?.openedAt !== undefined) {
       R(entry - CHUTE_HALF_WIDTH, GROUND, CHUTE_HALF_WIDTH * 2, VALKYRIEN_CEILING - GROUND, '#202529');
       R(entry - CHUTE_HALF_WIDTH - 2, GROUND, 2, VALKYRIEN_CEILING - GROUND, '#a4a8a9');
@@ -64,9 +64,9 @@ export function drawValkyrien(t: number, route?: ValkyrienState): void {
   }
 }
 
-export function drawValkyrienBalustrade(t: number): void {
+export function drawValkyrienBalustrade(t: number, minX = 0, maxX = W): void {
   const top = exitX(t), bottom = top - STAIRS_WIDTH;
-  if (top < -50 || bottom > W) return;
+  if (top < minX - 50 || bottom > maxX) return;
   ctx.save();
   ctx.beginPath();
   ctx.rect(bottom - 2, VALKYRIEN_CEILING, STAIRS_WIDTH + 4, VALKYRIEN_HEIGHT + 30);
@@ -80,9 +80,9 @@ export function drawValkyrienBalustrade(t: number): void {
 }
 
 /** Opaque front wall deliberately hides the party while they emerge inside the house. */
-export function drawValkyrienHouse(t: number): void {
+export function drawValkyrienHouse(t: number, minX = 0, maxX = W): void {
   const x = exitX(t);
-  if (x < -100 || x > W + 80) return;
+  if (x < minX - 100 || x > maxX + 80) return;
   R(x - 22, GROUND - 45, 60, 45, '#a6a7a2');
   polygon([[x - 28, GROUND - 45], [x + 8, GROUND - 68], [x + 44, GROUND - 45]], '#494f53');
   R(x - 13, GROUND - 36, 15, 17, '#516b73');

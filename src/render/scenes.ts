@@ -15,7 +15,7 @@ import burningTramUrl from '../../assets/vehicles/hires/tram-burning.png';
 import burningTram from '../../assets/vehicles/hires/tram-burning.json';
 import fireUrl from '../../assets/sprites/fire.png';
 import fireMeta from '../../assets/sprites/fire.json';
-import { HIRES_PPM, R, ctx, drawVehicle, loadImage, meta, ready, text } from './draw';
+import { HIRES_PPM, R, ctx, drawVehicle, horizontalBounds, loadImage, meta, ready, text } from './draw';
 import { drawEnemy, drawPlatformMachine } from './sprites';
 import { createEnemy } from '../state';
 
@@ -152,14 +152,15 @@ const STATION_START = SECTIONS[0].speed * barT(10) * ROOF_PARALLAX + W;
 const TERMINAL_COUNT = Math.floor((STATION_START - 30 + TERMINAL.gap) / (TERMINAL.section + TERMINAL.gap));
 
 function drawPlatformRoof(bx: number): void {
+  const bounds = horizontalBounds();
   const scroll = bx * ROOF_PARALLAX - 30; // the first terminal section starts 30 px left of the screen
   for (let i = 0; i < TERMINAL_COUNT; i++) { // the last one is as high as the station, to make room for the train
     roofSection(i < TERMINAL_COUNT - 1 ? TERMINAL : { ...TERMINAL, y: STATION.y }, i * (TERMINAL.section + TERMINAL.gap) - scroll);
   }
   const period = STATION.section + STATION.gap;
-  for (let i = Math.max(0, Math.floor((scroll + 30 - STATION_START) / period) - 1); ; i++) {
+  for (let i = Math.max(0, Math.floor((scroll + 30 - STATION_START + bounds.left) / period) - 1); ; i++) {
     const x = STATION_START - 30 + i * period - scroll;
-    if (x > W) break;
+    if (x > bounds.right) break;
     roofSection(STATION, x);
   }
 }
@@ -167,7 +168,8 @@ function drawPlatformRoof(bx: number): void {
 function roofSection(k: RoofKind, x: number): void {
   x = Math.round(x);
   const y = k.y, L = k.section;
-  if (x > W || x + L < -2) return;
+  const bounds = horizontalBounds();
+  if (x > bounds.right || x + L < bounds.left - 2) return;
   // pillars down to the platform (drawn first, under the roof)
   for (let px = x + 18; px < x + L - 10; px += PILLAR_EVERY) {
     R(px, y + 10, 4, GROUND - y - 10, '#252b52'); R(px + 1, y + 10, 1, GROUND - y - 10, '#3a4377');
@@ -190,6 +192,11 @@ function roofSection(k: RoofKind, x: number): void {
 
 /** positive modulo, for wrapping parallax layers */
 const wrap = (v: number, m: number) => ((v % m) + m) % m;
+
+function* repeatedX(x: number, period: number, width: number): Generator<number> {
+  const { left, right } = horizontalBounds();
+  for (let n = Math.ceil((left - width - x) / period); x + n * period < right; n++) yield x + n * period;
+}
 
 /**
  * Level 4 and Tokyoslo: one street of classic Oslo buildings in two styles (tools/backgrounds/karljohan.py).
@@ -222,7 +229,7 @@ function bxAt(t: number): number {
 function tileLayer(img: HTMLImageElement, x0: number): void {
   if (!ready(img)) return;
   const w = img.naturalWidth;
-  for (let x = wrap(x0, w) - w; x < W; x += w) ctx.drawImage(img, Math.round(x), GROUND - img.naturalHeight);
+  for (const x of repeatedX(x0, w, w)) ctx.drawImage(img, Math.round(x), GROUND - img.naturalHeight);
 }
 const streetX = (bx: number): number => STREET_X0 - (bx - bxAt(barT(42))) * STREET_PARALLAX;
 function drawClassicOslo(bx: number): void {
@@ -235,9 +242,10 @@ function drawTokyoslo(bx: number): void {
 }
 
 export function sky(c: [string, string]): void {
+  const { left, right } = horizontalBounds();
   const g = ctx.createLinearGradient(0, 0, 0, GROUND);
   g.addColorStop(0, c[0]); g.addColorStop(1, c[1]);
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, GROUND);
+  ctx.fillStyle = g; ctx.fillRect(left, 0, right - left, GROUND);
 }
 
 /** @param bx background scroll distance  @param beatFlash 0..1, peaks on each beat */
@@ -270,42 +278,45 @@ function drawBurningTrams(t: number, bx: number): void {
   const u = BT_PPM / burningTram.unitsPerMetre, k = BT_PPM / HIRES_PPM, len = burningTram.length * u;
   const [vx, vy] = [-10, -40], rail = burningTram.rail; // SVG viewBox origin; PNG is 2 px per SVG unit
   for (let i = 0; i < BT_SET.length; i++) {
-    const s = BT_SET[i], x0 = wrap(s.x - bx * BT_PARALLAX, BT_PERIOD) - len;
-    if (x0 > W || x0 + len < 0) continue;
-    const cx = x0 + len / 2, cy = GROUND - s.lift, cos = Math.cos(s.rot), sin = Math.sin(s.rot), m = s.flip ? -1 : 1;
-    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(s.rot); ctx.scale(m, 1);
-    ctx.drawImage(img, -len / 2 + vx * u, (vy - rail) * u, img.width * k, img.height * k);
-    ctx.restore();
-    ctx.imageSmoothingEnabled = false;
-    const at = (ax: number, ay: number): [number, number] => { // tram SVG point → game px, following the tilt
-      const lx = m * (ax * u - len / 2), ly = (ay - rail) * u;
-      return [cx + lx * cos - ly * sin, cy + lx * sin + ly * cos];
-    };
-    burningTram.smoke.forEach((p, j) => { // puffs rise and drift, two per anchor, staggered
-      for (let n = 0; n < 2; n++) {
-        const life = (t * 0.6 + j * 0.37 + n * 0.5 + i * 0.13) % 1, [gx, gy] = at(p.x, p.y);
-        const sp = fireMeta.sprites.smoke, c = fireMeta.cell, f = Math.min(sp.frames - 1, Math.floor(life * sp.frames));
-        ctx.drawImage(FIRE, f * c, sp.row * c, c, c, Math.round(gx - c / 2 + life * 10), Math.round(gy - c - life * 26), c, c);
-      }
-    });
-    burningTram.flames.forEach((p, j) => { const [gx, gy] = at(p.x, p.y); fireSprite(p.kind as 'big' | 'small', gx, gy, t, i * 7 + j); });
+    const s = BT_SET[i];
+    for (const x0 of repeatedX(s.x - bx * BT_PARALLAX - len, BT_PERIOD, len)) {
+      const cx = x0 + len / 2, cy = GROUND - s.lift, cos = Math.cos(s.rot), sin = Math.sin(s.rot), m = s.flip ? -1 : 1;
+      ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(s.rot); ctx.scale(m, 1);
+      ctx.drawImage(img, -len / 2 + vx * u, (vy - rail) * u, img.width * k, img.height * k);
+      ctx.restore();
+      ctx.imageSmoothingEnabled = false;
+      const at = (ax: number, ay: number): [number, number] => { // tram SVG point → game px, following the tilt
+        const lx = m * (ax * u - len / 2), ly = (ay - rail) * u;
+        return [cx + lx * cos - ly * sin, cy + lx * sin + ly * cos];
+      };
+      burningTram.smoke.forEach((p, j) => { // puffs rise and drift, two per anchor, staggered
+        for (let n = 0; n < 2; n++) {
+          const life = (t * 0.6 + j * 0.37 + n * 0.5 + i * 0.13) % 1, [gx, gy] = at(p.x, p.y);
+          const sp = fireMeta.sprites.smoke, c = fireMeta.cell, f = Math.min(sp.frames - 1, Math.floor(life * sp.frames));
+          ctx.drawImage(FIRE, f * c, sp.row * c, c, c, Math.round(gx - c / 2 + life * 10), Math.round(gy - c - life * 26), c, c);
+        }
+      });
+      burningTram.flames.forEach((p, j) => { const [gx, gy] = at(p.x, p.y); fireSprite(p.kind as 'big' | 'small', gx, gy, t, i * 7 + j); });
+    }
   }
 }
 
 export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: number, taggerStoppedAt?: number): void {
+  const { left, right } = horizontalBounds();
   const name: SceneName = scene === 'map' && t >= COLOR_T ? 'map2' : scene;
   sky(SKY[name]);
   const r = rng(7);
   if (name === 'station' || name === 'glitch') {
     for (let i = 0; i < 40; i++) { // snow
       const sx = (r() * W * 2 - bx * 0.1) % W, sy = (r() * GROUND + t * (20 + r() * 20)) % GROUND;
-      R((sx + W) % W, sy, 1, 1, '#dfe8ff');
+      for (const x of repeatedX((sx + W) % W, W, 1)) R(x, sy, 1, 1, '#dfe8ff');
     }
     for (let i = 0; i < 8; i++) { // houses
-      const hx = wrap(i * 70 - bx * 0.25, 560) - 60;
-      R(hx, GROUND - 60, 50, 60, '#1a2148');
-      for (let w = 0; w < 6; w++) R(hx + 6 + (w % 3) * 14, GROUND - 52 + Math.floor(w / 3) * 16, 6, 6, (i + w) % 3 ? '#f6d36b' : '#2a3366');
+      for (const hx of repeatedX(i * 70 - bx * 0.25 - 60, 560, 50)) {
+        R(hx, GROUND - 60, 50, 60, '#1a2148');
+        for (let w = 0; w < 6; w++) R(hx + 6 + (w % 3) * 14, GROUND - 52 + Math.floor(w / 3) * 16, 6, 6, (i + w) % 3 ? '#f6d36b' : '#2a3366');
+      }
     }
     drawBuses(t, bx);
     drawTrains(t);
@@ -318,7 +329,7 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
     if (name === 'glitch') {
       for (let i = 0; i < 6; i++) {
         const gy = (r() * GROUND + t * 90) % GROUND;
-        ctx.globalAlpha = 0.35; R(0, gy, W, 2 + r() * 4, r() < 0.5 ? '#ff2bd6' : '#2bf0ff'); ctx.globalAlpha = 1;
+        ctx.globalAlpha = 0.35; R(left, gy, right - left, 2 + r() * 4, r() < 0.5 ? '#ff2bd6' : '#2bf0ff'); ctx.globalAlpha = 1;
       }
       if (Math.floor(t * 4) % 2) text('A-A-A-AUTOMAT', W / 2, 60, '#ff2bd6', 8, 'center');
     }
@@ -341,18 +352,22 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
     if (name === 'boss') drawTokyoslo(bx); // the boss fight is in Tokyoslo
     else {
       for (let i = 0; i < 12; i++) { // barcode skyline
-        const hx = wrap(i * 40 - bx * 0.3, 480) - 40, hh = 30 + ((i * 17) % 50);
-        R(hx, GROUND - hh, 26, hh, '#1a0533'); R(hx, GROUND - hh, 26, 1, '#ff4fd8');
+        const hh = 30 + ((i * 17) % 50);
+        for (const hx of repeatedX(i * 40 - bx * 0.3 - 40, 480, 26)) {
+          R(hx, GROUND - hh, 26, hh, '#1a0533'); R(hx, GROUND - hh, 26, 1, '#ff4fd8');
+        }
       }
-      const jx = wrap(300 - bx * 0.15, 700) - 100; // Holmenkollen jump
-      ctx.strokeStyle = '#4ff3ff'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx, GROUND - 90); ctx.lineTo(jx + 60, GROUND - 10); ctx.stroke();
+      for (const jx of repeatedX(200 - bx * 0.15, 700, 60)) { // Holmenkollen jump
+        ctx.strokeStyle = '#4ff3ff'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx, GROUND - 90); ctx.lineTo(jx + 60, GROUND - 10); ctx.stroke();
+      }
     }
-    for (let i = 0; i < 12; i++) R(wrap(i * 32 - bx, 384) - 32, GROUND, 1, H - GROUND, '#ff4fd8'); // neon grid floor
+    for (let i = 0; i < 12; i++) for (const x of repeatedX(i * 32 - bx - 32, 384, 1)) R(x, GROUND, 1, H - GROUND, '#ff4fd8'); // neon grid floor
   } else if (name === 'map' || name === 'map2') {
     const line = name === 'map' ? '#2fe0c0' : '#ff6b6b';
     for (let i = 0; i < 20; i++) {
-      const mx = wrap(i * 50 - bx * 0.2, 1000) - 50;
-      R(mx, 20 + ((i * 37) % 100), 40, 1, line); R(mx + 20, 20 + ((i * 37) % 100), 1, 30, line);
+      for (const mx of repeatedX(i * 50 - bx * 0.2 - 50, 1000, 40)) {
+        R(mx, 20 + ((i * 37) % 100), 40, 1, line); R(mx + 20, 20 + ((i * 37) % 100), 1, 30, line);
+      }
     }
     // classic British-style Oslo, then at 1:42.0 the same street in Tokyoslo style (no place-name signs)
     if (name === 'map2') drawTokyoslo(bx);
@@ -361,9 +376,12 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
   } else if (name === 'chaos') { // «brennende trikker og busser på skrå» – in burning Tokyoslo
     drawTokyoslo(bx);
     drawBurningTrams(t, bx);
-    for (let i = 0; i < 30; i++) R(wrap(r() * W - bx * 0.05, W), wrap(r() * GROUND - t * 40, GROUND), 1, 1, '#ffb347'); // embers
+    for (let i = 0; i < 30; i++) {
+      const x = wrap(r() * W - bx * 0.05, W), y = wrap(r() * GROUND - t * 40, GROUND);
+      for (const copy of repeatedX(x, W, 1)) R(copy, y, 1, 1, '#ffb347'); // embers
+    }
   }
-  R(0, GROUND, W, H - GROUND, GROUND_COLOR[name]);
-  R(0, GROUND, W, 2, beatFlash > 0.5 ? '#ffffff' : '#ffcc33');
-  for (let i = 0; i < 11; i++) R(wrap(i * 32 - bx, 352) - 32, GROUND + 6, 16, 2, '#00000055');
+  R(left, GROUND, right - left, H - GROUND, GROUND_COLOR[name]);
+  R(left, GROUND, right - left, 2, beatFlash > 0.5 ? '#ffffff' : '#ffcc33');
+  for (let i = 0; i < 11; i++) for (const x of repeatedX(i * 32 - bx - 32, 352, 16)) R(x, GROUND + 6, 16, 2, '#00000055');
 }

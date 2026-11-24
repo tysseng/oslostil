@@ -4,17 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Started work on valkyrien">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Extending visible area in level editor outside playfield">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/landmarks/hires/opera.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/landmarks/hires/opera.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/landmarks/hires/opera.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/landmarks/hires/opera.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/draw.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/draw.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/valkyrien.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/editor.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/valkyrien.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/landmarks/landmarks.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/landmarks/landmarks.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,23 +29,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000867089" />
-      <entry key="MS500" value="1.0149861020690405" />
-      <entry key="S2" value="1.8653989241368756" />
-      <entry key="S5" value="3.263459752470828" />
-      <entry key="S10" value="4.531988581328352" />
-      <entry key="S30" value="6.36726482368065" />
-      <entry key="S60" value="7.097205286297227" />
-      <entry key="M2" value="7.524199216521127" />
-      <entry key="M5" value="7.803421283953368" />
-      <entry key="M10" value="7.90063845603663" />
-      <entry key="M15" value="7.934603330151247" />
-      <entry key="M30" value="8.162996130510285" />
-      <entry key="H1" value="10.946266005380185" />
-      <entry key="H2" value="21.022448978902837" />
-      <entry key="H4" value="39.792525197331045" />
-      <entry key="D1" value="350.439710087672" />
-      <entry key="W1" value="911.0950699918076" />
+      <entry key="MS100" value="1.0506170220991777" />
+      <entry key="MS500" value="2.2726768184701696" />
+      <entry key="S2" value="5.441710334169504" />
+      <entry key="S5" value="8.82303327959051" />
+      <entry key="S10" value="11.417153181807073" />
+      <entry key="S30" value="14.154693921783016" />
+      <entry key="S60" value="15.047790759093763" />
+      <entry key="M2" value="15.992518109152343" />
+      <entry key="M5" value="19.328558474849135" />
+      <entry key="M10" value="23.113520169584355" />
+      <entry key="M15" value="25.53236090015742" />
+      <entry key="M30" value="29.592886364272974" />
+      <entry key="H1" value="34.468317927347684" />
+      <entry key="H2" value="44.90737990070431" />
+      <entry key="H4" value="64.01313835855824" />
+      <entry key="D1" value="372.5622297121356" />
+      <entry key="W1" value="937.5329856455894" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -56,36 +54,36 @@
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
-      <entry key="S60" value="2.4644311614176956E-225" />
-      <entry key="M2" value="4.964303739113568E-113" />
-      <entry key="M5" value="1.197687007384513E-45" />
-      <entry key="M10" value="3.4607614875696263E-23" />
-      <entry key="M15" value="1.0619753740920526E-15" />
-      <entry key="M30" value="3.25879636383136E-8" />
-      <entry key="H1" value="1.8052136615457376E-4" />
-      <entry key="H2" value="0.013435823984950575" />
-      <entry key="H4" value="0.1159130017942363" />
-      <entry key="D1" value="0.698267816210312" />
-      <entry key="W1" value="0.9499864967618115" />
+      <entry key="S60" value="1.2738762679934702E-237" />
+      <entry key="M2" value="3.5691403278569306E-119" />
+      <entry key="M5" value="4.178548519548253E-48" />
+      <entry key="M10" value="2.044149828057684E-24" />
+      <entry key="M15" value="1.6106770964183727E-16" />
+      <entry key="M30" value="1.2691245393649774E-8" />
+      <entry key="H1" value="1.1265542771500106E-4" />
+      <entry key="H2" value="0.010613926121610256" />
+      <entry key="H4" value="0.1030239104364142" />
+      <entry key="D1" value="0.6846831999044781" />
+      <entry key="W1" value="0.9473239660615074" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="8.150667210096551E-8" />
-      <entry key="MS500" value="0.0531034372419235" />
-      <entry key="S2" value="1.3061262685453343" />
-      <entry key="S5" value="2.9834491036649977" />
-      <entry key="S10" value="4.380224929804683" />
-      <entry key="S30" value="6.313721767112768" />
-      <entry key="S60" value="7.070033867395996" />
-      <entry key="M2" value="7.510510624104491" />
-      <entry key="M5" value="7.79792074617165" />
-      <entry key="M10" value="7.897883966915948" />
-      <entry key="M15" value="7.932765947482073" />
-      <entry key="M30" value="8.162066565048228" />
-      <entry key="H1" value="10.945914232980455" />
-      <entry key="H2" value="21.035509504201208" />
-      <entry key="H4" value="39.9081558274727" />
-      <entry key="D1" value="351.13779613280155" />
-      <entry key="W1" value="912.0450092409228" />
+      <entry key="MS100" value="1.0025036573646877" />
+      <entry key="MS500" value="2.1528944524376774" />
+      <entry key="S2" value="5.379542909364284" />
+      <entry key="S5" value="8.79257986853174" />
+      <entry key="S10" value="11.40035011415838" />
+      <entry key="S30" value="14.148592694868942" />
+      <entry key="S60" value="15.044647574082658" />
+      <entry key="M2" value="15.990712644117636" />
+      <entry key="M5" value="19.32724580021789" />
+      <entry key="M10" value="23.11239932013504" />
+      <entry key="M15" value="25.531337353279387" />
+      <entry key="M30" value="29.592085667755807" />
+      <entry key="H1" value="34.46785952853364" />
+      <entry key="H2" value="44.917572609448904" />
+      <entry key="H4" value="64.11584754246289" />
+      <entry key="D1" value="373.24672385469853" />
+      <entry key="W1" value="938.4802609454543" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -155,7 +153,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="More and more and more" />
     <MESSAGE value="Added github pages" />
     <MESSAGE value="Added first background graphics" />
     <MESSAGE value="Lots of backgrounds. New trams, added subway" />
@@ -180,6 +177,7 @@
     <MESSAGE value="Added broken board and powerups" />
     <MESSAGE value="Added resized powerups, made a better navigation experience in level editor" />
     <MESSAGE value="Started work on valkyrien" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started work on valkyrien" />
+    <MESSAGE value="Valkyrien outline ok" />
+    <option name="LAST_COMMIT_MESSAGE" value="Valkyrien outline ok" />
   </component>
 </project>

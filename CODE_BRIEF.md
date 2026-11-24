@@ -105,6 +105,9 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- The editor canvas extends to both viewport edges at the normal editor scale. A centered pink frame marks the actual 320-pixel play area; assets outside it remain visible and editable, and pointer coordinates account for the extended view. The time slider layout is unchanged.
+- The widened view renders one continuous scene at the original song time and scroll distance. Background layers extend using their own repeat periods/parallax; trains, buses and scripted encounters retain their single gameplay positions rather than repeating at the play-area borders.
+
 - The upper Valkyrien stairs and balustrade are clipped below the surface ground. During ascent, the surface scene overlays the party at the top of the stairs; the foreground house hides their arrival until they emerge to its right.
 - Valkyrien's ceiling sits 15 pixels below the 30-pixel surface strip. The underground camera shows 15 pixels of moving surface scenery below the HUD, the complete surface strip, the 15-pixel dark gap, the station chamber and its unchanged 26-pixel bottom. Camera offset and physical station depth are independent. Stairs continue behind the ceiling band; ascent and the subsequent walk through the house lock jumping until the player's full sprite clears its right side.
 - Underground space outside the concrete chamber fades vertically from the surface strip's teal (`#0a2e33`) to black at the station bottom. The ceiling's foreground mask uses the same world-aligned gradient, avoiding seams during stair ascent.

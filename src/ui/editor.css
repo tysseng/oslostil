@@ -22,6 +22,12 @@
 .editor-help { flex-shrink: 0; max-height: 20vh; overflow-y: auto; }
 .editor-help summary { color: var(--cyan); cursor: pointer; }
 body.editing { overflow: hidden; justify-content: flex-start; }
-body.editing .screen { flex-shrink: 0; }
+body.editing .screen { flex-shrink: 0; width: 100vw; max-width: none; }
+body.editing #game { border: 0; box-shadow: none; max-width: none; display: block; }
+body.editing .screen::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: var(--play-width);
+  transform: translateX(-50%); box-sizing: border-box; border: 2px solid var(--glow);
+  box-shadow: 0 0 24px #ff2bd655; pointer-events: none;
+}
 body.editing .note, body.editing .devpanel { display: none; }
 [hidden] { display: none !important; }
