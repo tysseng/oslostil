@@ -102,6 +102,11 @@ Automat Victoria and the platform machines are seen from the front. They have **
 - **Heights relative to a girl (30 px):** round trash bin ≈ 55 % (17 px), recycling bin > girl (36 px), phone booth between recycling and kiosk (44 px), kiosk ≈ 2 × girl (61 px).
 - No real marks: the kiosk is a generic «KIOSK» (after narvesen 3, colours from the other kiosk photos); the textile bin is plain red with dots for writing, no Red Cross logo.
 
+### Glitch level (Joakim, 24 Nov)
+
+- In level 2 Automat Victoria goes rainbow (Joakim, 24 Nov): she flies free on a rubber band tied to the player, trailing a stepped six-band pixel rainbow with sparkles, and returns to normal at Neon Oslo. Our own design: plain rainbow ribbon, no cat or other borrowed character.
+- Level 2 (Sandvika, glitching) gets animated glitched copies of the ticket machines to stand on (`tools/sprites/glitch_props.py`, drawn into the props sheet). Built from the real «plain» machine frame so they match; glitch = slipping row slices, pink `#ff2bd6` / cyan `#2bf0ff` channel split, screen static, «A-A-A», magenta/black missing-texture checker. Solid pixels only; the base and the top row never move, so `top` stays valid in every frame.
+
 ### Landmarks (Joakim, 24 Nov)
 
 - Flat elevations: flat colour, no outlines, 3–4 tones per material, windows and details on their own layers so silhouettes, night versions and lit windows can be derived.

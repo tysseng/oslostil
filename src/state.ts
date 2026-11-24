@@ -25,6 +25,18 @@ export interface Particle { x: number; y: number; vx: number; vy: number; life: 
 export interface Pop { x: number; y: number; txt: string; life: number; c: string }
 export interface KnockedEnemy { enemy: Enemy; x: number; y: number; vx: number; vy: number; splash: boolean; squash?: number }
 export interface Dropping { x: number; y: number; vy: number; life: number; landed: boolean }
+export interface RainbowPoint { x: number; y: number; t: number }
+export interface RainbowState {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  blend: number;
+  path: RainbowPoint[];
+  sparkles: { x: number; y: number; age: number }[];
+  beat: number;
+  landing?: { x: number; y: number; length: number };
+}
 
 export interface Player {
   x: number;
@@ -70,6 +82,7 @@ export interface GameState {
   /** friend and machine x positions (they ease after the player) */
   fx: number;
   mx: number;
+  rainbow?: RainbowState;
   p: Player;
   friend: { yHist: number[]; atk: number; cd: number };
   /** background scroll distance */

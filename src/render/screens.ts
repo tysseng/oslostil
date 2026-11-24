@@ -6,7 +6,7 @@ import { itemLayer } from '../schedule';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
-import { drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, type Mood } from './sprites';
+import { drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
@@ -49,7 +49,10 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   // companions
-  if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
+  if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) {
+    if (s.rainbow) drawRainbowMachine(s.rainbow, t, machineMood(t));
+    else drawMachine(s.mx, GROUND - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
+  }
   const ninja = isNinja(t), f = s.friend, fy = f.yHist.length ? f.yHist[0] : GROUND;
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
   if (!s.deathFlight?.friend) drawGirl('friend', s.fx, fy, t + 0.13, { ninja, air: fy < GROUND, rising: fRising, atk: f.atk > 0 });

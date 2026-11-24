@@ -158,5 +158,29 @@
   "w": 57,
   "h": 21,
   "top": 0
+ },
+ "glitch_machine": {
+  "row": 20,
+  "frames": 8,
+  "fps": 8,
+  "w": 28,
+  "h": 32,
+  "top": 31
+ },
+ "glitch_machine_stack": {
+  "row": 21,
+  "frames": 8,
+  "fps": 8,
+  "w": 32,
+  "h": 64,
+  "top": 63
+ },
+ "glitch_machine_smear": {
+  "row": 22,
+  "frames": 8,
+  "fps": 8,
+  "w": 66,
+  "h": 32,
+  "top": 31
  }
 }

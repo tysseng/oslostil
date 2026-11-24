@@ -4,32 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So much more including celebration">
-      <change afterPath="$PROJECT_DIR$/Claude outputs/batch7-contact.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/celebrate-contact.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/fountain.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/oslo-night-contact.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/sakura-contact.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/statue-fountain.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/statue2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/tiger.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Claude outputs/tokyo-contact.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/automat-celebrate.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/celebrate.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/celebrate.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/trees.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/trees.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-tokyo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/vehicles/hires/tram-tokyo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/Japanese tram/japan tram 2.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/Japanese tram/japan tram 3.webp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/inspiration/vehicles/Japanese tram/japan tram.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/celebrate.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/oslo_props.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/ref/rearing_horse.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/ref/tiger.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/tokyo_props.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/trees.py" afterDir="false" />
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added nyancat-automat and glitch assets">
+      <change afterPath="$PROJECT_DIR$/Claude outputs/copilot-rainbow-victoria.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/glitch-machines-contact-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/glitch-machines-contact.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Claude outputs/rainbow-victoria-contact.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/landmarks/hires/domkirken.v1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/landmarks/hires/domkirken.v1.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/landmarks/hires/grand.v1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/landmarks/hires/grand.v1.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/landmarks/hires/holmenkollen-siluett.ai" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/automat-rainbow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/rainbow-sparkle.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/rainbow-tail-light.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/rainbow-tail.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/rainbow.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rainbow.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/glitch_props.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/rainbow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ART_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
@@ -37,18 +29,12 @@
       <change beforePath="$PROJECT_DIR$/assets/sprites/props-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props-light.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/sprites/props.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/sprites/props.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/props.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inspiration/holmenkollen 2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inspiration/landmark holmenkollen 1.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/vehicles/trams.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/vehicles/trams.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/timeline.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/timeline.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/sprites/props.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/props.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,23 +51,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0027645845940611" />
-      <entry key="MS500" value="1.593880651941633" />
-      <entry key="S2" value="3.8805213742709532" />
-      <entry key="S5" value="6.039595221575946" />
-      <entry key="S10" value="7.290099781006119" />
-      <entry key="S30" value="8.368290329816077" />
-      <entry key="S60" value="8.675636711113118" />
-      <entry key="M2" value="8.835630827784353" />
-      <entry key="M5" value="8.954372571783663" />
-      <entry key="M10" value="9.328514848063229" />
-      <entry key="M15" value="9.985698236692226" />
-      <entry key="M30" value="12.46469548541058" />
-      <entry key="H1" value="18.784720377027107" />
-      <entry key="H2" value="43.03243526300118" />
-      <entry key="H4" value="106.99259969257304" />
-      <entry key="D1" value="535.0859025015274" />
-      <entry key="W1" value="907.8941466446095" />
+      <entry key="MS100" value="1.0001989745401072" />
+      <entry key="MS500" value="1.336321122244236" />
+      <entry key="S2" value="3.28106121258808" />
+      <entry key="S5" value="5.741819283397851" />
+      <entry key="S10" value="7.4297805703412765" />
+      <entry key="S30" value="9.01776601936499" />
+      <entry key="S60" value="9.491069022647274" />
+      <entry key="M2" value="9.740902958667542" />
+      <entry key="M5" value="9.895225966765427" />
+      <entry key="M10" value="9.947421774717807" />
+      <entry key="M15" value="9.964907900281037" />
+      <entry key="M30" value="9.98878611742743" />
+      <entry key="H1" value="10.30023177038977" />
+      <entry key="H2" value="12.31294461938153" />
+      <entry key="H4" value="22.31111392537476" />
+      <entry key="D1" value="359.3756093195813" />
+      <entry key="W1" value="874.3850220692483" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -89,37 +75,37 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="0.0" />
-      <entry key="M2" value="0.0" />
-      <entry key="M5" value="0.0" />
-      <entry key="M10" value="0.0" />
-      <entry key="M15" value="0.0" />
-      <entry key="M30" value="0.0" />
-      <entry key="H1" value="0.0" />
-      <entry key="H2" value="0.0" />
-      <entry key="H4" value="0.0" />
-      <entry key="D1" value="0.0" />
-      <entry key="W1" value="0.0" />
+      <entry key="S30" value="2.615469468294813E-203" />
+      <entry key="S60" value="5.114166078936833E-102" />
+      <entry key="M2" value="2.2614522057600137E-51" />
+      <entry key="M5" value="5.517660379425455E-21" />
+      <entry key="M10" value="7.428095569811587E-11" />
+      <entry key="M15" value="1.7670614609346966E-7" />
+      <entry key="M30" value="4.203643016402193E-4" />
+      <entry key="H1" value="0.02050278765534628" />
+      <entry key="H2" value="0.1431879452165798" />
+      <entry key="H4" value="0.37840183035574754" />
+      <entry key="D1" value="0.8504697508262065" />
+      <entry key="W1" value="0.9771275702568332" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.13759384533910402" />
-      <entry key="MS500" value="1.2604493759328603" />
-      <entry key="S2" value="3.780671004176032" />
-      <entry key="S5" value="5.9970488929963395" />
-      <entry key="S10" value="7.268208385547291" />
-      <entry key="S30" value="8.360828050543535" />
-      <entry key="S60" value="8.671882794211816" />
-      <entry key="M2" value="8.833747997038161" />
-      <entry key="M5" value="8.953617733302389" />
-      <entry key="M10" value="9.328133445591407" />
-      <entry key="M15" value="9.985431561047507" />
-      <entry key="M30" value="12.464501751845805" />
-      <entry key="H1" value="18.78450396009715" />
-      <entry key="H2" value="43.0321354245577" />
-      <entry key="H4" value="106.99222722277688" />
-      <entry key="D1" value="535.0857051013925" />
-      <entry key="W1" value="907.8941089588275" />
+      <entry key="MS100" value="0.010820708499312107" />
+      <entry key="MS500" value="0.651744441725746" />
+      <entry key="S2" value="2.9392752006121805" />
+      <entry key="S5" value="5.573442378548741" />
+      <entry key="S10" value="7.338818701577591" />
+      <entry key="S30" value="8.985753047457091" />
+      <entry key="S60" value="9.474837567077724" />
+      <entry key="M2" value="9.732729904809318" />
+      <entry key="M5" value="9.891942844742493" />
+      <entry key="M10" value="9.945777885031138" />
+      <entry key="M15" value="9.963811631700997" />
+      <entry key="M30" value="9.988657544222287" />
+      <entry key="H1" value="10.320449160699894" />
+      <entry key="H2" value="12.455955564458248" />
+      <entry key="H4" value="22.689372998467324" />
+      <entry key="D1" value="360.22592432975733" />
+      <entry key="W1" value="875.3621095959764" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -210,6 +196,8 @@
     <MESSAGE value="Lots of new sprites. Tagging tagger" />
     <MESSAGE value="Lots of work on japan" />
     <MESSAGE value="So much more including celebration" />
-    <option name="LAST_COMMIT_MESSAGE" value="So much more including celebration" />
+    <MESSAGE value="added lots of landmarks as svg, will prepare later." />
+    <MESSAGE value="Added nyancat-automat and glitch assets" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added nyancat-automat and glitch assets" />
   </component>
 </project>

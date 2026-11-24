@@ -1,0 +1,59 @@
+{
+ "fly": {
+  "file": "automat-rainbow.png",
+  "w": 28,
+  "h": 32,
+  "frames": [
+   "fly0",
+   "fly1",
+   "glitch0",
+   "glitch1"
+  ],
+  "fps": 6,
+  "anchor": [
+   14,
+   32
+  ],
+  "tail_anchor": [
+   8,
+   17
+  ],
+  "note": "anchor = base centre; tail_anchor = where the ribbon leaves her (cell px, behind the cabinet)"
+ },
+ "tail": {
+  "file": "rainbow-tail.png",
+  "w": 6,
+  "h": 14,
+  "frames": [
+   "seg0",
+   "seg1",
+   "fade0",
+   "fade1"
+  ],
+  "centre_y": 7,
+  "spacing": 6,
+  "swap": "every beat",
+  "note": "chain of segments along her past positions, every 6 px of path; alternate seg0/seg1 along the chain and swap the parity on each beat; the last 2 links use fade0, fade1"
+ },
+ "tail_light": {
+  "file": "rainbow-tail-light.png",
+  "w": 18,
+  "h": 26,
+  "centre": [
+   9,
+   13
+  ],
+  "blend": "screen"
+ },
+ "sparkle": {
+  "file": "rainbow-sparkle.png",
+  "w": 7,
+  "h": 7,
+  "frames": 4,
+  "fps": 12,
+  "centre": [
+   3,
+   3
+  ]
+ }
+}

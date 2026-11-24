@@ -6,7 +6,8 @@ import { loadDefaultLevel } from './level';
 import { createEnemy, createState, enemyHeight, enemyX, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
-import { MACHINE_HEIGHT, MACHINE_WIDTH, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX, victoriaBob, victoriaLift } from './timeline';
+import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
+import { MACHINE_HEIGHT, MACHINE_WIDTH, RAINBOW_T0, RAINBOW_T1, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX } from './timeline';
 
 /** seconds she is gone after losing her last heart */
 const DEATH_TIME = 0.85;
@@ -60,6 +61,7 @@ export class Game {
     this.s = createState(this.level);
     this.s.lastT = t;
     this.s.bgx = scrollAt(t);
+    seekRainbow(this.s, t);
     this.audio.play(t);
     this.mode = 'play';
     this.cleanPause = false;
@@ -311,7 +313,7 @@ export class Game {
     if (s.deathFlight) {
       const companions = [
         { key: 'friend' as const, x: s.fx, y: s.friend.yHist[0] ?? GROUND, active: true },
-        { key: 'machine' as const, x: s.mx, y: Math.round(GROUND - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t)), active: t >= VICTORIA_WAKE_T },
+        { key: 'machine' as const, ...machinePosition(s, t), active: t >= VICTORIA_WAKE_T && !(t >= RAINBOW_T0 && t < RAINBOW_T1 + 1) },
       ];
       for (const companion of companions) {
         if (!companion.active || s.deathFlight[companion.key]) continue;
@@ -327,6 +329,7 @@ export class Game {
     // Automat Victoria stands on the platform until the girls reach her, then follows them
     if (t < VICTORIA_WAKE_T + WAKE_HOPS) s.mx = machineCenter(t); // stays put while she wakes up and hops
     else s.mx += (p.x - 46 - s.mx) * Math.min(1, dt * 2.5);
+    updateRainbow(s, t, dt);
     const dec = (v: number) => Math.max(0, v - dt);
     p.slide = dec(p.slide); p.atk = dec(p.atk); p.cd = dec(p.cd); p.star = dec(p.star);
     s.inv = dec(s.inv); s.shake = dec(s.shake); s.respawn = dec(s.respawn);
@@ -482,7 +485,7 @@ export class Game {
         elapsed: 0, bgx: s.bgx,
         victoria: { x: p.x, y: p.y },
         friend: { x: s.fx, y: s.friend.yHist[0] ?? GROUND },
-        machine: { x: s.mx, y: GROUND - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t) },
+        machine: machinePosition(s, t),
       };
       try { s.best = Math.max(Number(localStorage.getItem(BEST_KEY)) || 0, s.score); localStorage.setItem(BEST_KEY, String(s.best)); }
       catch { s.best = s.score; }

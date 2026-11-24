@@ -549,13 +549,14 @@ def field_image(A, col, blur=1.4):
 if __name__ == '__main__':
     import tokyo_props
     import oslo_props
+    import glitch_props
     # (name, frames, fps, top, light image) for every prop; Tokyoslo props come from tokyo_props.py
     entries = []
     for name, fn in PROPS:
         cv = fn()
         full = cv.image()
         entries.append((name, [full], 1, None, LIGHTS[name](full.width, full.height) if name in LIGHTS else None))
-    for name, fn, fps, top, lf in tokyo_props.TOKYO + oslo_props.OSLO:
+    for name, fn, fps, top, lf in tokyo_props.TOKYO + oslo_props.OSLO + glitch_props.GLITCH:
         frames = []
         for cv in fn():
             im = cv.image()

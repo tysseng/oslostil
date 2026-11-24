@@ -40,6 +40,7 @@ Sizes are in game pixels; the screen is 320 × 180. For a code-drawn asset the s
 | Friend | ✅ | 24 × 32 frames | `assets/sprites/friend.png` | same layout as Victoria |
 | Automat Victoria (companion) | ✅ | 24 × 32 frames | `assets/sprites/automat.png` (`tools/sprites/automat.py`) | idle0 idle1(blink) talk0 talk1 cheer0 cheer1 plain; talks when the lyrics are about her, cheers on the chorus calls and the win screen |
 | Celebration (ending): both girls in ninja outfits, Automat Victoria | ✅ | 24 × 32 frames | `assets/sprites/celebrate.png` (rows Victoria, friend: turn ×3, front idle ×2, wave ×4, jump takeoff/rise/fall/land), `automat-celebrate.png` (front, wave ×4, jump ×4, blink) + `celebrate.json` (layout, fps, jump timing), from `tools/sprites/celebrate.py`; used for the centered ending celebration and score summary |
+| Automat Victoria, rainbow mode (level 2) | ✅ | 28 × 32 frames + ribbon | `assets/sprites/automat-rainbow.png` (fly0 fly1 glitch0 glitch1), `rainbow-tail.png` (6 × 14 segments seg0 seg1 fade0 fade1), `rainbow-tail-light.png`, `rainbow-sparkle.png`, `rainbow.json` (`tools/sprites/rainbow.py`) | she flies on a rubber band above the player through bars 26–33 trailing a stepped rainbow, lands back at bar 34 |
 | Kaos-trikken (boss) | ⬜ | 80 × 70 | `drawBoss` in `src/render/sprites.ts` | white hit flash; damage and explosion frames |
 
 ## Enemies and obstacles
@@ -114,6 +115,9 @@ Pixel sprites at girl scale, front view, in `assets/sprites/props.png` + `props.
 | Tokyoslo stone lantern (`toro`) | ✅ | 19 × 37 | `lamps.png` row 6; firelight sideways and down; flat top, one jump |
 | Park bench, European (`bench_park`) | ✅ | 38 × 18 | dark green cast-iron ends, wooden slats; one jump |
 | Station bench, Sandvika (`bench_station`) | ✅ | 43 × 17 | steel frame, light wood slats; one jump |
+| Glitched machine clone (`glitch_machine`) | ✅ | 28 × 32 | level 2 glitch: the plain ticket machine breaking up, 8 frames @ 8 fps (slipping slices, pink/cyan split, screen static, «A-A-A», missing-texture blocks); top 31, one jump; screen glow in props-light |
+| Copy-pasted machines (`glitch_machine_stack`) | ✅ | 32 × 64 | level 2: a clone pasted on top of another, the top copy slips sideways; top 63, double jump |
+| Smeared machine (`glitch_machine_smear`) | ✅ | 66 × 32 | level 2: a clone dragging three echoes to the left; a long platform, top 31 |
 | Fountain, classic Oslo (`fountain`) | ✅ | 64 × 48 | tiered stone, darker for the night; 8 frames of pulsing semi-transparent water (centre jet + an arch to each side); lit from the water upwards (`props-light.png`); stand on the basin rim (`top` 13) |
 | Advertising column, night (`ad_column`) | ✅ | 26 × 48 (48-px-wide canvas so the lamps' glow fits) | posters lit by two small lamps above them (light in `props-light.png`); top 46 = double jump |
 | Cast-iron park railing, night (`railing`) | ✅ | 62 × 16 | spear tips; not standable |
@@ -189,8 +193,8 @@ Flat elevations from `tools/landmarks/landmarks.py` → `assets/landmarks/hires/
 | Monolitten | ✅ v1 | 1.5 × life (51 × 33) | `monolitten.v1.*` | |
 | Holmenkollbakken | 🎨 redo | | `holmenkollen.*` | to redo later (Joakim may trace the shape); current: constant-thickness S-curve, flat ends, no supports |
 | Operahuset | 🎨 redo | | `opera.*` | to redo later (Joakim may trace the shape); the foyer glass roof rises towards the left |
-| Domkirken | 🎨 review | 44 × 57 | `domkirken.*` | west front: brick tower, clock, portal, copper spire; nave wings + stair turret |
-| Grand Hotel | 🎨 review | 96 × 47 | `grand.*` | white facade, mansard with green dormers, corner turret, clock tower + copper cupola; grey annex right. No flags |
+| Domkirken | ✅ v1 | 44 × 57 | `domkirken.v1.*` | west front: brick tower, clock, portal, copper spire; nave wings + stair turret |
+| Grand Hotel | ✅ v1 | 96 × 47 | `grand.v1.*` | white facade, mansard with green dormers, corner turret, clock tower + copper cupola; grey annex right. No flags |
 | Postgirobygget | ✅ v1 | 69 × 111 | `postgiro.v1.*` | two bronze/glass slabs, 32.4 m wide each (103 m / 111 m) + glazed core just below the left one; window bands stop at the same height on both, glass above; no signs |
 | Oslostil title logo | ⬜ | | `assets/ui/title-logo.png` | redo: smoother, same pixel size as the sprites (measure from the displayed logo), synthwave/80s neon, «Oslostil», sun in the middle, Munch + Holmenkollen silhouettes instead of palm trees |
 

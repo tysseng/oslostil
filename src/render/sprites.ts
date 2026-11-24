@@ -1,7 +1,8 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
-import { GROUND, H, W } from '../config';
+import { BEAT, GROUND, H, PH, W } from '../config';
 import { TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
-import { enemyHeight, enemyX, type Enemy } from '../state';
+import { enemyHeight, enemyX, type Enemy, type RainbowState } from '../state';
+import { ribbonLength, ribbonPoints } from '../rainbow';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
 import { PASSENGER_CELL_W, PASSENGER_CELL_H, PASSENGERS, isPassenger, passengerColumn } from '../passengers';
 import { R, ctx, drawVehicle, loadImage, ready, text, meta, HIRES_PPM } from './draw';
@@ -26,6 +27,11 @@ import bossMeta from '../../assets/sprites/kaostrikken.json';
 import celebrationUrl from '../../assets/sprites/celebrate.png';
 import automatCelebrationUrl from '../../assets/sprites/automat-celebrate.png';
 import celebrationMeta from '../../assets/sprites/celebrate.json';
+import rainbowUrl from '../../assets/sprites/automat-rainbow.png';
+import rainbowTailUrl from '../../assets/sprites/rainbow-tail.png';
+import rainbowLightUrl from '../../assets/sprites/rainbow-tail-light.png';
+import rainbowSparkleUrl from '../../assets/sprites/rainbow-sparkle.png';
+import rainbowMeta from '../../assets/sprites/rainbow.json';
 
 // The girls are pixel-art sprite sheets (made by tools/sprites/girls.py, editable in any pixel editor):
 // 24×32 frames, row 0 = normal clothes, row 1 = ninja; feet on the bottom row, body centred on x = 12.
@@ -144,6 +150,54 @@ export function drawMachine(x: number, y: number, t: number, mood: Mood = 'idle'
   else frame = t % 3.2 < 0.15 ? 'idle1' : 'idle0'; // blink every few seconds
   const col = AUTOMAT_FRAMES.indexOf(frame);
   ctx.drawImage(AUTOMAT, col * 24, 0, 24, 32, Math.round(x - 12), oy - 32, 24, 32);
+}
+
+const RAINBOW_MACHINE = loadImage(rainbowUrl), RAINBOW_TAIL = loadImage(rainbowTailUrl);
+const RAINBOW_LIGHT = loadImage(rainbowLightUrl), RAINBOW_SPARKLE = loadImage(rainbowSparkleUrl);
+
+export function drawRainbowMachine(r: RainbowState, t: number, mood: Mood): void {
+  const points = ribbonPoints(r, ribbonLength(r, t));
+  const parity = Math.floor((t - PH) / BEAT) & 1;
+  ctx.save();
+  ctx.globalAlpha = r.blend;
+  if (ready(RAINBOW_LIGHT)) {
+    ctx.globalCompositeOperation = 'screen';
+    const { w, h, centre } = rainbowMeta.tail_light;
+    for (const p of points) ctx.drawImage(RAINBOW_LIGHT, Math.round(p.x) - centre[0], Math.round(p.y) - centre[1], w, h);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  if (ready(RAINBOW_TAIL)) {
+    const { w, h, centre_y } = rainbowMeta.tail;
+    for (let i = points.length - 1; i >= 0; i--) {
+      const col = i === points.length - 1 ? 3 : i === points.length - 2 ? 2 : (i + parity) % 2;
+      const p = points[i];
+      ctx.drawImage(RAINBOW_TAIL, col * w, 0, w, h, Math.round(p.x) - w / 2, Math.round(p.y) - centre_y, w, h);
+    }
+  }
+  if (ready(RAINBOW_MACHINE)) {
+    const { w, h, anchor, fps } = rainbowMeta.fly;
+    const sinceBeat = ((t - PH) % BEAT + BEAT) % BEAT;
+    const col = sinceBeat < 0.16 ? 2 + Math.floor(sinceBeat / 0.08) : Math.floor(t * fps) % 2;
+    const x = Math.round(r.x), y = Math.round(r.y);
+    if (r.vx < -20) {
+      ctx.save();
+      ctx.translate(x, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(RAINBOW_MACHINE, col * w, 0, w, h, -anchor[0], y - anchor[1], w, h);
+      ctx.restore();
+    } else ctx.drawImage(RAINBOW_MACHINE, col * w, 0, w, h, x - anchor[0], y - anchor[1], w, h);
+  }
+  ctx.globalAlpha = 1 - r.blend;
+  drawMachine(r.x, r.y, t, mood, 0, true);
+  ctx.globalAlpha = r.blend;
+  if (ready(RAINBOW_SPARKLE)) {
+    const { w, h, centre, fps } = rainbowMeta.sparkle;
+    for (const p of r.sparkles) {
+      const frame = Math.floor(p.age * fps);
+      ctx.drawImage(RAINBOW_SPARKLE, frame * w, 0, w, h, Math.round(p.x) - centre[0], Math.round(p.y) - centre[1], w, h);
+    }
+  }
+  ctx.restore();
 }
 
 /**

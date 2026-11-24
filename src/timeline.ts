@@ -88,6 +88,9 @@ export function victoriaLift(t: number): number {
 }
 export const victoriaBob = (t: number): number => 2 * Math.min(1, Math.max(0, (t - VICTORIA_WAKE_T - WAKE_HOPS) / WAKE_RISE));
 
+export const RAINBOW_T0 = barT(26);
+export const RAINBOW_T1 = barT(34);
+
 /** «Plutselig er vi ninjaer i et coin-op spill» */
 export const NINJA_T = lineT(54);
 /** «skjermen skifter farge» – the screen colour change (1:42, set by ear) */
