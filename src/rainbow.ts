@@ -123,6 +123,13 @@ export function updateRainbow(s: GameState, t: number, dt: number): void {
   }
   r.path.unshift({ ...anchor(r), t });
   trimPath(r, t);
+  if (Math.floor(t / 0.12) !== Math.floor((t - dt) / 0.12)) {
+    const points = ribbonPoints(r);
+    if (points.length) {
+      const point = points[Math.floor(Math.random() * points.length)];
+      r.sparkles.push({ x: point.x, y: point.y + (Math.random() < 0.5 ? -9 : 9), age: 0 });
+    }
+  }
 }
 
 /** Reconstruct visual history for debug seeks without simulating gameplay. */

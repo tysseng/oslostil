@@ -106,6 +106,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 ### Level editor
 
 - In bars 26–33, `rainbow.ts` simulates Automat Victoria's visual-only spring flight with a wandering anchor and beat impulses, even while the player stands still. A time-varying wave offsets the path-length-spaced ribbon; it shrinks for 0.6 seconds and she returns to her ordinary follow position over one second after bar 34. Debug seeks reconstruct her visual history, and tram death flight overrides rainbow mode.
+- The rainbow ribbon and glow use 75% opacity; Victoria and the sprite sparkles retain full brightness. Sparkles appear on the beat and every 0.12 seconds beside the ribbon so they remain visible between beats.
 
 - Trees move at 50-75% of their authored speed, varied by a stable per-tree `depth` (0-1, seeded for older layouts). Trees are drawn back-to-front by their actual adjusted speed, so the front tree always moves faster, even across different authored speeds. All trees stay behind props and trams. Spawn timing and editor positioning use the same adjusted speed; saved `rel` remains unscaled, and depth survives dragging and JSON round trips.
 

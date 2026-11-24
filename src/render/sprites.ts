@@ -159,7 +159,7 @@ export function drawRainbowMachine(r: RainbowState, t: number, mood: Mood): void
   const points = ribbonPoints(r, ribbonLength(r, t));
   const parity = Math.floor((t - PH) / BEAT) & 1;
   ctx.save();
-  ctx.globalAlpha = r.blend;
+  ctx.globalAlpha = r.blend * 0.75;
   if (ready(RAINBOW_LIGHT)) {
     ctx.globalCompositeOperation = 'screen';
     const { w, h, centre } = rainbowMeta.tail_light;
@@ -174,6 +174,7 @@ export function drawRainbowMachine(r: RainbowState, t: number, mood: Mood): void
       ctx.drawImage(RAINBOW_TAIL, col * w, 0, w, h, Math.round(p.x) - w / 2, Math.round(p.y) - centre_y, w, h);
     }
   }
+  ctx.globalAlpha = r.blend;
   if (ready(RAINBOW_MACHINE)) {
     const { w, h, anchor, fps } = rainbowMeta.fly;
     const sinceBeat = ((t - PH) % BEAT + BEAT) % BEAT;
