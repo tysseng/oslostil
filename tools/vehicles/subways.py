@@ -139,13 +139,13 @@ def metro_old_car(svg, x0, L, kind):
         assert total <= pb - pa - 8, f'old metro {kind}: {n} windows do not fit between {a_} and {b_}'
         wx0 = (pa + pb) / 2 - total / 2
         for k in range(n):
-            g.append(window(x0 + wx0 + k * 64, top + 40, 52, 58, glass=OT['glass'], shine=OT['shine'], rx=6))
+            g.append(lit_window(x0 + wx0 + k * 64, top + 40, 52, 58, rx=6))
     for dx in doors:  # blue double doors
         x = x0 + dx
         g.append(rect(x, top + 20, 80, bot - top - 22, OT['blue'], 4))
         g.append(f'<line x1="{x + 40}" y1="{top + 22}" x2="{x + 40}" y2="{bot - 2}" stroke="{INK}" stroke-width="3"/>')
-        g.append(window(x + 8, top + 30, 24, 70, glass=OT['glass'], shine=OT['shine'], rx=4))
-        g.append(window(x + 48, top + 30, 24, 70, glass=OT['glass'], shine=OT['shine'], rx=4))
+        g.append(lit_window(x + 8, top + 30, 24, 70, rx=4))
+        g.append(lit_window(x + 48, top + 30, 24, 70, rx=4))
         g.append(rect(x + 2, bot - 20, 76, 10, OT['blue_lo'], 2, stroke=False))
     g.append('</g>')
     g.append(f'<path d="{d}" fill="none" stroke="{INK}" stroke-width="{SW + 1}" stroke-linejoin="round"/>')

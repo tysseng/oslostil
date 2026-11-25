@@ -22,8 +22,8 @@ import passengersUrl from '../../assets/sprites/passengers.png';
 import boardUrl from '../../assets/sprites/board-broken.png';
 import powerupsUrl from '../../assets/sprites/powerups.png';
 import './editor.css';
-import { VALKYRIEN_DEPTH, stationPlacement } from '../valkyrien';
-import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from '../render/valkyrien';
+import { VALKYRIEN_CAMERA, VALKYRIEN_DEPTH, VALKYRIEN_ENTRY, VALKYRIEN_FLOOR, stationPlacement } from '../valkyrien';
+import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValkyrienHouse } from '../render/valkyrien';
 
 const STORAGE_KEY = 'oslostil-level-v1';
 const kinds = Object.keys(TYPES) as EnemyKind[];
@@ -88,6 +88,7 @@ export class LevelEditor {
       <div class="editor-row">
         <button type="button" data-action="title">Title</button>
         <button type="button" data-action="test">Play level</button>
+        <button type="button" data-action="valkyrien">Valkyrien</button>
         <button type="button" data-action="download">Download level</button>
         <button type="button" data-action="import">Import level</button>
         <input type="file" accept=".json,application/json" hidden aria-label="Import level JSON">
@@ -134,6 +135,14 @@ export class LevelEditor {
     this.panel.querySelector('[data-action="test"]')!.addEventListener('click', () => {
       game.keys.clear();
       game.seek(game.s.lastT);
+      canvas.focus();
+      this.tick();
+    });
+    this.panel.querySelector('[data-action="valkyrien"]')!.addEventListener('click', () => {
+      if (this.drag) return;
+      game.edit(VALKYRIEN_ENTRY);
+      this.cameraY = VALKYRIEN_CAMERA;
+      this.hovered = null;
       canvas.focus();
       this.tick();
     });
@@ -424,6 +433,10 @@ export class LevelEditor {
 
   private position(e: ScheduledEvent, x: number, base: number): boolean {
     const underground = base > GROUND;
+    if (underground) {
+      const clearance = isPowerup(e.type) ? 2 : e.type === 'ticket' ? 1 : 0;
+      base = Math.min(VALKYRIEN_FLOOR - clearance, Math.round(base));
+    }
     if (underground && !stationPlacement(x, base, TYPES[e.type].w, TYPES[e.type].h, this.game.s.lastT)) {
       return false;
     }
@@ -448,6 +461,7 @@ export class LevelEditor {
       };
       canvas.setPointerCapture(e.pointerId);
     } else if (this.selected) {
+      if (y > VALKYRIEN_FLOOR) return;
       const event: ScheduledEvent = { type: this.selected, arr: this.game.s.lastT };
       if (event.type === 'blob_hop') event.hop = this.hopVariant();
       if (isTree(event.type)) event.depth = treeDepth({ ...event, arr: event.arr + x / W });
@@ -537,6 +551,13 @@ export class LevelEditor {
     drawLampLights(events.map(createEnemy), t);
     drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
     drawValkyrienHouse(t, -this.viewOffset, W + this.viewOffset);
+    drawValkyrienDarkness(t, () => {
+      for (const event of events) {
+        const enemy = createEnemy(event);
+        drawEnemy(enemy, enemyX(enemy, t), t);
+      }
+      drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
+    });
     for (const event of events) {
       const b = this.bounds(event);
       if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) continue;

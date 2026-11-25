@@ -7,7 +7,7 @@ import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, ene
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
 import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
-import { VALKYRIEN_FLOOR, belowSurface, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
+import { VALKYRIEN_FLOOR, belowSurface, clampStationY, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, RAINBOW_T0, RAINBOW_T1, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX } from './timeline';
 
 /** seconds she is gone after losing her last heart */
@@ -226,7 +226,7 @@ export class Game {
   /** She drops in from above (onto a tram roof if one is passing) and flashes white while invincible. */
   private respawn(): void {
     const { s } = this, p = s.p;
-    p.x = Math.max(p.x, PX); p.y = playerFloor(s) - 100; p.vy = 0; p.jumps = 1;
+    p.x = Math.max(p.x, PX); p.y = clampStationY(s, playerFloor(s) - 100, 32); p.vy = 0; p.jumps = 1;
     if (s.deathFlight) {
       if (s.deathFlight.friend) {
         s.fx = p.x - 22; s.friend.yHist = [DROP_Y]; s.friend.atk = 0;

@@ -1,6 +1,11 @@
 - Logo
 - Top side house for valkyrien!
 
+New assets:
+- valkyrien sign
+- valkyrien rear wall
+- valkyrien ceiling lights
+- valkyrien vintage vall posters
 Backgrounds for neon level
 Better backgrounds for kollektivkaos level
 

@@ -4,16 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Extending visible area in level editor outside playfield">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added subway to valkyrien">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NEXT_CHANGES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vehicles/hires/subway-old-2.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old-2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vehicles/hires/subway-old-2.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old-2.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vehicles/hires/subway-old.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/vehicles/hires/subway-old.svg" beforeDir="false" afterPath="$PROJECT_DIR$/assets/vehicles/hires/subway-old.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rainbow.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rainbow.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/draw.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/draw.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/valkyrien.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/valkyrien.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/vehicles/subways.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/vehicles/subways.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,23 +36,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0506170220991777" />
-      <entry key="MS500" value="2.2726768184701696" />
-      <entry key="S2" value="5.441710334169504" />
-      <entry key="S5" value="8.82303327959051" />
-      <entry key="S10" value="11.417153181807073" />
-      <entry key="S30" value="14.154693921783016" />
-      <entry key="S60" value="15.047790759093763" />
-      <entry key="M2" value="15.992518109152343" />
-      <entry key="M5" value="19.328558474849135" />
-      <entry key="M10" value="23.113520169584355" />
-      <entry key="M15" value="25.53236090015742" />
-      <entry key="M30" value="29.592886364272974" />
-      <entry key="H1" value="34.468317927347684" />
-      <entry key="H2" value="44.90737990070431" />
-      <entry key="H4" value="64.01313835855824" />
-      <entry key="D1" value="372.5622297121356" />
-      <entry key="W1" value="937.5329856455894" />
+      <entry key="MS100" value="1.0169803244709545" />
+      <entry key="MS500" value="1.487410047494793" />
+      <entry key="S2" value="2.844247538879614" />
+      <entry key="S5" value="4.913076984314927" />
+      <entry key="S10" value="7.671469210690376" />
+      <entry key="S30" value="12.438631933440636" />
+      <entry key="S60" value="14.453205611603618" />
+      <entry key="M2" value="15.651141324944788" />
+      <entry key="M5" value="16.441055514185045" />
+      <entry key="M10" value="16.717179936257182" />
+      <entry key="M15" value="16.81070060895867" />
+      <entry key="M30" value="16.9052505817138" />
+      <entry key="H1" value="17.069484475065906" />
+      <entry key="H2" value="19.781514560014145" />
+      <entry key="H4" value="33.68184423108936" />
+      <entry key="D1" value="315.2407321057411" />
+      <entry key="W1" value="931.4077738928559" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -55,36 +61,36 @@
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
-      <entry key="S60" value="1.2738762679934702E-237" />
-      <entry key="M2" value="3.5691403278569306E-119" />
-      <entry key="M5" value="4.178548519548253E-48" />
-      <entry key="M10" value="2.044149828057684E-24" />
-      <entry key="M15" value="1.6106770964183727E-16" />
-      <entry key="M30" value="1.2691245393649774E-8" />
-      <entry key="H1" value="1.1265542771500106E-4" />
-      <entry key="H2" value="0.010613926121610256" />
-      <entry key="H4" value="0.1030239104364142" />
-      <entry key="D1" value="0.6846831999044781" />
-      <entry key="W1" value="0.9473239660615074" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="4.3624381973502785E-197" />
+      <entry key="M5" value="2.856878133272467E-79" />
+      <entry key="M10" value="5.3449772060060955E-40" />
+      <entry key="M15" value="6.586134138377603E-27" />
+      <entry key="M30" value="8.115500069852483E-14" />
+      <entry key="H1" value="2.8487716773817676E-7" />
+      <entry key="H2" value="5.337388572496622E-4" />
+      <entry key="H4" value="0.02310278894959794" />
+      <entry key="D1" value="0.5336756672913183" />
+      <entry key="W1" value="0.9141966569629392" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0025036573646877" />
-      <entry key="MS500" value="2.1528944524376774" />
-      <entry key="S2" value="5.379542909364284" />
-      <entry key="S5" value="8.79257986853174" />
-      <entry key="S10" value="11.40035011415838" />
-      <entry key="S30" value="14.148592694868942" />
-      <entry key="S60" value="15.044647574082658" />
-      <entry key="M2" value="15.990712644117636" />
-      <entry key="M5" value="19.32724580021789" />
-      <entry key="M10" value="23.11239932013504" />
-      <entry key="M15" value="25.531337353279387" />
-      <entry key="M30" value="29.592085667755807" />
-      <entry key="H1" value="34.46785952853364" />
-      <entry key="H2" value="44.917572609448904" />
-      <entry key="H4" value="64.11584754246289" />
-      <entry key="D1" value="373.24672385469853" />
-      <entry key="W1" value="938.4802609454543" />
+      <entry key="MS100" value="0.9824523249104461" />
+      <entry key="MS500" value="1.4777513300643736" />
+      <entry key="S2" value="2.839649405936769" />
+      <entry key="S5" value="4.909792451844457" />
+      <entry key="S10" value="7.668804924308479" />
+      <entry key="S30" value="12.437130800711396" />
+      <entry key="S60" value="14.45232290064291" />
+      <entry key="M2" value="15.650660420195567" />
+      <entry key="M5" value="16.44085268366756" />
+      <entry key="M10" value="16.71707668802947" />
+      <entry key="M15" value="16.81063136268674" />
+      <entry key="M30" value="16.905215663521687" />
+      <entry key="H1" value="17.069452323539014" />
+      <entry key="H2" value="19.78189492225681" />
+      <entry key="H4" value="33.70460833723917" />
+      <entry key="D1" value="315.77411224924543" />
+      <entry key="W1" value="932.3218975633482" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -154,7 +160,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added first background graphics" />
     <MESSAGE value="Lots of backgrounds. New trams, added subway" />
     <MESSAGE value="Added level editor" />
     <MESSAGE value="Moved built in level code to same format as custom changes." />
@@ -179,6 +184,7 @@
     <MESSAGE value="Started work on valkyrien" />
     <MESSAGE value="Valkyrien outline ok" />
     <MESSAGE value="Extending visible area in level editor outside playfield" />
-    <option name="LAST_COMMIT_MESSAGE" value="Extending visible area in level editor outside playfield" />
+    <MESSAGE value="Added subway to valkyrien" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added subway to valkyrien" />
   </component>
 </project>

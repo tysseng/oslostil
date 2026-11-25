@@ -10,8 +10,18 @@ export const RES = 4;
 export const canvas = document.getElementById('game') as HTMLCanvasElement;
 canvas.width = W * RES;
 canvas.height = H * RES;
-export const ctx = canvas.getContext('2d')!;
+export let ctx = canvas.getContext('2d')!;
 ctx.imageSmoothingEnabled = false;
+
+export function drawToContext(target: CanvasRenderingContext2D, draw: () => void): void {
+  const previous = ctx;
+  ctx = target;
+  try {
+    draw();
+  } finally {
+    ctx = previous;
+  }
+}
 
 /** Back to the plain game-pixel transform, optionally shifted (screen shake) by whole game pixels. */
 export function resetTransform(dx = 0, dy = 0): void {
@@ -21,7 +31,7 @@ resetTransform();
 
 export function horizontalBounds(): { left: number; right: number } {
   const transform = ctx.getTransform();
-  return { left: -transform.e / transform.a, right: (canvas.width - transform.e) / transform.a };
+  return { left: -transform.e / transform.a, right: (ctx.canvas.width - transform.e) / transform.a };
 }
 
 /** Draw a hi-res image smoothly at (x, y) with size w × h in game pixels. */

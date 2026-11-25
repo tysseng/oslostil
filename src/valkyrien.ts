@@ -37,6 +37,8 @@ export const belowSurface = (s: GameState): boolean =>
 export const routeControlsPlayer = (s: GameState): boolean =>
   !!s.valkyrien.coverRider || ['chute', 'run-in', 'stairs', 'house'].includes(s.valkyrien.phase);
 export const playerFloor = (s: GameState): number => belowSurface(s) ? VALKYRIEN_FLOOR : GROUND;
+export const clampStationY = (s: GameState, base: number, height: number): number =>
+  ['underground', 'run-in'].includes(s.valkyrien.phase) ? Math.max(VALKYRIEN_CEILING + height, base) : base;
 
 /** Resolve the optional route after ordinary gravity, instead of surface ground landing. */
 export function resolveValkyrien(s: GameState, t: number, dt: number, previousY: number): void {
@@ -78,6 +80,16 @@ export function resolveValkyrien(s: GameState, t: number, dt: number, previousY:
   if (r.phase === 'run-in') {
     p.x = Math.min(PX, p.x + 260 * dt);
     if (p.x === PX) r.phase = 'underground';
+  }
+  if (s.down <= 0) {
+    const base = clampStationY(s, p.y, 32);
+    if (base !== p.y) {
+      p.y = base;
+      p.vy = Math.max(0, p.vy);
+      p.ride = undefined;
+      p.propRide = undefined;
+      p.machineRide = undefined;
+    }
   }
   if (r.phase === 'underground' && (t >= VALKYRIEN_EXIT ||
     p.x >= exitX(t) - STAIRS_WIDTH && p.y >= VALKYRIEN_FLOOR - 3)) {

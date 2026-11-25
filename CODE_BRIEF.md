@@ -105,6 +105,27 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- Valkyrien stairs retain a solid concrete body with a horizontal lower edge and a right wall extending to the station end. Their silhouette blocks subway headlight/rear beams and circular glows; window lights use the same rendered stair/wall alpha mask.
+
+- The old subway uses the modern subway's yellow lit-window interiors. Ceiling cones extend 24 pixels beyond the chamber height so their soft bottom falloff still illuminates the floor.
+
+- Underground jumps stop at the Valkyrien ceiling using the full 32-pixel sprite height. Victoria's floating/bobbing position and the following girl's delayed position share that ceiling limit; chute entry and automatic stair/house exit remain unrestricted by it.
+
+- Subway window lights follow the exact passenger and door glass positions and the train's bumps. Cached yellow rounded-rectangle bitmaps lighten the station mask, with a four-pixel cubic falloff outside the windows. Foreground asset sprite alpha masks both the glow and its darkness cutout in gameplay and the editor, preserving transparent gaps.
+
+- The subway's rear beam uses a red-tinted copy of the soft cone bitmap, retaining its alpha falloff while coloring the entire beam, not only the circular glow.
+
+- The Valkyrien subway has subtle paired vertical track-joint bumps, a pale forward headlight and red rear light with soft falloff that reduce the darkness mask. Ceiling fixture brightness and cone strength flicker together on independently phased, deterministic cycles.
+- Flicker cycles are spaced 2.2+ seconds apart, alternating double/triple pulses with mixed dimming and complete blackouts. Consecutive groups of three fixtures share a cycle, starting at the leftmost group at the station entrance and progressing right at 0.85-second intervals. Temporary cones start at narrow points and fade at their top, sides and bottom; train bumps peak at 1.3 pixels. Circular train-light glow is centered on each end of the car with a 32-pixel radius.
+
+- Valkyrien wall joints, columns and signage scroll at 85% of the station speed; ceiling lights and their cones stay anchored to the station. Underground placement clamps item bases above the platform, reserving downward bob clearance for pickups so grounded objects can still be dragged sideways.
+
+- Ceiling lights start one 70-pixel tile later and omit the final fixture. The last remaining cone excludes the foreground stair silhouette, illuminating behind it. Stairs and their balustrade stop at the platform's six-pixel light edge instead of extending into its dark underside.
+
+- The editor's **Valkyrien** button jumps to its 1:27 entrance and pans down to the station view.
+
+- Valkyrien has an 82%-opaque black foreground mask over the station, including trains, objects and characters. Cached temporary RGBA cone bitmaps erase portions of that mask with `destination-out`, with a 24-pixel edge falloff. Ceiling lights are spaced 140 pixels apart; their 100-pixel cones do not overlap, leaving dark gaps. Gameplay and editor share the effect; editor selection outlines and the HUD remain clear. Replace the generated cone bitmap in `ceilingLightCone()` when final artwork is available.
+
 - Valkyrien's `subway-old` train enters from the station's left when the manhole center reaches x=20 in the playfield. It continues through the whole station at a constant 360 px/s relative to the station, without braking or stopping; it renders behind platform items/characters in gameplay and the editor.
 
 - Assets can be placed/dragged below the surface only when their bounds fit inside Valkyrien's chamber before the stairs. Invalid placement is blocked without a message and leaves the item unchanged. Underground items use negative `y`, validated on import, and move with the station at 145 px/s; they interact only with underground players. Surface placement is unchanged.

@@ -2,15 +2,15 @@ import { BEAT, GROUND, PH, W } from './config';
 import type { GameState, RainbowPoint, RainbowState } from './state';
 import { RAINBOW_T0, RAINBOW_T1, sectionAt, victoriaBob, victoriaLift } from './timeline';
 import rainbowMeta from '../assets/sprites/rainbow.json';
-import { belowSurface } from './valkyrien';
+import { belowSurface, clampStationY, playerFloor } from './valkyrien';
 
 const LANDING_TIME = 1;
 const TRAIL_TIME = 1.2;
 const TRAIL_LENGTH = 150;
 
 export function machinePosition(s: GameState, t: number): { x: number; y: number } {
-  if (s.rainbow && !s.deathFlight?.machine) return { x: s.rainbow.x, y: s.rainbow.y };
-  return { x: s.mx, y: (belowSurface(s) ? s.p.y : GROUND) - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t) };
+  if (s.rainbow && !s.deathFlight?.machine) return { x: s.rainbow.x, y: clampStationY(s, s.rainbow.y, 32) };
+  return { x: s.mx, y: clampStationY(s, (belowSurface(s) ? s.p.y : GROUND) - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t), 32) };
 }
 
 function anchor(r: RainbowState): RainbowPoint {
@@ -87,8 +87,8 @@ export function updateRainbow(s: GameState, t: number, dt: number): void {
     const u = Math.min(1, (t - RAINBOW_T1) / LANDING_TIME), ease = u * u * (3 - 2 * u);
     r.blend = 1 - ease;
     r.x = r.landing.x + (s.mx - r.landing.x) * ease;
-    const targetY = GROUND - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t);
-    r.y = r.landing.y + (targetY - r.landing.y) * ease;
+    const targetY = (belowSurface(s) ? s.p.y : GROUND) - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t);
+    r.y = clampStationY(s, r.landing.y + (targetY - r.landing.y) * ease, 32);
     r.path.unshift({ ...anchor(r), t });
     trimPath(r, t);
     return;
@@ -118,8 +118,9 @@ export function updateRainbow(s: GameState, t: number, dt: number): void {
     r.x = Math.max(14, Math.min(W - 14, r.x));
     r.vx *= -0.5;
   }
-  if (r.y < 36 || r.y > GROUND - 20) {
-    r.y = Math.max(36, Math.min(GROUND - 20, r.y));
+  const minY = clampStationY(s, 36, 32), maxY = playerFloor(s) - 20;
+  if (r.y < minY || r.y > maxY) {
+    r.y = Math.max(minY, Math.min(maxY, r.y));
     r.vy *= -0.5;
   }
   r.path.unshift({ ...anchor(r), t });

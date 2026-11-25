@@ -3,13 +3,14 @@ import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } fr
 import type { Game } from '../game';
 import { compareItems, enemyX } from '../state';
 import { itemLayer } from '../schedule';
-import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt, victoriaBob, victoriaLift } from '../timeline';
+import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
-import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, belowSurface, exitX, manholeX, playerFloor } from '../valkyrien';
-import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienHouse } from './valkyrien';
+import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, manholeX, playerFloor } from '../valkyrien';
+import { machinePosition } from '../rainbow';
+import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValkyrienHouse } from './valkyrien';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
 
@@ -64,9 +65,12 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   }
   if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) {
     if (s.rainbow) drawRainbowMachine(s.rainbow, t, machineMood(t));
-    else drawMachine(inChute ? s.p.x : s.mx, (belowSurface(s) ? s.p.y : GROUND) - victoriaLift(t), t, machineMood(t), victoriaBob(t), t >= VICTORIA_WAKE_T + WAKE_HOPS);
+    else {
+      const machine = machinePosition(s, t);
+      drawMachine(inChute ? s.p.x : machine.x, machine.y, t, machineMood(t), 0, t >= VICTORIA_WAKE_T + WAKE_HOPS);
+    }
   }
-  const ninja = isNinja(t), f = s.friend, fy = f.yHist.length ? f.yHist[0] : GROUND;
+  const ninja = isNinja(t), f = s.friend, fy = clampStationY(s, f.yHist.length ? f.yHist[0] : GROUND, 32);
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
   if (!s.deathFlight?.friend) drawGirl('friend', inChute ? s.p.x : s.fx, inChute ? s.p.y : fy, t + 0.13, { ninja, air: fy < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: fRising, atk: f.atk > 0 });
   // gone while dead; after respawning she flashes white, after an ordinary hit she blinks
@@ -109,6 +113,20 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
       VALKYRIEN_CEILING - H);
   }
   drawValkyrienHouse(t);
+  drawValkyrienDarkness(t, () => {
+    for (const e of s.enemies) if (!e.dead) drawEnemy(e, enemyX(e, t), t);
+    for (const q of s.knocked) {
+      ctx.save();
+      if (q.squash !== undefined) {
+        ctx.translate(q.x, q.y);
+        ctx.scale(1.4, 0.25);
+        ctx.translate(-q.x, -q.y);
+      }
+      drawEnemy({ ...q.enemy, y: GROUND - q.y }, q.x, t);
+      ctx.restore();
+    }
+    drawValkyrienBalustrade(t);
+  });
   resetTransform();
 
   if (t >= FINAL_HIT) { // «-STIL!»
