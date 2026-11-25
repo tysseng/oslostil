@@ -18,6 +18,21 @@ Tbane pole with logo, higher than entry
 Station sign in the modern subway style, with "Majorstuen" text.
 Some special asset for Valkyrien, maybe an old fashioned ticket stall.
 
+Neon Oslo:
+- Low building with Short shift logo and a fancy car in neon
+- Taller buildings with Bekk, Entur and KnowIT, in neon versions
+    - Set in the close background, city silhouette further back
+
+Kollektiv-kaos:
+- Remove slanted trams
+- Bus crashed into bulding, fire on both bus and building. Not slanted
+- overturned bus, fire on bus and building. Not slanted.
+- Burning moving tram (tokyo version).
+- Subway entrance burning (tokyo style?),
+- Drones firing at players
+- Burning trashcans.
+
+
 Backgrounds for neon level
 Better backgrounds for kollektivkaos level
 Lights for the station levels

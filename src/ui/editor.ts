@@ -61,6 +61,7 @@ export class LevelEditor {
   private selected: EnemyKind | null = null;
   private hovered: ScheduledEvent | null = null;
   private cameraY = 0;
+  private showOutlines = true;
   private drag: Drag | null = null;
   private inspected: ScheduledEvent | null = null;
   private readonly hopInput: HTMLSelectElement;
@@ -111,6 +112,7 @@ export class LevelEditor {
       <p>To publish this layout as the default: download it, replace src/level.json with the downloaded file, then rebuild/deploy. Use default level discards the browser draft.</p>
       <p>Drag any item to move it. Right-click an item to delete it. Select an item below, then click empty space to place copies. Move / Esc stops placing.</p>
       <p>Left/right arrows or scrolling move through time. Up/down arrows or Shift + scrolling pan vertically to view Valkyrien.</p>
+      <p>Press O to toggle asset outlines for a clean level preview. Placement, dragging and deletion still work with outlines hidden.</p>
       <p>Broken boards crumble when landed on. Select a hopping glitch to edit its hop variant; tool settings also apply to new copies.</p>
       <p>Ghosts can only be placed inside Valkyrien. They glow green, damage on contact and start following after you pass them. Press Down/S at the square surface entrance to enter the station.</p>
       </details>`;
@@ -387,6 +389,11 @@ export class LevelEditor {
 
   keyDown(e: KeyboardEvent): boolean {
     if (this.game.mode !== 'editor') return false;
+    if (e.code === 'KeyO' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      if (!e.repeat) this.showOutlines = !this.showOutlines;
+      return true;
+    }
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.code) && !e.ctrlKey && !e.metaKey && !e.altKey) {
       if (e.target instanceof HTMLElement && e.target.closest('select')) return true;
       e.preventDefault();
@@ -573,6 +580,7 @@ export class LevelEditor {
       }
       drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
     }, events.map(createEnemy));
+    if (!this.showOutlines) return;
     for (const event of events) {
       const b = this.bounds(event);
       if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) continue;

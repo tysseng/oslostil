@@ -105,6 +105,8 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- O toggles all asset outlines in the editor without affecting scene rendering, lighting or item editing; held-key repeats do not retrigger the toggle.
+
 - The upper world's teal bottom strip fades to black from y=150 to y=180; everything surrounding the subway below that strip is black, including the entry/exit foreground masks.
 
 - The whole Valkyrien station timeline, including its train and bundled underground items, is shifted 0.8 seconds later; the entrance is now at 87.8 seconds.
