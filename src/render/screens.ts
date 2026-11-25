@@ -109,8 +109,8 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.clip();
     drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
     ctx.restore();
-    drawUndergroundFill(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, H, ENTRY_HALF_WIDTH * 2 + 28,
-      VALKYRIEN_CEILING - H);
+    drawUndergroundFill(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, GROUND, ENTRY_HALF_WIDTH * 2 + 28,
+      VALKYRIEN_CEILING - GROUND);
   }
   if (s.valkyrien.phase === 'stairs') {
     ctx.save();
@@ -119,8 +119,8 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.clip();
     drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
     ctx.restore();
-    drawUndergroundFill(exitX(t) - STAIRS_WIDTH - 24, H, STAIRS_WIDTH + 62,
-      VALKYRIEN_CEILING - H);
+    drawUndergroundFill(exitX(t) - STAIRS_WIDTH - 24, GROUND, STAIRS_WIDTH + 62,
+      VALKYRIEN_CEILING - GROUND);
   }
   drawValkyrienHouse(t);
   drawValkyrienDarkness(t, () => {

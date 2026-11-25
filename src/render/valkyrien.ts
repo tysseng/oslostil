@@ -309,8 +309,8 @@ function polygon(points: [number, number][], color: string): void {
   ctx.fill();
 }
 
-export function drawUndergroundFill(x = 0, y = H, width = W, height = VALKYRIEN_DEPTH + 30): void {
-  const gradient = ctx.createLinearGradient(0, H, 0, VALKYRIEN_FLOOR + VALKYRIEN_BOTTOM);
+export function drawUndergroundFill(x = 0, y = GROUND, width = W, height = VALKYRIEN_DEPTH + 30): void {
+  const gradient = ctx.createLinearGradient(0, GROUND, 0, H);
   gradient.addColorStop(0, '#0a2e33');
   gradient.addColorStop(1, '#000');
   ctx.fillStyle = gradient;
@@ -319,7 +319,7 @@ export function drawUndergroundFill(x = 0, y = H, width = W, height = VALKYRIEN_
 
 export function drawValkyrien(t: number, minX = 0, maxX = W): void {
   const entry = stationEntryX(t), exit = exitX(t), left = Math.max(minX - 10, entry - 50);
-  drawUndergroundFill(minX, H, maxX - minX);
+  drawUndergroundFill(minX, GROUND, maxX - minX);
   if (exit < minX - 100 || left > maxX) return;
   R(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT, '#898d8f');
   const wallAnchor = entry - 50 + (t - VALKYRIEN_ENTRY) * 145 * 0.15;

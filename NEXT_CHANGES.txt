@@ -1,9 +1,11 @@
 - Logo
-- Top side house for valkyrien!
+- Something valuable that is only in Valkyrien.
+
 
 New assets:
 Valkyrien:
 - Ghosts
+- Top side house
 - Entry portal with "Valkyrien" sign above it
 - Valkyrien sign on the exit portal
 - Entry portal for the train.
@@ -18,6 +20,8 @@ Some special asset for Valkyrien, maybe an old fashioned ticket stall.
 
 Backgrounds for neon level
 Better backgrounds for kollektivkaos level
+Lights for the station levels
+Dim down/gradient vehicles
 
 Important before the 3rd
 - pixelate vehicles

@@ -1,9 +1,9 @@
 import { GROUND, H, PX } from './config';
 import type { GameState } from './state';
 
-export const VALKYRIEN_ENTRY = 87;
-// Include the 50-pixel entrance and 45-pixel end margins in the 50% length increase.
-export const VALKYRIEN_EXIT = VALKYRIEN_ENTRY + 12 + 47.5 / 145;
+export const VALKYRIEN_ENTRY = 87.8;
+// Include the 50-pixel entrance and 45-pixel end margins in the station length.
+export const VALKYRIEN_EXIT = VALKYRIEN_ENTRY + (1882.5 * 0.95 - 95) / 145;
 export const SURFACE_STRIP_HEIGHT = H - GROUND;
 export const VALKYRIEN_CAMERA = GROUND - SURFACE_STRIP_HEIGHT / 2 - 14;
 export const VALKYRIEN_CEILING = H + SURFACE_STRIP_HEIGHT / 2;
