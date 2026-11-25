@@ -11,6 +11,7 @@ function isEvent(value: unknown): value is ScheduledEvent {
   if (!value || typeof value !== 'object') return false;
   const e = value as Record<string, unknown>;
   if (!isKind(e.type) || typeof e.arr !== 'number' || !Number.isFinite(e.arr)) return false;
+  if (e.type === 'ghost' && (typeof e.y !== 'number' || e.y >= 0)) return false;
   return (e.y === undefined || (typeof e.y === 'number' && Number.isFinite(e.y) && e.y >= -VALKYRIEN_DEPTH && e.y <= GROUND
       && (e.y >= 0 || stationPlacement(PX, GROUND - e.y, TYPES[e.type].w, TYPES[e.type].h, e.arr))))
     && (e.rel === undefined || (typeof e.rel === 'number' && Number.isFinite(e.rel) && e.rel > 0))

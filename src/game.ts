@@ -7,7 +7,8 @@ import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, ene
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
 import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
-import { VALKYRIEN_FLOOR, belowSurface, clampStationY, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
+import { VALKYRIEN_FLOOR, belowSurface, clampStationY, enterValkyrien, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
+import { updateGhosts } from './ghosts';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, RAINBOW_T0, RAINBOW_T1, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX } from './timeline';
 
 /** seconds she is gone after losing her last heart */
@@ -126,6 +127,7 @@ export class Game {
       if (p.jumps < 2) { p.vy = p.jumps ? -250 : -300; p.jumps++; p.slide = 0; this.audio.sfx('jump'); }
     }
     if (c === 'ArrowDown' || c === 'KeyS') {
+      if (enterValkyrien(this.s)) return;
       if (p.y >= playerFloor(this.s) || p.ride || p.propRide || p.machineRide !== undefined) {
         p.slide = 0.45;
         p.slideDirection = this.keys.has('ArrowLeft') || this.keys.has('KeyA') ? -1 : 1;
@@ -460,6 +462,7 @@ export class Game {
     }
     s.droppings = s.droppings.filter(drop => drop.life > 0 && drop.x > -12);
 
+    updateGhosts(s, t, dt);
     // enemies
     for (const e of s.enemies) {
       if (e.dead) continue;
@@ -519,7 +522,14 @@ export class Game {
           if (isPowerup(e.type)) this.collectHealth(e.type, x, ey);
           else if (e.type === 'terminal') { s.power = t + 8 * BAR; s.pops.push({ x, y: ey - 20, txt: 'PIP! ★★★', life: 1.2, c: '#7cf' }); }
           else { s.tickets++; s.ammo++; s.score += 50; s.pops.push({ x, y: ey - 8, txt: '+1', life: 0.5, c: '#ffd84a' }); }
-        } else if (s.inv <= 0 && !(e.type === 'blob_hop' && hopPose(e, t).frame < 2)) this.hurt();
+        } else if (s.inv <= 0 && !e.ghost?.gaveUp && !(e.type === 'blob_hop' && hopPose(e, t).frame < 2)) {
+          this.hurt();
+          if (e.type === 'ghost') {
+            e.ghost ??= { x, base: ey, vx: -e.rel, following: false };
+            e.ghost.gaveUp = true;
+            e.ghost.following = false;
+          }
+        }
       }
     }
     // Resolve stomp crossings before landing, including fast falls that cross an enemy and the ground in one frame.

@@ -2,7 +2,8 @@ import { GROUND, H, PX } from './config';
 import type { GameState } from './state';
 
 export const VALKYRIEN_ENTRY = 87;
-export const VALKYRIEN_EXIT = 95;
+// Include the 50-pixel entrance and 45-pixel end margins in the 50% length increase.
+export const VALKYRIEN_EXIT = VALKYRIEN_ENTRY + 12 + 47.5 / 145;
 export const SURFACE_STRIP_HEIGHT = H - GROUND;
 export const VALKYRIEN_CAMERA = GROUND - SURFACE_STRIP_HEIGHT / 2 - 14;
 export const VALKYRIEN_CEILING = H + SURFACE_STRIP_HEIGHT / 2;
@@ -10,35 +11,49 @@ export const VALKYRIEN_BOTTOM = 26;
 export const VALKYRIEN_FLOOR = VALKYRIEN_CAMERA + H - VALKYRIEN_BOTTOM;
 export const VALKYRIEN_DEPTH = VALKYRIEN_FLOOR - GROUND;
 export const VALKYRIEN_HEIGHT = VALKYRIEN_FLOOR - VALKYRIEN_CEILING;
-export const CHUTE_HALF_WIDTH = 22;
+export const ENTRY_HALF_WIDTH = 22;
 export const STAIRS_WIDTH = 140;
 const SPEED = 145;
 export const stationPlacement = (x: number, base: number, width: number, height: number, t: number): boolean =>
   base <= VALKYRIEN_FLOOR && base - height >= VALKYRIEN_CEILING
-  && x - width / 2 >= manholeX(t) - 50 && x + width / 2 <= exitX(t) - STAIRS_WIDTH;
+  && x - width / 2 >= stationEntryX(t) - 50 && x + width / 2 <= exitX(t) - STAIRS_WIDTH;
 
 export interface ValkyrienState {
   phase: 'surface' | 'chute' | 'underground' | 'run-in' | 'stairs' | 'house' | 'exit';
   camera: number;
-  openedAt?: number;
-  coverRider?: boolean;
   ascendingAt?: number;
 }
 
-export const manholeX = (t: number): number => PX + (VALKYRIEN_ENTRY - t) * SPEED;
+export const stationEntryX = (t: number): number => PX + (VALKYRIEN_ENTRY - t) * SPEED;
 export const exitX = (t: number): number => PX + (VALKYRIEN_EXIT - t) * SPEED;
 export const VALKYRIEN_TRAIN_START = VALKYRIEN_ENTRY + (PX - 20) / SPEED;
 export function valkyrienTrainNose(t: number): number | null {
   if (t < VALKYRIEN_TRAIN_START) return null;
-  return manholeX(t) - 50 + 360 * (t - VALKYRIEN_TRAIN_START);
+  return stationEntryX(t) - 50 + 360 * (t - VALKYRIEN_TRAIN_START);
 }
 export const belowSurface = (s: GameState): boolean =>
   !['surface', 'house', 'exit'].includes(s.valkyrien.phase);
 export const routeControlsPlayer = (s: GameState): boolean =>
-  !!s.valkyrien.coverRider || ['chute', 'run-in', 'stairs', 'house'].includes(s.valkyrien.phase);
+  ['chute', 'run-in', 'stairs', 'house'].includes(s.valkyrien.phase);
 export const playerFloor = (s: GameState): number => belowSurface(s) ? VALKYRIEN_FLOOR : GROUND;
 export const clampStationY = (s: GameState, base: number, height: number): number =>
   ['underground', 'run-in'].includes(s.valkyrien.phase) ? Math.max(VALKYRIEN_CEILING + height, base) : base;
+
+export function enterValkyrien(s: GameState): boolean {
+  const p = s.p;
+  if (s.valkyrien.phase !== 'surface' || s.down > 0 || Math.abs(p.x - stationEntryX(s.lastT)) > ENTRY_HALF_WIDTH
+    || Math.abs(p.y - GROUND) > 2 || p.vy < 0) return false;
+  s.valkyrien.phase = 'chute';
+  p.x = stationEntryX(s.lastT);
+  p.y = GROUND;
+  p.vy = 650;
+  p.slide = 0;
+  p.jumps = 0;
+  p.ride = undefined;
+  p.propRide = undefined;
+  p.machineRide = undefined;
+  return true;
+}
 
 /** Resolve the optional route after ordinary gravity, instead of surface ground landing. */
 export function resolveValkyrien(s: GameState, t: number, dt: number, previousY: number): void {
@@ -49,31 +64,8 @@ export function resolveValkyrien(s: GameState, t: number, dt: number, previousY:
     p.x += 130 * dt;
     if (p.x - 16 > exitX(t) + 40) r.phase = 'exit';
   }
-  if (r.coverRider) {
-    if (p.vy < 0 || Math.abs(p.x - manholeX(t)) > 25) r.coverRider = false;
-    else p.x = manholeX(t);
-  }
-  const hole = Math.abs(p.x - manholeX(t)) < 18;
-  if (r.phase === 'surface' && s.down <= 0 && p.vy > 0 && previousY <= GROUND && p.y >= GROUND && hole) {
-    if (r.openedAt === undefined && previousY < GROUND - 1) {
-      r.openedAt = t;
-      p.y = GROUND;
-      r.coverRider = true;
-      p.vy = 0;
-      p.jumps = 0;
-      p.slide = 0;
-    } else if (r.openedAt !== undefined && t - r.openedAt >= 0.22) {
-      r.phase = 'chute';
-      r.coverRider = false;
-      p.ride = undefined;
-      p.propRide = undefined;
-      p.machineRide = undefined;
-      p.slide = 0;
-      p.vy = 650;
-    }
-  }
   if (r.phase === 'chute') {
-    p.x = manholeX(t);
+    p.x = stationEntryX(t);
     p.vy = Math.max(650, p.vy);
     if (p.y - 32 >= VALKYRIEN_CEILING) r.phase = 'underground';
   }

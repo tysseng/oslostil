@@ -1,6 +1,6 @@
 import { GROUND, H, W } from '../config';
-import type { ValkyrienState } from '../valkyrien';
-import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_ENTRY, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, manholeX, valkyrienTrainNose } from '../valkyrien';
+import { STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_ENTRY, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, stationEntryX, valkyrienTrainNose } from '../valkyrien';
+import { enemyHeight, enemyX, type Enemy } from '../state';
 import { HIRES_PPM, RES, R, ctx, drawToContext, drawVehicle, horizontalBounds, loadImage, meta, ready, text } from './draw';
 import subwayOldUrl from '../../assets/vehicles/hires/subway-old.png';
 
@@ -19,6 +19,22 @@ const windowLayer = document.createElement('canvas');
 const windowLayerCtx = windowLayer.getContext('2d')!;
 const windowOcclusion = document.createElement('canvas');
 const windowOcclusionCtx = windowOcclusion.getContext('2d')!;
+let ghostGlow: HTMLCanvasElement | null = null;
+
+function ghostLight(): HTMLCanvasElement {
+  if (ghostGlow) return ghostGlow;
+  const bitmap = document.createElement('canvas');
+  bitmap.width = bitmap.height = 72 * RES;
+  const c = bitmap.getContext('2d')!;
+  const gradient = c.createRadialGradient(36 * RES, 36 * RES, 0, 36 * RES, 36 * RES, 36 * RES);
+  gradient.addColorStop(0, 'rgba(80, 255, 100, 0.85)');
+  gradient.addColorStop(0.35, 'rgba(50, 240, 80, 0.5)');
+  gradient.addColorStop(1, 'rgba(30, 220, 60, 0)');
+  c.fillStyle = gradient;
+  c.fillRect(0, 0, bitmap.width, bitmap.height);
+  ghostGlow = bitmap;
+  return bitmap;
+}
 
 function trainWindowLights(t: number): { bitmap: HTMLCanvasElement; x: number; y: number; width: number; height: number } | null {
   const nose = valkyrienTrainNose(t);
@@ -130,7 +146,7 @@ function trainLights(t: number): { x: number; y: number; rear: boolean }[] {
 }
 
 function stationLights(t: number): number[] {
-  const start = manholeX(t) + 20;
+  const start = stationEntryX(t) + 20;
   const count = Math.max(0, Math.ceil((exitX(t) + 45 - start) / LIGHT_SPACING) - 1);
   return Array.from({ length: count }, (_, i) => start + i * LIGHT_SPACING + 32.5);
 }
@@ -177,9 +193,9 @@ function clipOutsideStairs(t: number, left: number, width: number, height: numbe
   ctx.clip('evenodd');
 }
 
-export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void): void {
+export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void, enemies: Enemy[] = []): void {
   const bounds = horizontalBounds();
-  const left = Math.max(bounds.left, manholeX(t) - 50);
+  const left = Math.max(bounds.left, stationEntryX(t) - 50);
   const right = Math.min(bounds.right, exitX(t) + 45);
   if (right <= left) return;
   const height = VALKYRIEN_HEIGHT + VALKYRIEN_BOTTOM;
@@ -219,6 +235,11 @@ export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void
     darknessCtx.drawImage(trainLightCone(), 0, -30, 120, 60);
     darknessCtx.restore();
   }
+  const ghosts = enemies.filter(e => e.type === 'ghost' && !e.dead);
+  for (const ghost of ghosts) {
+    darknessCtx.drawImage(ghostLight(), enemyX(ghost, t) - left - 36,
+      GROUND - enemyHeight(ghost, t) - VALKYRIEN_CEILING - 44, 72, 72);
+  }
   const windows = trainWindowLights(t);
   if (windows) {
     for (const target of [windowLayer, windowOcclusion]) {
@@ -249,6 +270,11 @@ export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void
   ctx.rect(left, VALKYRIEN_CEILING, right - left, VALKYRIEN_HEIGHT);
   ctx.clip();
   ctx.globalCompositeOperation = 'screen';
+  for (const ghost of ghosts) {
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(ghostLight(), enemyX(ghost, t) - 36, GROUND - enemyHeight(ghost, t) - 44, 72, 72);
+  }
+  ctx.globalAlpha = 1;
   if (windows) {
     ctx.globalAlpha = 0.35;
     ctx.drawImage(windowLayer, left, VALKYRIEN_CEILING, width / RES, height);
@@ -291,8 +317,8 @@ export function drawUndergroundFill(x = 0, y = H, width = W, height = VALKYRIEN_
   ctx.fillRect(x, y, width, height);
 }
 
-export function drawValkyrien(t: number, route?: ValkyrienState, minX = 0, maxX = W): void {
-  const entry = manholeX(t), exit = exitX(t), left = Math.max(minX - 10, entry - 50);
+export function drawValkyrien(t: number, minX = 0, maxX = W): void {
+  const entry = stationEntryX(t), exit = exitX(t), left = Math.max(minX - 10, entry - 50);
   drawUndergroundFill(minX, H, maxX - minX);
   if (exit < minX - 100 || left > maxX) return;
   R(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT, '#898d8f');
@@ -342,19 +368,10 @@ export function drawValkyrien(t: number, route?: ValkyrienState, minX = 0, maxX 
   }
   ctx.restore();
   if (entry > minX - 30 && entry < maxX + 30) {
-    if (route?.openedAt !== undefined) {
-      R(entry - CHUTE_HALF_WIDTH, GROUND, CHUTE_HALF_WIDTH * 2, VALKYRIEN_CEILING - GROUND, '#202529');
-      R(entry - CHUTE_HALF_WIDTH - 2, GROUND, 2, VALKYRIEN_CEILING - GROUND, '#a4a8a9');
-      R(entry + CHUTE_HALF_WIDTH, GROUND, 2, VALKYRIEN_CEILING - GROUND, '#a4a8a9');
-    }
-    const fall = route?.openedAt === undefined ? 0 : Math.min(1, (t - route.openedAt) / 0.22);
-    ctx.save();
-    ctx.translate(entry, GROUND + fall * (VALKYRIEN_CEILING - GROUND));
-    ctx.scale(1, 1 - fall * 0.85);
-    ctx.fillStyle = '#a5aaad';
-    ctx.beginPath(); ctx.ellipse(0, -2, 22, 4, 0, 0, Math.PI * 2); ctx.fill();
-    for (let x = -14; x <= 14; x += 7) R(x, -4, 2, 4, '#51585c');
-    ctx.restore();
+    R(entry - 20, GROUND - 40, 40, 40, '#858b8e');
+    R(entry - 16, GROUND - 36, 32, 36, '#202b30');
+    text('T', entry, GROUND - 31, '#d8e5dd', 12, 'center');
+    text('v', entry, GROUND - 14, '#d8e5dd', 8, 'center');
   }
 }
 

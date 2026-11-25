@@ -3,7 +3,7 @@ import { BLOB_HOP, BROKEN_BOARD, isPowerup, isTree, itemLayer, treeDepth, TRAM_W
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 import type { ValkyrienState } from './valkyrien';
-import { VALKYRIEN_CEILING } from './valkyrien';
+import { VALKYRIEN_CEILING, VALKYRIEN_FLOOR } from './valkyrien';
 
 /** Throws you start with, before collecting any tickets. */
 export const START_AMMO = 3;
@@ -21,6 +21,7 @@ export interface Enemy extends ScheduledEvent {
   crumbledAt?: number;
   dead?: boolean;
   gone?: boolean;
+  ghost?: { x: number; base: number; vx: number; following: boolean; gaveUp?: boolean };
 }
 
 export interface Star { x: number; y: number; vx: number; vy: number; a: number; ninja: boolean; gone?: boolean }
@@ -148,7 +149,7 @@ export function createState(events: ScheduledEvent[] = loadDefaultLevel()): Game
 }
 
 /** Where an enemy is on screen at song time t. */
-export const enemyX = (e: Enemy, t: number): number => PX + (e.arr - t) * e.rel
+export const enemyX = (e: Enemy, t: number): number => e.ghost?.x ?? PX + (e.arr - t) * e.rel
   + (e.type === 'blob_hop' && e.y >= 0 ? 40 * (hopTravel(e, e.arr) - hopTravel(e, t) - 5 / 8 * (e.arr - t)) : 0);
 
 function hopTravel(e: ScheduledEvent, t: number): number {
@@ -191,6 +192,11 @@ export function eventArrival(e: ScheduledEvent, t: number, x: number): number {
 
 /** Song-time flight, seeded from the authored position rather than frame/update order. */
 export function enemyHeight(e: Enemy, t: number): number {
+  if (e.type === 'ghost') {
+    if (e.ghost) return GROUND - e.ghost.base;
+    return GROUND - Math.max(VALKYRIEN_CEILING + TYPES.ghost.h,
+      Math.min(VALKYRIEN_FLOOR - 4, GROUND - e.y + 4 * Math.sin((t - e.arr) * 3)));
+  }
   if (isPowerup(e.type)) return e.y + 2 * Math.sin(t * 4);
   if (!e.dead && e.type === 'blob_hop') return e.y + hopPose(e, t).lift;
   if (e.dead || (e.type !== 'pigeon' && e.type !== 'gull')) return e.y;

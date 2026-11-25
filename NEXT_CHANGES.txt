@@ -2,10 +2,20 @@
 - Top side house for valkyrien!
 
 New assets:
-- valkyrien sign
+Valkyrien:
+- Ghosts
+- Entry portal with "Valkyrien" sign above it
+- Valkyrien sign on the exit portal
+- Entry portal for the train.
+- valkyrien sign for the wall, with three point lights above it
 - valkyrien rear wall
 - valkyrien ceiling lights
-- valkyrien vintage vall posters
+- valkyrien vintage wall posters
+
+Tbane pole with logo, higher than entry
+Station sign in the modern subway style, with "Majorstuen" text.
+Some special asset for Valkyrien, maybe an old fashioned ticket stall.
+
 Backgrounds for neon level
 Better backgrounds for kollektivkaos level
 

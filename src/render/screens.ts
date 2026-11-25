@@ -8,7 +8,7 @@ import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from
 import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
-import { CHUTE_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, manholeX, playerFloor } from '../valkyrien';
+import { ENTRY_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, stationEntryX, playerFloor } from '../valkyrien';
 import { machinePosition } from '../rainbow';
 import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValkyrienHouse } from './valkyrien';
 
@@ -20,7 +20,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   else if (s.boardShake > 0) resetTransform(Math.round((Math.random() - 0.5) * 4), Math.round((Math.random() - 0.5) * 4));
   ctx.translate(0, -s.valkyrien.camera);
   drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
-  drawValkyrien(t, s.valkyrien);
+  drawValkyrien(t);
   const prev = SECTIONS[SECTIONS.indexOf(sec) - 1];
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
@@ -60,7 +60,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   ctx.save();
   if (inChute) {
     ctx.beginPath();
-    ctx.rect(manholeX(t) - CHUTE_HALF_WIDTH, GROUND, CHUTE_HALF_WIDTH * 2, VALKYRIEN_CEILING - GROUND + 32);
+    ctx.rect(stationEntryX(t) - ENTRY_HALF_WIDTH, 0, ENTRY_HALF_WIDTH * 2, VALKYRIEN_CEILING + 32);
     ctx.clip();
   }
   if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) {
@@ -102,6 +102,16 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   drawLampLights(s.enemies, t);
   for (const q of s.pops) text(q.txt, q.x, q.y, q.c, 6, 'center');
   drawValkyrienBalustrade(t);
+  if (inChute) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, GROUND, ENTRY_HALF_WIDTH * 2 + 28, H - GROUND);
+    ctx.clip();
+    drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
+    ctx.restore();
+    drawUndergroundFill(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, H, ENTRY_HALF_WIDTH * 2 + 28,
+      VALKYRIEN_CEILING - H);
+  }
   if (s.valkyrien.phase === 'stairs') {
     ctx.save();
     ctx.beginPath();
@@ -126,7 +136,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
       ctx.restore();
     }
     drawValkyrienBalustrade(t);
-  });
+  }, s.enemies);
   resetTransform();
 
   if (t >= FINAL_HIT) { // «-STIL!»

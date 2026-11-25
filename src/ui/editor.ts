@@ -3,10 +3,10 @@ import type { Game } from '../game';
 import { loadDefaultLevel, parseLevel } from '../level';
 import { RES, canvas, ctx, resetTransform } from '../render/draw';
 import { drawScene } from '../render/scenes';
-import { drawEnemy, drawLampLights } from '../render/sprites';
+import { GHOST_IMAGE, drawEnemy, drawLampLights } from '../render/sprites';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
 import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
-import { POWERUPS, isPowerup, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
+import { GHOST, POWERUPS, isPowerup, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
 import { compareItems, createEnemy, enemyBodyHeight, enemyHeight, enemyX, eventArrival, eventSpeed } from '../state';
 import { sectionAt } from '../timeline';
 import { fmtTime } from './devpanel';
@@ -27,10 +27,11 @@ import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValk
 
 const STORAGE_KEY = 'oslostil-level-v1';
 const kinds = Object.keys(TYPES) as EnemyKind[];
-const categories = ['Enemies', 'Power-ups', 'Tickets & coins', 'Lights', 'Props & platforms', 'Trees', 'Vehicles', 'Hazards'] as const;
+const categories = ['Tunnel', 'Enemies', 'Power-ups', 'Tickets & coins', 'Lights', 'Props & platforms', 'Trees', 'Vehicles', 'Hazards'] as const;
 type Category = (typeof categories)[number];
 
 function itemCategory(kind: EnemyKind): Category {
+  if (kind === 'ghost') return 'Tunnel';
   if (isPowerup(kind) || kind === 'terminal') return 'Power-ups';
   if (isLamp(kind)) return 'Lights';
   if (isTree(kind)) return 'Trees';
@@ -111,6 +112,7 @@ export class LevelEditor {
       <p>Drag any item to move it. Right-click an item to delete it. Select an item below, then click empty space to place copies. Move / Esc stops placing.</p>
       <p>Left/right arrows or scrolling move through time. Up/down arrows or Shift + scrolling pan vertically to view Valkyrien.</p>
       <p>Broken boards crumble when landed on. Select a hopping glitch to edit its hop variant; tool settings also apply to new copies.</p>
+      <p>Ghosts can only be placed inside Valkyrien. They glow green, damage on contact and start following after you pass them. Press Down/S at the square surface entrance to enter the station.</p>
       </details>`;
     this.entry.after(this.panel);
     this.slider = this.panel.querySelector('input[type="range"]')!;
@@ -230,6 +232,18 @@ export class LevelEditor {
         img.src = tramUrl;
         img.alt = '';
         button.prepend(img);
+      } else if (kind === 'ghost') {
+        const preview = document.createElement('canvas');
+        preview.width = 64; preview.height = 40;
+        const draw = () => {
+          const c = preview.getContext('2d')!, [w, h] = GHOST.cell;
+          c.imageSmoothingEnabled = false;
+          c.shadowColor = '#50ff64'; c.shadowBlur = 10;
+          c.drawImage(GHOST_IMAGE, 0, GHOST.row * h, w, h, 16, 4, w, h);
+        };
+        if (GHOST_IMAGE.complete && GHOST_IMAGE.naturalWidth) draw();
+        else GHOST_IMAGE.addEventListener('load', draw, { once: true });
+        button.prepend(preview);
       } else if (isPowerup(kind)) {
         const preview = document.createElement('canvas');
         preview.width = 64; preview.height = 40;
@@ -433,6 +447,7 @@ export class LevelEditor {
 
   private position(e: ScheduledEvent, x: number, base: number): boolean {
     const underground = base > GROUND;
+    if (e.type === 'ghost' && !underground) return false;
     if (underground) {
       const clearance = isPowerup(e.type) ? 2 : e.type === 'ticket' ? 1 : 0;
       base = Math.min(VALKYRIEN_FLOOR - clearance, Math.round(base));
@@ -540,7 +555,7 @@ export class LevelEditor {
     ctx.translate(this.viewOffset, 0);
     ctx.translate(0, -this.cameraY);
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0);
-    drawValkyrien(t, undefined, -this.viewOffset, W + this.viewOffset);
+    drawValkyrien(t, -this.viewOffset, W + this.viewOffset);
     const events = this.layeredEvents();
     for (const event of events) {
       const b = this.bounds(event);
@@ -557,7 +572,7 @@ export class LevelEditor {
         drawEnemy(enemy, enemyX(enemy, t), t);
       }
       drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
-    });
+    }, events.map(createEnemy));
     for (const event of events) {
       const b = this.bounds(event);
       if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) continue;
