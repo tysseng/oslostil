@@ -3,18 +3,6 @@
 
 
 New assets:
-Valkyrien:
-- Ghosts
-- Top side house
-- Entry portal with "Valkyrien" sign above it
-- Valkyrien sign on the exit portal
-- Entry portal for the train.
-- valkyrien sign for the wall, with three point lights above it
-- valkyrien rear wall
-- valkyrien ceiling lights
-- valkyrien vintage wall posters
-
-Tbane pole with logo, higher than entry
 Station sign in the modern subway style, with "Majorstuen" text.
 Some special asset for Valkyrien, maybe an old fashioned ticket stall.
 

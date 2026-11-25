@@ -33,6 +33,9 @@ const SUBWAY_PPM = 10;
 const LIGHT_SPACING = 140;
 const CONE_WIDTH = 100;
 const CONE_HEIGHT = VALKYRIEN_HEIGHT + 24;
+const STATION_SPEED = 145;
+const WALL_SPEED = STATION_SPEED * 0.85;
+const LIGHT_SPEED = WALL_SPEED * 1.08;
 const darkness = document.createElement('canvas');
 const darknessCtx = darkness.getContext('2d')!;
 let trainCone: HTMLCanvasElement | null = null;
@@ -153,16 +156,18 @@ function trainLights(t: number): { x: number; y: number; rear: boolean }[] {
 }
 
 function stationLights(t: number): number[] {
-  const start = platformStartX(t) + 20;
-  const count = Math.max(0, Math.ceil((exitX(t) + 45 - start) / LIGHT_SPACING) - 1);
-  const foregroundDrift = -(t - VALKYRIEN_ENTRY) * 145 * 0.08;
-  return Array.from({ length: count }, (_, i) => start + i * LIGHT_SPACING + 32.5 + foregroundDrift);
+  const start = platformStartX(VALKYRIEN_ENTRY) + 70;
+  const platformRight = exitX(VALKYRIEN_ENTRY) - STAIRS_WIDTH;
+  const count = Math.max(0, Math.ceil((platformRight - start) / LIGHT_SPACING));
+  const drift = -(t - VALKYRIEN_ENTRY) * LIGHT_SPEED;
+  return Array.from({ length: count }, (_, i) => start + i * LIGHT_SPACING + drift);
 }
 
 function stationSigns(t: number): number[] {
-  const width = exitX(t) - STAIRS_WIDTH - platformStartX(t);
-  const anchor = platformStartX(t) + (width - 12 * 128) / 2;
-  return Array.from({ length: 3 }, (_, i) => anchor + (1.5 + i * 4) * 128);
+  const width = exitX(VALKYRIEN_ENTRY) - STAIRS_WIDTH - platformStartX(VALKYRIEN_ENTRY);
+  const anchor = platformStartX(VALKYRIEN_ENTRY) + (width - 12 * 128) / 2;
+  const drift = -(t - VALKYRIEN_ENTRY) * WALL_SPEED;
+  return Array.from({ length: 3 }, (_, i) => anchor + drift + (1.5 + i * 4) * 128);
 }
 
 function stairSilhouette(t: number): void {
@@ -323,8 +328,9 @@ export function drawValkyrien(t: number, minX = 0, maxX = W, drawWallItems?: () 
   drawUndergroundFill(minX, GROUND, maxX - minX);
   if (exit < minX - 100 || left > maxX) return;
   R(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT, '#898d8f');
-  const platformWidth = exit - STAIRS_WIDTH - platformStartX(t);
-  const wallAnchor = platformStartX(t) + (platformWidth - 12 * 128) / 2;
+  const platformWidth = exitX(VALKYRIEN_ENTRY) - STAIRS_WIDTH - platformStartX(VALKYRIEN_ENTRY);
+  const wallDrift = -(t - VALKYRIEN_ENTRY) * WALL_SPEED;
+  const wallAnchor = platformStartX(VALKYRIEN_ENTRY) + wallDrift + (platformWidth - 12 * 128) / 2;
   ctx.save();
   ctx.beginPath();
   ctx.rect(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT);

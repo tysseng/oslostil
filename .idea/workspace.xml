@@ -3,19 +3,15 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="ensemble" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Fixed valkyrien exit">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So many things for valkyrien">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/NEXT_CHANGES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/valkyrien.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/valkyrien.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,23 +28,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0497162411020022" />
-      <entry key="MS500" value="1.9256530531105451" />
-      <entry key="S2" value="4.359933037019145" />
-      <entry key="S5" value="6.417120557776584" />
-      <entry key="S10" value="7.533345724178289" />
-      <entry key="S30" value="8.465012982260717" />
-      <entry key="S60" value="8.726223516892908" />
-      <entry key="M2" value="8.861498911239622" />
-      <entry key="M5" value="8.944213374398164" />
-      <entry key="M10" value="8.978271442550152" />
-      <entry key="M15" value="9.044147168499883" />
-      <entry key="M30" value="9.673453909416432" />
-      <entry key="H1" value="11.683583206789113" />
-      <entry key="H2" value="20.858888237651236" />
-      <entry key="H4" value="56.72096703580636" />
-      <entry key="D1" value="393.38281242892805" />
-      <entry key="W1" value="1097.6853046067001" />
+      <entry key="MS100" value="1.0000000004922238" />
+      <entry key="MS500" value="1.017334005890229" />
+      <entry key="S2" value="2.1057777909187045" />
+      <entry key="S5" value="3.9927308050631547" />
+      <entry key="S10" value="5.224500979407155" />
+      <entry key="S30" value="6.3341863156974245" />
+      <entry key="S60" value="6.656837138017268" />
+      <entry key="M2" value="6.82577194418763" />
+      <entry key="M5" value="6.929694741382219" />
+      <entry key="M10" value="6.981716983648901" />
+      <entry key="M15" value="7.114848330041292" />
+      <entry key="M30" value="8.184822792691456" />
+      <entry key="H1" value="11.103339364614225" />
+      <entry key="H2" value="19.367446925550208" />
+      <entry key="H4" value="50.67925015979789" />
+      <entry key="D1" value="383.6223872252857" />
+      <entry key="W1" value="1097.8789343032745" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -58,35 +54,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="2.430454831280487E-302" />
-      <entry key="M5" value="2.2608670358216043E-121" />
-      <entry key="M10" value="4.754857553935343E-61" />
-      <entry key="M15" value="6.091978200364933E-41" />
-      <entry key="M30" value="7.805112555475948E-21" />
-      <entry key="H1" value="8.834654806768635E-11" />
-      <entry key="H2" value="9.399284444450288E-6" />
-      <entry key="H4" value="0.0030658252468871083" />
-      <entry key="D1" value="0.3811458827147165" />
-      <entry key="W1" value="0.8712762792224653" />
+      <entry key="M2" value="5.90516746E-316" />
+      <entry key="M5" value="8.100146779301441E-127" />
+      <entry key="M10" value="9.000081543686936E-64" />
+      <entry key="M15" value="9.321753823375515E-43" />
+      <entry key="M30" value="9.654923005066044E-22" />
+      <entry key="H1" value="3.107237198069393E-11" />
+      <entry key="H2" value="5.574259769753604E-6" />
+      <entry key="H4" value="0.0023609870329490737" />
+      <entry key="D1" value="0.36490706089296115" />
+      <entry key="W1" value="0.8658738215402699" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.0206776659906307" />
-      <entry key="MS500" value="1.900676069477507" />
-      <entry key="S2" value="4.274167957027514" />
-      <entry key="S5" value="6.35308852443803" />
-      <entry key="S10" value="7.493793658034991" />
-      <entry key="S30" value="8.449820916155653" />
-      <entry key="S60" value="8.71835262441895" />
-      <entry key="M2" value="8.857492834823532" />
-      <entry key="M5" value="8.942593741768867" />
-      <entry key="M10" value="8.977458672060568" />
-      <entry key="M15" value="9.04360328529378" />
-      <entry key="M30" value="9.673148827899176" />
-      <entry key="H1" value="11.683326012853778" />
-      <entry key="H2" value="20.858641812300313" />
-      <entry key="H4" value="56.7237540653561" />
-      <entry key="D1" value="393.76366086700557" />
-      <entry key="W1" value="1098.5564967461705" />
+      <entry key="MS100" value="3.328914177531528E-8" />
+      <entry key="MS500" value="0.048926921652342685" />
+      <entry key="S2" value="1.525418096010686" />
+      <entry key="S5" value="3.6984196410022667" />
+      <entry key="S10" value="5.064303933209572" />
+      <entry key="S30" value="6.277577911485694" />
+      <entry key="S60" value="6.628110357987453" />
+      <entry key="M2" value="6.811301223661918" />
+      <entry key="M5" value="6.923880468674486" />
+      <entry key="M10" value="6.978803963555139" />
+      <entry key="M15" value="7.112898052292649" />
+      <entry key="M30" value="8.183813592239767" />
+      <entry key="H1" value="11.102763054871541" />
+      <entry key="H2" value="19.36705782632017" />
+      <entry key="H4" value="50.6812749609935" />
+      <entry key="D1" value="383.986989265577" />
+      <entry key="W1" value="1098.744721614088" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -156,7 +152,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="So many nice fixes again!" />
     <MESSAGE value="Added logo to startup screen" />
     <MESSAGE value="Tram fixes etc" />
     <MESSAGE value="Longer delay before respawn" />
@@ -181,6 +176,7 @@
     <MESSAGE value="Added ghosts" />
     <MESSAGE value="Fixed entrance" />
     <MESSAGE value="Fixed valkyrien exit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed valkyrien exit" />
+    <MESSAGE value="So many things for valkyrien" />
+    <option name="LAST_COMMIT_MESSAGE" value="So many things for valkyrien" />
   </component>
 </project>

@@ -1,5 +1,5 @@
 import { BEAT, GROUND, PH, PLAYER_MAX_HP, PX, W, rng } from './config';
-import { BLOB_HOP, BROKEN_BOARD, isGhost, isPowerup, isTree, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
+import { BLOB_HOP, BROKEN_BOARD, isGhost, isPowerup, isTree, isWallPoster, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 import type { ValkyrienState } from './valkyrien';
@@ -123,7 +123,9 @@ export interface GameState {
 
 export const eventSpeed = (e: ScheduledEvent): number =>
   e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : 1);
-const movementSpeed = (e: ScheduledEvent): number => (e.y ?? 0) < 0 ? 145 : eventSpeed(e) * (isTree(e.type) ? 0.5 + treeDepth(e) * 0.25 : 1);
+const movementSpeed = (e: ScheduledEvent): number =>
+  (e.y ?? 0) < 0 ? (isWallPoster(e.type) ? 145 * 0.85 : 145)
+  : eventSpeed(e) * (isTree(e.type) ? 0.5 + treeDepth(e) * 0.25 : 1);
 export const spawnTime = (e: ScheduledEvent): number =>
   e.arr - (W + 100 - PX + (e.type === 'blob_hop' ? 40 * BEAT : 0)) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
 
