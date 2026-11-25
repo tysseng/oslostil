@@ -14,6 +14,7 @@ export const VALKYRIEN_HEIGHT = VALKYRIEN_FLOOR - VALKYRIEN_CEILING;
 export const ENTRY_HALF_WIDTH = 22;
 export const STAIRS_WIDTH = 140;
 const SPEED = 145;
+const ENTRY_DROP_SPEED = 260;
 export const stationPlacement = (x: number, base: number, width: number, height: number, t: number): boolean =>
   base <= VALKYRIEN_FLOOR && base - height >= VALKYRIEN_CEILING
   && x - width / 2 >= stationEntryX(t) - 50 && x + width / 2 <= exitX(t) - STAIRS_WIDTH;
@@ -52,7 +53,7 @@ export function enterValkyrien(s: GameState): boolean {
   s.valkyrien.phase = 'chute';
   p.x = stationEntryX(s.lastT);
   p.y = GROUND;
-  p.vy = 650;
+  p.vy = ENTRY_DROP_SPEED;
   p.slide = 0;
   p.jumps = 0;
   p.ride = undefined;
@@ -72,7 +73,8 @@ export function resolveValkyrien(s: GameState, t: number, dt: number, previousY:
   }
   if (r.phase === 'chute') {
     p.x = stationEntryX(t);
-    p.vy = Math.max(650, p.vy);
+    p.vy = ENTRY_DROP_SPEED;
+    p.y = previousY + ENTRY_DROP_SPEED * dt;
     if (p.y - 32 >= VALKYRIEN_CEILING) r.phase = 'underground';
   }
   if (r.phase === 'run-in') {

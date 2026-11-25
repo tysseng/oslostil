@@ -5,29 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added ghosts">
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost-bedsheet-light.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost-bedsheet.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost-bedsheet.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost-light.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost-slime-light.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost-slime.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost-slime.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/sprites/ghost.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/render/ghost.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/ghost.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/sprites/ghost_variants.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/sprites/ghost.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/sprites/ghost.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ghosts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ghosts.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rainbow.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/rainbow.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/scenes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/scenes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/render/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/valkyrien.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/valkyrien.ts" afterDir="false" />
     </list>
@@ -170,7 +152,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated level titles" />
     <MESSAGE value="Should fix highscore screen.&#10;Multiplier when jumping on things&#10;Backwards move is now faster than scroll" />
     <MESSAGE value="So many nice fixes!" />
     <MESSAGE value="So many nice fixes again!" />
@@ -195,6 +176,7 @@
     <MESSAGE value="Added ghosts to valkyrien" />
     <MESSAGE value="Small fixes" />
     <MESSAGE value="Remove asset outlines in editor" />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove asset outlines in editor" />
+    <MESSAGE value="Added ghosts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added ghosts" />
   </component>
 </project>

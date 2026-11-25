@@ -302,7 +302,7 @@ function drawBurningTrams(t: number, bx: number): void {
   }
 }
 
-export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: number, taggerStoppedAt?: number): void {
+export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: number, taggerStoppedAt?: number, drawBackgroundItems?: () => void): void {
   const { left, right } = horizontalBounds();
   const name: SceneName = scene === 'map' && t >= COLOR_T ? 'map2' : scene;
   sky(SKY[name]);
@@ -372,7 +372,6 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
     // classic British-style Oslo, then at 1:42.0 the same street in Tokyoslo style (no place-name signs)
     if (name === 'map2') drawTokyoslo(bx);
     else drawClassicOslo(bx);
-    if (name === 'map') drawSubway(t, taggerStoppedAt); // in front of the buildings
   } else if (name === 'chaos') { // «brennende trikker og busser på skrå» – in burning Tokyoslo
     drawTokyoslo(bx);
     drawBurningTrams(t, bx);
@@ -384,4 +383,13 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
   R(left, GROUND, right - left, H - GROUND, GROUND_COLOR[name]);
   R(left, GROUND, right - left, 2, beatFlash > 0.5 ? '#ffffff' : '#ffcc33');
   for (let i = 0; i < 11; i++) for (const x of repeatedX(i * 32 - bx - 32, 352, 16)) R(x, GROUND + 6, 16, 2, '#00000055');
+  drawBackgroundItems?.();
+  if (name === 'map') {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(left, 0, right - left, GROUND);
+    ctx.clip();
+    drawSubway(t, taggerStoppedAt);
+    ctx.restore();
+  }
 }

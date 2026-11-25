@@ -3,10 +3,14 @@ import { STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VAL
 import { enemyHeight, enemyX, type Enemy } from '../state';
 import { HIRES_PPM, RES, R, ctx, drawToContext, drawVehicle, horizontalBounds, loadImage, meta, ready, text } from './draw';
 import subwayOldUrl from '../../assets/vehicles/hires/subway-old.png';
+import entranceUrl from '../../assets/sprites/valkyrien-entrance.png';
+import entranceLightUrl from '../../assets/sprites/valkyrien-entrance-light.png';
 import { drawGhost } from './ghost';
 import { isGhost } from '../schedule';
 
 const SUBWAY_OLD = loadImage(subwayOldUrl);
+const ENTRANCE = loadImage(entranceUrl);
+const ENTRANCE_LIGHT = loadImage(entranceLightUrl);
 const SUBWAY_PPM = 10;
 const LIGHT_SPACING = 140;
 const CONE_WIDTH = 100;
@@ -355,11 +359,16 @@ export function drawValkyrien(t: number, minX = 0, maxX = W): void {
     R(bottom + STAIRS_WIDTH * u, VALKYRIEN_FLOOR - VALKYRIEN_DEPTH * u, STAIRS_WIDTH / 20, 2, '#c2c5c4');
   }
   ctx.restore();
-  if (entry > minX - 30 && entry < maxX + 30) {
-    R(entry - 20, GROUND - 40, 40, 40, '#858b8e');
-    R(entry - 16, GROUND - 36, 32, 36, '#202b30');
-    text('T', entry, GROUND - 31, '#d8e5dd', 12, 'center');
-    text('v', entry, GROUND - 14, '#d8e5dd', 8, 'center');
+  if (entry > minX - 96 && entry < maxX + 96 && ready(ENTRANCE)) {
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(ENTRANCE, Math.round(entry - 32), GROUND - 64, 64, 64);
+    if (ready(ENTRANCE_LIGHT)) {
+      ctx.imageSmoothingEnabled = true;
+      ctx.globalCompositeOperation = 'screen';
+      ctx.drawImage(ENTRANCE_LIGHT, Math.round(entry - 96), GROUND - 128, 192, 192);
+    }
+    ctx.restore();
   }
 }
 

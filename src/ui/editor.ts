@@ -574,15 +574,18 @@ export class LevelEditor {
     resetTransform();
     ctx.translate(this.viewOffset, 0);
     ctx.translate(0, -this.cameraY);
-    drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0);
-    drawValkyrien(t, -this.viewOffset, W + this.viewOffset);
     const events = this.layeredEvents();
-    for (const event of events) {
+    const drawEvent = (event: ScheduledEvent): void => {
       const b = this.bounds(event);
-      if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) continue;
+      if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) return;
       const enemy = createEnemy(event);
       drawEnemy(enemy, enemyX(enemy, t), t);
-    }
+    };
+    drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0, undefined, () => {
+      for (const event of events) if (isTree(event.type)) drawEvent(event);
+    });
+    drawValkyrien(t, -this.viewOffset, W + this.viewOffset);
+    for (const event of events) if (!isTree(event.type)) drawEvent(event);
     drawLampLights(events.map(createEnemy), t);
     drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
     drawValkyrienHouse(t, -this.viewOffset, W + this.viewOffset);
