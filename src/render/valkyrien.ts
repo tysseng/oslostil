@@ -1,13 +1,19 @@
 import { GROUND, H, W } from '../config';
-import { EXIT_HOUSE_LEFT, EXIT_HOUSE_RIGHT, STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_ENTRY, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, stationEntryX, valkyrienTrainNose } from '../valkyrien';
+import { EXIT_HOUSE_LEFT, EXIT_HOUSE_RIGHT, STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_ENTRY, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, platformStartX, stationEntryX, valkyrienTrainNose } from '../valkyrien';
 import { enemyHeight, enemyX, type Enemy } from '../state';
-import { HIRES_PPM, RES, R, ctx, drawToContext, drawVehicle, horizontalBounds, loadImage, meta, ready, text } from './draw';
+import { HIRES_PPM, RES, R, ctx, drawToContext, drawVehicle, horizontalBounds, loadImage, meta, ready } from './draw';
 import subwayOldUrl from '../../assets/vehicles/hires/subway-old.png';
 import entranceUrl from '../../assets/sprites/valkyrien-entrance.png';
 import entranceLightUrl from '../../assets/sprites/valkyrien-entrance-light.png';
 import houseUrl from '../../assets/sprites/valkyrien-house.png';
 import houseFrontUrl from '../../assets/sprites/valkyrien-house-front.png';
 import houseLightUrl from '../../assets/sprites/valkyrien-house-light.png';
+import wallUrl from '../../assets/sprites/valkyrien-wall.png';
+import signUrl from '../../assets/sprites/valkyrien-sign.png';
+import ceilingLampUrl from '../../assets/sprites/valkyrien-ceiling-lamp.png';
+import tubeLightUrl from '../../assets/sprites/valkyrien-tube-light.png';
+import signLampsUrl from '../../assets/sprites/valkyrien-sign-lamps.png';
+import signLightUrl from '../../assets/sprites/valkyrien-sign-light.png';
 import { drawGhost } from './ghost';
 import { isGhost } from '../schedule';
 
@@ -17,11 +23,16 @@ const ENTRANCE_LIGHT = loadImage(entranceLightUrl);
 const HOUSE = loadImage(houseUrl);
 const HOUSE_FRONT = loadImage(houseFrontUrl);
 const HOUSE_LIGHT = loadImage(houseLightUrl);
+const WALL = loadImage(wallUrl);
+const SIGN = loadImage(signUrl);
+const CEILING_LAMP = loadImage(ceilingLampUrl);
+const TUBE_LIGHT = loadImage(tubeLightUrl);
+const SIGN_LAMPS = loadImage(signLampsUrl);
+const SIGN_LIGHT = loadImage(signLightUrl);
 const SUBWAY_PPM = 10;
 const LIGHT_SPACING = 140;
 const CONE_WIDTH = 100;
 const CONE_HEIGHT = VALKYRIEN_HEIGHT + 24;
-let lightCone: HTMLCanvasElement | null = null;
 const darkness = document.createElement('canvas');
 const darknessCtx = darkness.getContext('2d')!;
 let trainCone: HTMLCanvasElement | null = null;
@@ -142,34 +153,16 @@ function trainLights(t: number): { x: number; y: number; rear: boolean }[] {
 }
 
 function stationLights(t: number): number[] {
-  const start = stationEntryX(t) + 20;
+  const start = platformStartX(t) + 20;
   const count = Math.max(0, Math.ceil((exitX(t) + 45 - start) / LIGHT_SPACING) - 1);
-  return Array.from({ length: count }, (_, i) => start + i * LIGHT_SPACING + 32.5);
+  const foregroundDrift = -(t - VALKYRIEN_ENTRY) * 145 * 0.08;
+  return Array.from({ length: count }, (_, i) => start + i * LIGHT_SPACING + 32.5 + foregroundDrift);
 }
 
-function ceilingLightCone(): HTMLCanvasElement {
-  if (lightCone) return lightCone;
-  const bitmap = document.createElement('canvas');
-  bitmap.width = CONE_WIDTH * RES;
-  bitmap.height = CONE_HEIGHT * RES;
-  const c = bitmap.getContext('2d')!;
-  const pixels = c.createImageData(bitmap.width, bitmap.height);
-  for (let y = 0; y < bitmap.height; y++) {
-    const depth = y / bitmap.height, radius = 1 + depth * 47;
-    for (let x = 0; x < bitmap.width; x++) {
-      const distance = Math.abs((x + 0.5) / RES - CONE_WIDTH / 2);
-      const edge = Math.max(0, Math.min(1, (radius - distance) / Math.min(24, radius)));
-      const bottomFade = Math.max(0, Math.min(1, (1 - depth) / 0.35));
-      const topFade = Math.min(1, depth / 0.025);
-      const alpha = edge * edge * (3 - 2 * edge) * bottomFade * bottomFade * (3 - 2 * bottomFade) * topFade;
-      const i = (y * bitmap.width + x) * 4;
-      pixels.data[i] = pixels.data[i + 1] = pixels.data[i + 2] = 255;
-      pixels.data[i + 3] = Math.round(alpha * 255);
-    }
-  }
-  c.putImageData(pixels, 0, 0);
-  lightCone = bitmap;
-  return bitmap;
+function stationSigns(t: number): number[] {
+  const width = exitX(t) - STAIRS_WIDTH - platformStartX(t);
+  const anchor = platformStartX(t) + (width - 12 * 128) / 2;
+  return Array.from({ length: 3 }, (_, i) => anchor + (1.5 + i * 4) * 128);
 }
 
 function stairSilhouette(t: number): void {
@@ -180,6 +173,13 @@ function stairSilhouette(t: number): void {
   ctx.lineTo(bottom, VALKYRIEN_FLOOR + 6);
   ctx.closePath();
   ctx.rect(top, VALKYRIEN_CEILING, 45, VALKYRIEN_HEIGHT + 6);
+  const entry = stationEntryX(t), landing = platformStartX(t);
+  ctx.moveTo(entry, GROUND - 12);
+  ctx.lineTo(landing, VALKYRIEN_FLOOR - 12);
+  ctx.lineTo(landing, VALKYRIEN_FLOOR + 6);
+  ctx.lineTo(entry, VALKYRIEN_FLOOR + 6);
+  ctx.closePath();
+  ctx.rect(entry - 50, VALKYRIEN_CEILING, 50, VALKYRIEN_HEIGHT + 6);
 }
 
 function clipOutsideStairs(t: number, left: number, width: number, height: number): void {
@@ -206,9 +206,9 @@ export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void
   darknessCtx.fillStyle = 'rgba(0, 0, 0, 0.82)';
   darknessCtx.fillRect(0, 0, width / RES, height);
   darknessCtx.globalCompositeOperation = 'destination-out';
-  const cone = ceilingLightCone();
   const lights = stationLights(t);
   for (const [i, center] of lights.entries()) {
+    if (!ready(TUBE_LIGHT)) break;
     if (center + CONE_WIDTH / 2 < left) continue;
     if (center - CONE_WIDTH / 2 > right) break;
     darknessCtx.save();
@@ -218,8 +218,11 @@ export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void
       drawToContext(darknessCtx, () => clipOutsideStairs(t, left, width / RES, height));
       darknessCtx.translate(left, VALKYRIEN_CEILING);
     }
-    darknessCtx.drawImage(cone, center - left - CONE_WIDTH / 2, 6, CONE_WIDTH, CONE_HEIGHT);
+    darknessCtx.drawImage(TUBE_LIGHT, center - left - CONE_WIDTH / 2, 23, CONE_WIDTH, CONE_HEIGHT);
     darknessCtx.restore();
+  }
+  if (ready(SIGN_LIGHT)) for (const center of stationSigns(t)) {
+    darknessCtx.drawImage(SIGN_LIGHT, Math.round(center - 64) - left, 35, 128, 48);
   }
   for (const light of trainLights(t)) {
     darknessCtx.save();
@@ -315,30 +318,43 @@ export function drawUndergroundFill(x = 0, y = GROUND, width = W, height = VALKY
   ctx.fillRect(x, y, width, height);
 }
 
-export function drawValkyrien(t: number, minX = 0, maxX = W): void {
+export function drawValkyrien(t: number, minX = 0, maxX = W, drawWallItems?: () => void): void {
   const entry = stationEntryX(t), exit = exitX(t), left = Math.max(minX - 10, entry - 50);
   drawUndergroundFill(minX, GROUND, maxX - minX);
   if (exit < minX - 100 || left > maxX) return;
   R(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT, '#898d8f');
-  const wallAnchor = entry - 50 + (t - VALKYRIEN_ENTRY) * 145 * 0.15;
+  const platformWidth = exit - STAIRS_WIDTH - platformStartX(t);
+  const wallAnchor = platformStartX(t) + (platformWidth - 12 * 128) / 2;
   ctx.save();
   ctx.beginPath();
   ctx.rect(left, VALKYRIEN_CEILING, exit + 45 - left, VALKYRIEN_HEIGHT);
   ctx.clip();
-  const wallStart = wallAnchor + Math.floor((left - wallAnchor) / 70) * 70;
-  for (let x = wallStart; x < Math.min(exit + 45, maxX + 70); x += 70) {
-    R(x, VALKYRIEN_CEILING, 1, VALKYRIEN_HEIGHT, '#64696c');
-    R(x + 27, VALKYRIEN_FLOOR - 40, 8, 40, '#6b7073');
+  ctx.imageSmoothingEnabled = false;
+  const firstTile = Math.floor((left - wallAnchor) / 128);
+  for (let i = firstTile; wallAnchor + i * 128 < Math.min(exit + 45, maxX + 128); i++) {
+    const tile = ((i % 6) + 6) % 6;
+    if (ready(WALL)) ctx.drawImage(WALL, tile * 128, 0, 128, 80,
+      Math.round(wallAnchor + i * 128), VALKYRIEN_CEILING, 128, VALKYRIEN_HEIGHT);
   }
-  const sign = wallAnchor + 220;
-  R(sign, VALKYRIEN_CEILING + 26, 80, 17, '#35393c');
-  text('VALKYRIEN', sign + 40, VALKYRIEN_CEILING + 31, '#eee', 7, 'center');
+  for (const center of stationSigns(t)) {
+    if (ready(SIGN)) ctx.drawImage(SIGN, Math.round(center - 52), VALKYRIEN_CEILING + 47, 104, 15);
+    if (ready(SIGN_LAMPS)) ctx.drawImage(SIGN_LAMPS, Math.round(center - 52), VALKYRIEN_CEILING + 35, 104, 12);
+    if (ready(SIGN_LIGHT)) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(SIGN_LIGHT, Math.round(center - 64), VALKYRIEN_CEILING + 35, 128, 48);
+      ctx.restore();
+    }
+  }
+  drawWallItems?.();
   ctx.restore();
   for (const [i, center] of stationLights(t).entries()) {
-    if (center + 17.5 < minX || center - 17.5 > maxX) continue;
+    if (center + 20 < minX || center - 20 > maxX || !ready(CEILING_LAMP)) continue;
     ctx.save();
     ctx.globalAlpha = lightIntensity(t, i);
-    R(center - 17.5, VALKYRIEN_CEILING + 6, 35, 3, '#e2e4da');
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(CEILING_LAMP, Math.round(center - 20), VALKYRIEN_CEILING + 6, 40, 20);
     ctx.restore();
   }
   const nose = valkyrienTrainNose(t);
@@ -351,9 +367,10 @@ export function drawValkyrien(t: number, minX = 0, maxX = W): void {
     drawVehicle(SUBWAY_OLD, nose - width, VALKYRIEN_FLOOR + 8.75 + trainBump(t), SUBWAY_PPM);
     ctx.restore();
   }
-  R(left, VALKYRIEN_FLOOR, Math.max(0, exit - STAIRS_WIDTH - left), 6, '#bec1bf');
-  R(left, VALKYRIEN_FLOOR + 6, Math.max(0, exit - STAIRS_WIDTH - left), 20, '#454a4d');
-  R(left, VALKYRIEN_FLOOR - 2, Math.max(0, exit - STAIRS_WIDTH - left), 2, '#d6cd85');
+  const platformLeft = Math.max(left, platformStartX(t));
+  R(platformLeft, VALKYRIEN_FLOOR, Math.max(0, exit - STAIRS_WIDTH - platformLeft), 6, '#bec1bf');
+  R(platformLeft, VALKYRIEN_FLOOR + 6, Math.max(0, exit - STAIRS_WIDTH - platformLeft), 20, '#454a4d');
+  R(platformLeft, VALKYRIEN_FLOOR - 2, Math.max(0, exit - STAIRS_WIDTH - platformLeft), 2, '#d6cd85');
   const bottom = exit - STAIRS_WIDTH;
   ctx.save();
   ctx.beginPath();
@@ -363,6 +380,17 @@ export function drawValkyrien(t: number, minX = 0, maxX = W): void {
   for (let i = 0; i < 20; i++) {
     const u = i / 20;
     R(bottom + STAIRS_WIDTH * u, VALKYRIEN_FLOOR - VALKYRIEN_DEPTH * u, STAIRS_WIDTH / 20, 2, '#c2c5c4');
+  }
+  ctx.restore();
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(entry, VALKYRIEN_CEILING, STAIRS_WIDTH, VALKYRIEN_HEIGHT + 6);
+  ctx.clip();
+  polygon([[entry, GROUND], [entry + STAIRS_WIDTH, VALKYRIEN_FLOOR],
+    [entry + STAIRS_WIDTH, VALKYRIEN_FLOOR + 6], [entry, GROUND + 6]], '#73787b');
+  for (let i = 0; i < 20; i++) {
+    const u = i / 20;
+    R(entry + STAIRS_WIDTH * u, GROUND + VALKYRIEN_DEPTH * u, STAIRS_WIDTH / 20, 2, '#c2c5c4');
   }
   ctx.restore();
   if (entry > minX - 96 && entry < maxX + 96 && ready(ENTRANCE)) {
@@ -380,10 +408,11 @@ export function drawValkyrien(t: number, minX = 0, maxX = W): void {
 
 export function drawValkyrienBalustrade(t: number, minX = 0, maxX = W): void {
   const top = exitX(t), bottom = top - STAIRS_WIDTH;
-  if (top + 45 < minX || bottom > maxX) return;
+  const entry = stationEntryX(t), landing = platformStartX(t);
+  if (top + 45 < minX || entry - 50 > maxX) return;
   ctx.save();
   ctx.beginPath();
-  ctx.rect(bottom - 2, VALKYRIEN_CEILING, STAIRS_WIDTH + 47, VALKYRIEN_HEIGHT + 6);
+  ctx.rect(minX, VALKYRIEN_CEILING, maxX - minX, VALKYRIEN_HEIGHT + 6);
   ctx.clip();
   ctx.fillStyle = '#93989a';
   ctx.beginPath();
@@ -392,6 +421,7 @@ export function drawValkyrienBalustrade(t: number, minX = 0, maxX = W): void {
   ctx.strokeStyle = '#d1d3d2';
   ctx.lineWidth = 3;
   ctx.beginPath(); ctx.moveTo(bottom, VALKYRIEN_FLOOR - 12); ctx.lineTo(top, GROUND - 12); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(entry, GROUND - 12); ctx.lineTo(landing, VALKYRIEN_FLOOR - 12); ctx.stroke();
   ctx.restore();
 }
 

@@ -1,8 +1,8 @@
 // Web Audio: the song is the master clock, plus a few synthesized sound effects.
-export type Sfx = 'jump' | 'hit' | 'slash' | 'coin' | 'hurt' | 'star' | 'die' | 'respawn';
+export type Sfx = 'jump' | 'hit' | 'slash' | 'coin' | 'hurt' | 'star' | 'die' | 'respawn' | 'ding';
 type Sweep = [number, number, number, OscillatorType];
 
-const SFX: Record<Exclude<Sfx, 'die' | 'respawn'>, Sweep> = {
+const SFX: Record<Exclude<Sfx, 'die' | 'respawn' | 'ding'>, Sweep> = {
   jump: [520, 880, 0.08, 'square'],
   hit: [220, 70, 0.1, 'sawtooth'],
   slash: [900, 300, 0.06, 'triangle'],
@@ -117,6 +117,12 @@ export class AudioEngine {
     const ctx = this.ctx;
     if (!ctx || !this.gain) return;
     const n = ctx.currentTime;
+    if (kind === 'ding') {
+      for (const [frequency, volume, duration] of [[1568, 0.14, 0.8], [3136, 0.06, 0.5], [4234, 0.025, 0.3]]) {
+        this.tone(ctx, [frequency, frequency, duration, 'sine'], n, volume);
+      }
+      return;
+    }
     if (kind === 'die' || kind === 'respawn') {
       const [notes, step, type] = JINGLES[kind];
       notes.forEach((f, i) => {
@@ -128,12 +134,12 @@ export class AudioEngine {
     this.tone(ctx, SFX[kind], n);
   }
 
-  private tone(ctx: AudioContext, [f0, f1, dur, type]: Sweep, at: number): void {
+  private tone(ctx: AudioContext, [f0, f1, dur, type]: Sweep, at: number, volume = 0.05): void {
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = type;
     o.frequency.setValueAtTime(f0, at);
     o.frequency.exponentialRampToValueAtTime(f1, at + dur);
-    g.gain.setValueAtTime(0.05, at);
+    g.gain.setValueAtTime(volume, at);
     g.gain.exponentialRampToValueAtTime(0.0005, at + dur);
     o.connect(g); g.connect(this.gain!);
     o.start(at); o.stop(at + dur + 0.02);

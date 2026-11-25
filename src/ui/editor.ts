@@ -5,6 +5,8 @@ import { RES, canvas, ctx, resetTransform } from '../render/draw';
 import { drawScene } from '../render/scenes';
 import { drawEnemy, drawLampLights } from '../render/sprites';
 import { GHOST_IMAGES } from '../render/ghost';
+import { STATION_IMAGES } from '../render/station-assets';
+import { STATION_ASSETS, isStationAsset, isWallPoster } from '../schedule';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
 import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
 import { GHOSTS, isGhost, POWERUPS, isPowerup, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
@@ -32,7 +34,7 @@ const categories = ['Tunnel', 'Enemies', 'Power-ups', 'Tickets & coins', 'Lights
 type Category = (typeof categories)[number];
 
 function itemCategory(kind: EnemyKind): Category {
-  if (isGhost(kind)) return 'Tunnel';
+  if (isGhost(kind) || isStationAsset(kind)) return 'Tunnel';
   if (isPowerup(kind) || kind === 'terminal') return 'Power-ups';
   if (isLamp(kind)) return 'Lights';
   if (isTree(kind)) return 'Trees';
@@ -235,6 +237,18 @@ export class LevelEditor {
         img.src = tramUrl;
         img.alt = '';
         button.prepend(img);
+      } else if (isStationAsset(kind)) {
+        const preview = document.createElement('canvas'), image = STATION_IMAGES[kind];
+        preview.width = 64; preview.height = 48;
+        const draw = () => {
+          const c = preview.getContext('2d')!, { w, h } = STATION_ASSETS[kind];
+          c.imageSmoothingEnabled = false;
+          c.clearRect(0, 0, 64, 48);
+          c.drawImage(image, (64 - w) / 2, 48 - h, w, h);
+        };
+        if (image.complete && image.naturalWidth) draw();
+        else image.addEventListener('load', draw, { once: true });
+        button.prepend(preview);
       } else if (isGhost(kind)) {
         const GHOST = GHOSTS[kind];
         const { sprite: GHOST_IMAGE, light: GHOST_LIGHT_IMAGE } = GHOST_IMAGES[kind];
@@ -467,7 +481,7 @@ export class LevelEditor {
 
   private position(e: ScheduledEvent, x: number, base: number): boolean {
     const underground = base > GROUND;
-    if (isGhost(e.type) && !underground) return false;
+    if ((isGhost(e.type) || isStationAsset(e.type)) && !underground) return false;
     if (underground) {
       const clearance = isPowerup(e.type) ? 2 : e.type === 'ticket' ? 1 : 0;
       base = Math.min(VALKYRIEN_FLOOR - clearance, Math.round(base));
@@ -584,13 +598,16 @@ export class LevelEditor {
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0, undefined, () => {
       for (const event of events) if (isTree(event.type)) drawEvent(event);
     });
-    drawValkyrien(t, -this.viewOffset, W + this.viewOffset);
-    for (const event of events) if (!isTree(event.type)) drawEvent(event);
+    drawValkyrien(t, -this.viewOffset, W + this.viewOffset, () => {
+      for (const event of events) if (isWallPoster(event.type)) drawEvent(event);
+    });
+    for (const event of events) if (!isTree(event.type) && !isWallPoster(event.type)) drawEvent(event);
     drawLampLights(events.map(createEnemy), t);
     drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
     drawValkyrienHouse(t, -this.viewOffset, W + this.viewOffset);
     drawValkyrienDarkness(t, () => {
       for (const event of events) {
+        if (isWallPoster(event.type)) continue;
         const enemy = createEnemy(event);
         drawEnemy(enemy, enemyX(enemy, t), t);
       }

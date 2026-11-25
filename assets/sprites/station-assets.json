@@ -1,0 +1,37 @@
+{
+  "poster_tobacco": {
+    "w": 24,
+    "h": 32,
+    "wall": true
+  },
+  "poster_tobacco_worn": {
+    "w": 24,
+    "h": 32,
+    "wall": true
+  },
+  "poster_soda": {
+    "w": 24,
+    "h": 32,
+    "wall": true
+  },
+  "poster_soda_worn": {
+    "w": 24,
+    "h": 32,
+    "wall": true
+  },
+  "poster_coffee": {
+    "w": 24,
+    "h": 32,
+    "wall": true
+  },
+  "poster_coffee_worn": {
+    "w": 24,
+    "h": 32,
+    "wall": true
+  },
+  "vintage_scale": {
+    "w": 22,
+    "h": 46,
+    "wall": false
+  }
+}

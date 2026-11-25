@@ -12,6 +12,8 @@ import victoriaUrl from '../../assets/sprites/victoria.png';
 import automatUrl from '../../assets/sprites/automat.png';
 import enemiesUrl from '../../assets/sprites/enemies.png';
 import { drawGhost } from './ghost';
+import { isStationAsset } from '../schedule';
+import { drawStationAsset } from './station-assets';
 import propsUrl from '../../assets/sprites/props.png';
 import lampsUrl from '../../assets/sprites/lamps.png';
 import lightsUrl from '../../assets/sprites/lamps-light.png';
@@ -296,6 +298,10 @@ export function drawBlobPop(pop: BlobPop): void {
 
 export function drawEnemy(e: Enemy, x: number, t: number): void {
   const y = GROUND - enemyHeight(e, t);
+  if (isStationAsset(e.type)) {
+    drawStationAsset(e.type, x, y);
+    return;
+  }
   if (isGhost(e.type)) {
     ctx.save();
     ctx.globalAlpha = 0.8;

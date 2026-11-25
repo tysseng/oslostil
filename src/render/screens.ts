@@ -2,7 +2,7 @@
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { compareItems, enemyX } from '../state';
-import { isTree, itemLayer } from '../schedule';
+import { isTree, isWallPoster, itemLayer } from '../schedule';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
@@ -23,13 +23,15 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt, () => {
     for (const e of items) if (!e.dead && isTree(e.type)) drawEnemy(e, enemyX(e, t), t);
   });
-  drawValkyrien(t);
+  drawValkyrien(t, 0, W, () => {
+    for (const e of items) if (!e.dead && isWallPoster(e.type)) drawEnemy(e, enemyX(e, t), t);
+  });
   drawValkyrienHouse(t);
   const prev = SECTIONS[SECTIONS.indexOf(sec) - 1];
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
   flash(t, NINJA_T, 0.4, '#fff'); // ninja transformation
-  for (const e of items) if (!e.dead && !isTree(e.type) && itemLayer(e.type) <= 1) drawEnemy(e, enemyX(e, t), t);
+  for (const e of items) if (!e.dead && !isTree(e.type) && !isWallPoster(e.type) && itemLayer(e.type) <= 1) drawEnemy(e, enemyX(e, t), t);
   if (bossVisible(t)) {
     // walks in for a bar, then fires its coupler cannon on every beat and idles in between
     const walking = t - BOSS_AT < BAR, ph = beatPhase(t, BEAT);
@@ -60,7 +62,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   const friendStairs = stairCompanionPosition(s, s.fx, t);
-  if (s.valkyrien.phase === 'stairs' || stairCompanionPosition(s, s.mx, t) || friendStairs) {
+  if (s.valkyrien.ascendingAt !== undefined && (s.valkyrien.phase === 'stairs' || stairCompanionPosition(s, s.mx, t) || friendStairs)) {
     ctx.save();
     ctx.beginPath();
     ctx.rect(exitX(t) - STAIRS_WIDTH - 24, 0, STAIRS_WIDTH + 24 + EXIT_HOUSE_RIGHT, GROUND + 30);
@@ -73,10 +75,13 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   }
   // companions
   const inChute = s.valkyrien.phase === 'chute';
+  const entering = s.valkyrien.descendingAt !== undefined && s.valkyrien.ascendingAt === undefined
+    && (inChute || friendStairs !== null || stairCompanionPosition(s, s.mx, t) !== null);
   ctx.save();
-  if (inChute) {
+  if (entering) {
     ctx.beginPath();
-    ctx.rect(stationEntryX(t) - ENTRY_HALF_WIDTH, 0, ENTRY_HALF_WIDTH * 2, VALKYRIEN_CEILING + 32);
+    ctx.rect(-1000, VALKYRIEN_CEILING, 2000, 1000);
+    ctx.rect(stationEntryX(t) - ENTRY_HALF_WIDTH, 0, ENTRY_HALF_WIDTH * 2, GROUND);
     ctx.clip();
   }
   if (s.valkyrien.ascendingAt !== undefined) {
@@ -89,12 +94,12 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     if (s.rainbow) drawRainbowMachine(s.rainbow, t, machineMood(t));
     else {
       const machine = machinePosition(s, t);
-      drawMachine(inChute ? s.p.x : machine.x, machine.y, t, machineMood(t), 0, t >= VICTORIA_WAKE_T + WAKE_HOPS);
+      drawMachine(machine.x, machine.y, t, machineMood(t), 0, t >= VICTORIA_WAKE_T + WAKE_HOPS);
     }
   }
   const ninja = isNinja(t), f = s.friend, fy = friendStairs?.y ?? clampStationY(s, f.yHist.length ? f.yHist[0] : GROUND, 32);
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
-  if (!s.deathFlight?.friend) drawGirl('friend', inChute ? s.p.x : s.fx, inChute ? s.p.y : fy, t + 0.13, { ninja, air: !friendStairs && fy < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: fRising, atk: f.atk > 0 });
+  if (!s.deathFlight?.friend) drawGirl('friend', s.fx, fy, t + 0.13, { ninja, air: !friendStairs && fy < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: fRising, atk: f.atk > 0 });
   // gone while dead; after respawning she flashes white, after an ordinary hit she blinks
   const white = s.healFlash > 0 || s.respawn > 0 && Math.floor(s.respawn * 8) % 2 === 1;
   if (s.deathFlight) {
@@ -111,7 +116,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     }
   }
   if (s.down <= 0 && (s.healFlash > 0 || s.respawn > 0 || !(s.inv > 0 && Math.floor(t * 20) % 2))) {
-    drawGirl('victoria', s.p.x, s.p.y, t, { white, ninja, air: s.p.y < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: s.p.vy < 0, slide: s.p.slide > 0, atk: s.p.atk > 0 });
+    drawGirl('victoria', s.p.x, s.p.y, t, { white, ninja, air: s.p.y < playerFloor(s) && s.valkyrien.phase !== 'stairs' && !inChute, rising: s.p.vy < 0, slide: s.p.slide > 0, atk: s.p.atk > 0 });
   }
   ctx.restore();
   for (const st of s.stars) {
@@ -124,19 +129,9 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   drawLampLights(s.enemies, t);
   for (const q of s.pops) text(q.txt, q.x, q.y, q.c, 6, 'center');
   drawValkyrienBalustrade(t);
-  if (inChute) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, GROUND, ENTRY_HALF_WIDTH * 2 + 28, H - GROUND);
-    ctx.clip();
-    drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
-    ctx.restore();
-    drawUndergroundFill(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, GROUND, ENTRY_HALF_WIDTH * 2 + 28,
-      VALKYRIEN_CEILING - GROUND);
-  }
   if (s.valkyrien.ascendingAt !== undefined) drawValkyrienHouse(t, 0, W, true);
   drawValkyrienDarkness(t, () => {
-    for (const e of s.enemies) if (!e.dead) drawEnemy(e, enemyX(e, t), t);
+    for (const e of s.enemies) if (!e.dead && !isWallPoster(e.type)) drawEnemy(e, enemyX(e, t), t);
     for (const q of s.knocked) {
       ctx.save();
       if (q.squash !== undefined) {

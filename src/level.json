@@ -2290,5 +2290,41 @@
     "arr": 95.08534482758572,
     "y": -83,
     "rel": 145
+  },
+  {
+    "type": "poster_tobacco",
+    "arr": 89.4,
+    "y": -83,
+    "rel": 145
+  },
+  {
+    "type": "poster_soda",
+    "arr": 91.2,
+    "y": -83,
+    "rel": 145
+  },
+  {
+    "type": "poster_coffee",
+    "arr": 93,
+    "y": -83,
+    "rel": 145
+  },
+  {
+    "type": "poster_tobacco",
+    "arr": 94.8,
+    "y": -83,
+    "rel": 145
+  },
+  {
+    "type": "poster_soda",
+    "arr": 96.6,
+    "y": -83,
+    "rel": 145
+  },
+  {
+    "type": "vintage_scale",
+    "arr": 89.5,
+    "y": -125,
+    "rel": 145
   }
 ]

@@ -19,6 +19,7 @@ export interface Enemy extends ScheduledEvent {
   y0?: number;
   dropIn?: number;
   crumbledAt?: number;
+  weighed?: boolean;
   dead?: boolean;
   gone?: boolean;
   ghost?: { x: number; base: number; vx: number; following: boolean; gaveUp?: boolean };

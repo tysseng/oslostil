@@ -1,7 +1,7 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
-import { BLOB_POP, LAMPS, POWERUPS, PROPS, isGhost, isLamp, isPowerup, isProp, isTree, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
+import { BLOB_POP, LAMPS, POWERUPS, PROPS, isGhost, isLamp, isPowerup, isProp, isTree, isStationAsset, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
 import { loadDefaultLevel } from './level';
 import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, enemyHeight, enemyX, hopPose, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
@@ -480,7 +480,25 @@ export class Game {
       }
       if (x < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)) { e.dead = true; e.gone = true; continue; }
       if ((e.y < 0) !== belowSurface(s)) continue;
-      if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type)) continue; // scenery has no side damage
+      if (e.type === 'vintage_scale' && s.down <= 0 && !routeControlsPlayer(s) && p.vy > 0) {
+        const top = ey - 6;
+        if (prevY <= top && p.y >= top) {
+          const crossing = (top - prevY) / (p.y - prevY);
+          const playerX = prevX + (p.x - prevX) * crossing;
+          const scaleX = enemyX(e, prevT) + (x - enemyX(e, prevT)) * crossing;
+          if (Math.abs(playerX - scaleX) < ty.w / 2 + 4) {
+            p.y = top; p.vy = -260; p.jumps = 1; p.slide = 0;
+            p.ride = undefined; p.propRide = undefined; p.machineRide = undefined;
+            this.audio.sfx('ding');
+            if (!e.weighed) {
+              e.weighed = true;
+              s.score += 200;
+              s.pops.push({ x, y: top - 8, txt: '+200', life: 0.8, c: '#fff2b0' });
+            }
+          }
+        }
+      }
+      if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type) || isStationAsset(e.type)) continue; // scenery has no side damage
       const h = enemyBodyHeight(e, t), top = ey - h;
       const previousTop = GROUND - enemyHeight(e, prevT) - enemyBodyHeight(e, prevT);
       if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase' || e.type === 'blob_hop') && s.down <= 0 && p.vy > 0 && prevY <= previousTop && p.y >= top) {
