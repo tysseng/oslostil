@@ -1,10 +1,11 @@
 {
-  "file": "enemies.png",
+  "file": "ghost.png",
   "cell": [32, 32],
-  "row": 4,
-  "frames": 4,
-  "fps": 6,
+  "row": 0,
+  "frames": 8,
+  "fps": 10,
   "w": 16,
   "h": 17,
-  "note": "Temporary blob artwork. Replace the ghost image import and this frame metadata when final ghost sprites are available."
+  "light": { "file": "ghost-light.png", "cell": [64, 64], "padding": 16 },
+  "note": "Original pixel ghost with a waving tail; light frames are generated from each sprite frame's alpha."
 }

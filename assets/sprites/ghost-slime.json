@@ -1,0 +1,21 @@
+{
+  "file": "ghost-slime.png",
+  "cell": [
+    24,
+    29
+  ],
+  "row": 0,
+  "frames": 8,
+  "fps": 10,
+  "w": 16,
+  "h": 27,
+  "light": {
+    "file": "ghost-slime-light.png",
+    "cell": [
+      56,
+      61
+    ],
+    "padding": 16
+  },
+  "note": "Left-facing ghost, bottom-centred cell; separate animated glow follows frame alpha."
+}

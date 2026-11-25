@@ -1,11 +1,11 @@
 import { GROUND } from './config';
-import { TYPES } from './schedule';
+import { TYPES, isGhost } from './schedule';
 import { enemyHeight, enemyX, type GameState } from './state';
 import { VALKYRIEN_CEILING, VALKYRIEN_FLOOR, exitX, stationEntryX } from './valkyrien';
 
 export function updateGhosts(s: GameState, t: number, dt: number): void {
   for (const e of s.enemies) {
-    if (e.type !== 'ghost' || e.dead) continue;
+    if (!isGhost(e.type) || e.dead) continue;
     const x = enemyX(e, t);
     if (!e.ghost && ['underground', 'run-in'].includes(s.valkyrien.phase) && s.down <= 0
       && x <= s.p.x && x >= stationEntryX(t) - 50) {
@@ -20,8 +20,8 @@ export function updateGhosts(s: GameState, t: number, dt: number): void {
     ghost.x += ghost.vx * dt;
     const targetBase = following ? s.p.y - 8 : GROUND - e.y;
     ghost.base += (targetBase - ghost.base) * (1 - Math.exp(-2 * dt));
-    ghost.base = Math.max(VALKYRIEN_CEILING + TYPES.ghost.h, Math.min(VALKYRIEN_FLOOR - 4, ghost.base));
-    ghost.x = Math.max(stationEntryX(t) - 50 + TYPES.ghost.w / 2,
-      Math.min(exitX(t) - TYPES.ghost.w / 2, ghost.x));
+    ghost.base = Math.max(VALKYRIEN_CEILING + TYPES[e.type].h, Math.min(VALKYRIEN_FLOOR - 4, ghost.base));
+    ghost.x = Math.max(stationEntryX(t) - 50 + TYPES[e.type].w / 2,
+      Math.min(exitX(t) - TYPES[e.type].w / 2, ghost.x));
   }
 }

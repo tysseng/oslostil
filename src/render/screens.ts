@@ -8,7 +8,7 @@ import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from
 import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
-import { ENTRY_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, stationEntryX, playerFloor } from '../valkyrien';
+import { ENTRY_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, stationEntryX, playerFloor, stairCompanionPosition } from '../valkyrien';
 import { machinePosition } from '../rainbow';
 import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValkyrienHouse } from './valkyrien';
 
@@ -70,9 +70,17 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
       drawMachine(inChute ? s.p.x : machine.x, machine.y, t, machineMood(t), 0, t >= VICTORIA_WAKE_T + WAKE_HOPS);
     }
   }
-  const ninja = isNinja(t), f = s.friend, fy = clampStationY(s, f.yHist.length ? f.yHist[0] : GROUND, 32);
+  const friendStairs = stairCompanionPosition(s, s.fx, t);
+  const ninja = isNinja(t), f = s.friend, fy = friendStairs?.y ?? clampStationY(s, f.yHist.length ? f.yHist[0] : GROUND, 32);
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
-  if (!s.deathFlight?.friend) drawGirl('friend', inChute ? s.p.x : s.fx, inChute ? s.p.y : fy, t + 0.13, { ninja, air: fy < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: fRising, atk: f.atk > 0 });
+  ctx.save();
+  if (friendStairs) {
+    ctx.beginPath();
+    ctx.rect(-1000, VALKYRIEN_CEILING, 2000, 1000);
+    ctx.clip();
+  }
+  if (!s.deathFlight?.friend) drawGirl('friend', inChute ? s.p.x : s.fx, inChute ? s.p.y : fy, t + 0.13, { ninja, air: !friendStairs && fy < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: fRising, atk: f.atk > 0 });
+  ctx.restore();
   // gone while dead; after respawning she flashes white, after an ordinary hit she blinks
   const white = s.healFlash > 0 || s.respawn > 0 && Math.floor(s.respawn * 8) % 2 === 1;
   if (s.deathFlight) {
@@ -112,7 +120,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     drawUndergroundFill(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, GROUND, ENTRY_HALF_WIDTH * 2 + 28,
       VALKYRIEN_CEILING - GROUND);
   }
-  if (s.valkyrien.phase === 'stairs') {
+  if (s.valkyrien.phase === 'stairs' || stairCompanionPosition(s, s.mx, t) || friendStairs) {
     ctx.save();
     ctx.beginPath();
     ctx.rect(exitX(t) - STAIRS_WIDTH - 24, 0, STAIRS_WIDTH + 62, GROUND + 30);

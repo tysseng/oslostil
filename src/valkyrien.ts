@@ -39,6 +39,12 @@ export const playerFloor = (s: GameState): number => belowSurface(s) ? VALKYRIEN
 export const clampStationY = (s: GameState, base: number, height: number): number =>
   ['underground', 'run-in'].includes(s.valkyrien.phase) ? Math.max(VALKYRIEN_CEILING + height, base) : base;
 
+export function stairCompanionPosition(s: GameState, x: number, t: number): { x: number; y: number } | null {
+  if (s.valkyrien.ascendingAt === undefined || x - 16 > exitX(t) + 40) return null;
+  const progress = Math.max(0, Math.min(1, (x - exitX(t) + STAIRS_WIDTH) / STAIRS_WIDTH));
+  return { x, y: VALKYRIEN_FLOOR - VALKYRIEN_DEPTH * progress };
+}
+
 export function enterValkyrien(s: GameState): boolean {
   const p = s.p;
   if (s.valkyrien.phase !== 'surface' || s.down > 0 || Math.abs(p.x - stationEntryX(s.lastT)) > ENTRY_HALF_WIDTH

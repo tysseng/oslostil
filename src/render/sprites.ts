@@ -1,6 +1,6 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { BEAT, GROUND, PH, W } from '../config';
-import { GHOST, POWERUPS, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { POWERUPS, isGhost, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
 import { boardFrame, enemyHeight, enemyX, hopPose, type BlobPop, type Enemy, type RainbowState } from '../state';
 import { ribbonLength, ribbonPoints } from '../rainbow';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
@@ -11,7 +11,7 @@ import friendUrl from '../../assets/sprites/friend.png';
 import victoriaUrl from '../../assets/sprites/victoria.png';
 import automatUrl from '../../assets/sprites/automat.png';
 import enemiesUrl from '../../assets/sprites/enemies.png';
-import ghostUrl from '../../assets/sprites/enemies.png';
+import { drawGhost } from './ghost';
 import propsUrl from '../../assets/sprites/props.png';
 import lampsUrl from '../../assets/sprites/lamps.png';
 import lightsUrl from '../../assets/sprites/lamps-light.png';
@@ -221,7 +221,6 @@ function drawTram(x: number, y: number, t: number, tokyo = false): void {
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */
 const ENEMIES = loadImage(enemiesUrl);
-export const GHOST_IMAGE = loadImage(ghostUrl);
 const BOARD_IMAGE = loadImage(boardUrl), BOARD_LIGHT = loadImage(boardLightUrl);
 const POWERUP_IMAGE = loadImage(powerupsUrl), POWERUP_LIGHT = loadImage(powerupLightsUrl);
 const PROP_IMAGE = loadImage(propsUrl);
@@ -297,16 +296,10 @@ export function drawBlobPop(pop: BlobPop): void {
 
 export function drawEnemy(e: Enemy, x: number, t: number): void {
   const y = GROUND - enemyHeight(e, t);
-  if (e.type === 'ghost') {
-    if (!ready(GHOST_IMAGE)) return;
-    const [w, h] = GHOST.cell, frame = Math.floor(t * GHOST.fps) % GHOST.frames;
+  if (isGhost(e.type)) {
     ctx.save();
     ctx.globalAlpha = 0.8;
-    if (e.ghost?.following) {
-      ctx.translate(Math.round(x) * 2, 0);
-      ctx.scale(-1, 1);
-    }
-    ctx.drawImage(GHOST_IMAGE, frame * w, GHOST.row * h, w, h, Math.round(x - w / 2), Math.round(y - h), w, h);
+    drawGhost(e, x, y, t);
     ctx.restore();
     return;
   }

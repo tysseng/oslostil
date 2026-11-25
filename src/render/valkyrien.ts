@@ -3,6 +3,8 @@ import { STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VAL
 import { enemyHeight, enemyX, type Enemy } from '../state';
 import { HIRES_PPM, RES, R, ctx, drawToContext, drawVehicle, horizontalBounds, loadImage, meta, ready, text } from './draw';
 import subwayOldUrl from '../../assets/vehicles/hires/subway-old.png';
+import { drawGhost } from './ghost';
+import { isGhost } from '../schedule';
 
 const SUBWAY_OLD = loadImage(subwayOldUrl);
 const SUBWAY_PPM = 10;
@@ -19,22 +21,6 @@ const windowLayer = document.createElement('canvas');
 const windowLayerCtx = windowLayer.getContext('2d')!;
 const windowOcclusion = document.createElement('canvas');
 const windowOcclusionCtx = windowOcclusion.getContext('2d')!;
-let ghostGlow: HTMLCanvasElement | null = null;
-
-function ghostLight(): HTMLCanvasElement {
-  if (ghostGlow) return ghostGlow;
-  const bitmap = document.createElement('canvas');
-  bitmap.width = bitmap.height = 72 * RES;
-  const c = bitmap.getContext('2d')!;
-  const gradient = c.createRadialGradient(36 * RES, 36 * RES, 0, 36 * RES, 36 * RES, 36 * RES);
-  gradient.addColorStop(0, 'rgba(80, 255, 100, 0.85)');
-  gradient.addColorStop(0.35, 'rgba(50, 240, 80, 0.5)');
-  gradient.addColorStop(1, 'rgba(30, 220, 60, 0)');
-  c.fillStyle = gradient;
-  c.fillRect(0, 0, bitmap.width, bitmap.height);
-  ghostGlow = bitmap;
-  return bitmap;
-}
 
 function trainWindowLights(t: number): { bitmap: HTMLCanvasElement; x: number; y: number; width: number; height: number } | null {
   const nose = valkyrienTrainNose(t);
@@ -235,10 +221,12 @@ export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void
     darknessCtx.drawImage(trainLightCone(), 0, -30, 120, 60);
     darknessCtx.restore();
   }
-  const ghosts = enemies.filter(e => e.type === 'ghost' && !e.dead);
+  const ghosts = enemies.filter(e => isGhost(e.type) && !e.dead);
   for (const ghost of ghosts) {
-    darknessCtx.drawImage(ghostLight(), enemyX(ghost, t) - left - 36,
-      GROUND - enemyHeight(ghost, t) - VALKYRIEN_CEILING - 44, 72, 72);
+    darknessCtx.save();
+    darknessCtx.translate(-left, -VALKYRIEN_CEILING);
+    drawToContext(darknessCtx, () => drawGhost(ghost, enemyX(ghost, t), GROUND - enemyHeight(ghost, t), t, true));
+    darknessCtx.restore();
   }
   const windows = trainWindowLights(t);
   if (windows) {
@@ -272,7 +260,7 @@ export function drawValkyrienDarkness(t: number, drawWindowOccluders: () => void
   ctx.globalCompositeOperation = 'screen';
   for (const ghost of ghosts) {
     ctx.globalAlpha = 0.5;
-    ctx.drawImage(ghostLight(), enemyX(ghost, t) - 36, GROUND - enemyHeight(ghost, t) - 44, 72, 72);
+    drawGhost(ghost, enemyX(ghost, t), GROUND - enemyHeight(ghost, t), t, true);
   }
   ctx.globalAlpha = 1;
   if (windows) {

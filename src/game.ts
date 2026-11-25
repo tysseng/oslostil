@@ -1,7 +1,7 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
-import { BLOB_POP, LAMPS, POWERUPS, PROPS, isLamp, isPowerup, isProp, isTree, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
+import { BLOB_POP, LAMPS, POWERUPS, PROPS, isGhost, isLamp, isPowerup, isProp, isTree, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
 import { loadDefaultLevel } from './level';
 import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, enemyHeight, enemyX, hopPose, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
@@ -524,7 +524,7 @@ export class Game {
           else { s.tickets++; s.ammo++; s.score += 50; s.pops.push({ x, y: ey - 8, txt: '+1', life: 0.5, c: '#ffd84a' }); }
         } else if (s.inv <= 0 && !e.ghost?.gaveUp && !(e.type === 'blob_hop' && hopPose(e, t).frame < 2)) {
           this.hurt();
-          if (e.type === 'ghost') {
+          if (isGhost(e.type)) {
             e.ghost ??= { x, base: ey, vx: -e.rel, following: false };
             e.ghost.gaveUp = true;
             e.ghost.following = false;

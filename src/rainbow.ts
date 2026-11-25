@@ -2,13 +2,20 @@ import { BEAT, GROUND, PH, W } from './config';
 import type { GameState, RainbowPoint, RainbowState } from './state';
 import { RAINBOW_T0, RAINBOW_T1, sectionAt, victoriaBob, victoriaLift } from './timeline';
 import rainbowMeta from '../assets/sprites/rainbow.json';
-import { belowSurface, clampStationY, playerFloor } from './valkyrien';
+import { belowSurface, clampStationY, exitX, playerFloor, stairCompanionPosition } from './valkyrien';
 
 const LANDING_TIME = 1;
 const TRAIL_TIME = 1.2;
 const TRAIL_LENGTH = 150;
 
 export function machinePosition(s: GameState, t: number): { x: number; y: number } {
+  const stairs = stairCompanionPosition(s, s.mx, t);
+  if (stairs) return stairs;
+  if (s.valkyrien.ascendingAt !== undefined) {
+    const progress = Math.max(0, Math.min(1, (s.mx - 16 - (exitX(t) + 40)) / 100));
+    const ease = progress * progress * (3 - 2 * progress);
+    return { x: s.mx, y: GROUND + (-victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t)) * ease };
+  }
   if (s.rainbow && !s.deathFlight?.machine) return { x: s.rainbow.x, y: clampStationY(s, s.rainbow.y, 32) };
   return { x: s.mx, y: clampStationY(s, (belowSurface(s) ? s.p.y : GROUND) - victoriaLift(t) + Math.sin(t * 3) * victoriaBob(t), 32) };
 }

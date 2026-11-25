@@ -3,10 +3,11 @@ import type { Game } from '../game';
 import { loadDefaultLevel, parseLevel } from '../level';
 import { RES, canvas, ctx, resetTransform } from '../render/draw';
 import { drawScene } from '../render/scenes';
-import { GHOST_IMAGE, drawEnemy, drawLampLights } from '../render/sprites';
+import { drawEnemy, drawLampLights } from '../render/sprites';
+import { GHOST_IMAGES } from '../render/ghost';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
 import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
-import { GHOST, POWERUPS, isPowerup, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
+import { GHOSTS, isGhost, POWERUPS, isPowerup, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
 import { compareItems, createEnemy, enemyBodyHeight, enemyHeight, enemyX, eventArrival, eventSpeed } from '../state';
 import { sectionAt } from '../timeline';
 import { fmtTime } from './devpanel';
@@ -31,7 +32,7 @@ const categories = ['Tunnel', 'Enemies', 'Power-ups', 'Tickets & coins', 'Lights
 type Category = (typeof categories)[number];
 
 function itemCategory(kind: EnemyKind): Category {
-  if (kind === 'ghost') return 'Tunnel';
+  if (isGhost(kind)) return 'Tunnel';
   if (isPowerup(kind) || kind === 'terminal') return 'Power-ups';
   if (isLamp(kind)) return 'Lights';
   if (isTree(kind)) return 'Trees';
@@ -228,23 +229,35 @@ export class LevelEditor {
     thugs.src = thugsUrl; passengers.src = passengersUrl;
     lamps.src = lampsUrl; lights.src = lightsUrl;
     for (const kind of kinds) {
-      const button = addTool(kind[0].toUpperCase() + kind.slice(1), kind);
+      const button = addTool(kind === 'ghost_bedsheet' ? 'Bedsheet ghost' : kind === 'ghost_conductor' ? 'Conductor ghost' : kind[0].toUpperCase() + kind.slice(1), kind);
       if (kind === 'tram') {
         const img = document.createElement('img');
         img.src = tramUrl;
         img.alt = '';
         button.prepend(img);
-      } else if (kind === 'ghost') {
+      } else if (isGhost(kind)) {
+        const GHOST = GHOSTS[kind];
+        const { sprite: GHOST_IMAGE, light: GHOST_LIGHT_IMAGE } = GHOST_IMAGES[kind];
         const preview = document.createElement('canvas');
         preview.width = 64; preview.height = 40;
         const draw = () => {
           const c = preview.getContext('2d')!, [w, h] = GHOST.cell;
           c.imageSmoothingEnabled = false;
-          c.shadowColor = '#50ff64'; c.shadowBlur = 10;
-          c.drawImage(GHOST_IMAGE, 0, GHOST.row * h, w, h, 16, 4, w, h);
+          c.clearRect(0, 0, preview.width, preview.height);
+          c.save();
+          const scale = Math.min(1, preview.height / GHOST.cell[1]);
+          c.translate(preview.width / 2, preview.height);
+          c.scale(scale, scale);
+          if (GHOST_LIGHT_IMAGE.complete && GHOST_LIGHT_IMAGE.naturalWidth) {
+            const [lw, lh] = GHOST.light.cell;
+            c.drawImage(GHOST_LIGHT_IMAGE, 0, 0, lw, lh, -lw / 2, -h - GHOST.light.padding, lw, lh);
+          }
+          c.drawImage(GHOST_IMAGE, 0, GHOST.row * h, w, h, -w / 2, -h, w, h);
+          c.restore();
         };
         if (GHOST_IMAGE.complete && GHOST_IMAGE.naturalWidth) draw();
         else GHOST_IMAGE.addEventListener('load', draw, { once: true });
+        GHOST_LIGHT_IMAGE.addEventListener('load', draw, { once: true });
         button.prepend(preview);
       } else if (isPowerup(kind)) {
         const preview = document.createElement('canvas');
@@ -454,7 +467,7 @@ export class LevelEditor {
 
   private position(e: ScheduledEvent, x: number, base: number): boolean {
     const underground = base > GROUND;
-    if (e.type === 'ghost' && !underground) return false;
+    if (isGhost(e.type) && !underground) return false;
     if (underground) {
       const clearance = isPowerup(e.type) ? 2 : e.type === 'ticket' ? 1 : 0;
       base = Math.min(VALKYRIEN_FLOOR - clearance, Math.round(base));

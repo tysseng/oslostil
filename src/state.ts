@@ -1,5 +1,5 @@
 import { BEAT, GROUND, PH, PLAYER_MAX_HP, PX, W, rng } from './config';
-import { BLOB_HOP, BROKEN_BOARD, isPowerup, isTree, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
+import { BLOB_HOP, BROKEN_BOARD, isGhost, isPowerup, isTree, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 import type { ValkyrienState } from './valkyrien';
@@ -192,9 +192,9 @@ export function eventArrival(e: ScheduledEvent, t: number, x: number): number {
 
 /** Song-time flight, seeded from the authored position rather than frame/update order. */
 export function enemyHeight(e: Enemy, t: number): number {
-  if (e.type === 'ghost') {
+  if (isGhost(e.type)) {
     if (e.ghost) return GROUND - e.ghost.base;
-    return GROUND - Math.max(VALKYRIEN_CEILING + TYPES.ghost.h,
+    return GROUND - Math.max(VALKYRIEN_CEILING + TYPES[e.type].h,
       Math.min(VALKYRIEN_FLOOR - 4, GROUND - e.y + 4 * Math.sin((t - e.arr) * 3)));
   }
   if (isPowerup(e.type)) return e.y + 2 * Math.sin(t * 4);

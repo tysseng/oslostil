@@ -1,0 +1,21 @@
+{
+  "file": "ghost-bedsheet.png",
+  "cell": [
+    32,
+    40
+  ],
+  "row": 0,
+  "frames": 8,
+  "fps": 10,
+  "w": 24,
+  "h": 36,
+  "light": {
+    "file": "ghost-bedsheet-light.png",
+    "cell": [
+      64,
+      72
+    ],
+    "padding": 16
+  },
+  "note": "Left-facing ghost, bottom-centred cell; separate animated glow follows frame alpha."
+}

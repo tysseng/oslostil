@@ -105,6 +105,13 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 ### Level editor
 
+- Automat Victoria follows the stair slope without hovering, then smoothly rises to her normal bobbing height over 100 pixels after her full sprite clears the exit house. The surface foreground hides the ascent until all companions are through.
+
+- All three ghosts are available in the Tunnel palette: Ghost, Bedsheet ghost (32x40), and Conductor ghost (24x29, redrawn at approximately 60% of its original size, not resized). They share pursuit and single-hit behavior, with separate animated light sheets. Generated sprite/light frames face left by default; only chasing mirrors them in code.
+- Friend and Automat Victoria follow the stair slope at their own horizontal positions and stay hidden above the station ceiling until their full sprites clear the foreground exit house, even after the player exits.
+
+- Ghosts use original eight-frame pixel artwork with a waving tail (`ghost.png`). Matching `ghost-light.png` frames are blurred from each sprite's alpha, not generated at runtime; sprite and glow share frame selection, positioning and chase mirroring. Regenerate both with `python3 tools/sprites/ghost.py` (Pillow).
+
 - O toggles all asset outlines in the editor without affecting scene rendering, lighting or item editing; held-key repeats do not retrigger the toggle.
 
 - The upper world's teal bottom strip fades to black from y=150 to y=180; everything surrounding the subway below that strip is black, including the entry/exit foreground masks.
@@ -113,7 +120,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 - Each ghost gives up permanently after its first successful contact hit, stops pursuing, drifts away with the station and cannot deal another contact hit. Touching an invincible player does not consume its hit.
 - Other pursuing ghosts continue after a hit, including during the player's respawn delay; giving up is tracked separately for each ghost.
-- Ghost animation frames are mirrored horizontally while pursuing, returning to their original orientation when they give up.
+- Ghost sprite/glow frames face left initially and flip right when pursuing; giving up restores the initial direction. Editor previews match the initial direction.
 
 - Valkyrien stairs retain a solid concrete body with a horizontal lower edge and a right wall extending to the station end. Their silhouette blocks subway headlight/rear beams and circular glows; window lights use the same rendered stair/wall alpha mask.
 
@@ -149,7 +156,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 - The final-hit explosion particles, screen shake and half-second white flash continue rendering and advancing during the immediate celebration transition, synchronized to the final musical hit.
 
 - **Valkyrien prototype:** a square surface entrance reaches the player at 1:27. Press Down/S while standing in front to descend; jumping/landing no longer opens a hole or activates the route. The surface platform hides the fast descent, without a visible shaft or moving cover. The station ceiling is below the surface viewport; the world pans upward while the HUD stays fixed and a strip of moving surface scenery remains visible. Descent locks the party horizontally to the scrolling entrance, even offscreen left; an offscreen player runs back to x=80 after landing. The optional surface route remains unchanged if skipped. The station is 1788.375 pixels long (5% shorter than the extended layout), with unchanged scroll speed and stair dimensions. The underground platform leads to concrete stairs near 1:39; the party automatically walks up and emerges inside an opaque foreground house, then continues on the surface. The stair balustrade hides the lower half of the player and extends solidly to the underground ground. `valkyrien.ts` owns route geometry/state/landing and `render/valkyrien.ts` draws placeholders, also visible in the editor. Seeking/restarting resets the route; surface enemies cannot interact with underground players.
-- **Tunnel ghosts:** editor-placeable underground enemies in the first palette category, Tunnel, with two hit points and ordinary contact damage. They bob at their authored position until passed, then slow from station scroll speed into a capped 65 px/s pursuit, staying inside the chamber. A soft green glow illuminates the wall and foreground elements. `ghosts.ts` owns pursuit; `assets/sprites/ghost.json` and the dedicated ghost image import define replaceable temporary blob artwork. Editor previews stay at authored positions; saved levels contain no runtime chase state.
+- **Tunnel ghosts:** editor-placeable underground enemies in the first palette category, Tunnel, with two hit points and ordinary contact damage. They bob at their authored position until passed, then slow from station scroll speed into a capped 65 px/s pursuit, staying inside the chamber. A soft green glow illuminates the wall and foreground elements. `ghosts.ts` owns pursuit; `assets/sprites/ghost.json` defines the dedicated sprite/glow sheet metadata. Editor previews stay at authored positions; saved levels contain no runtime chase state.
 
 - The palette groups items under Enemies, Power-ups, Tickets & coins, Lights, Props & platforms, Trees, Vehicles and Hazards. Move stays above the groups, and selecting any item clears selection across all categories.
 - The editor fits within the viewport: the level canvas uses at most half the viewport height, and the palette scrolls independently below the fixed action/time controls. Help is collapsible so it does not push the level map out of view.
