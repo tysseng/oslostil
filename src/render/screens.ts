@@ -8,7 +8,7 @@ import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from
 import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo.png';
-import { ENTRY_HALF_WIDTH, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, stationEntryX, playerFloor, stairCompanionPosition } from '../valkyrien';
+import { ENTRY_HALF_WIDTH, EXIT_HOUSE_LEFT, EXIT_HOUSE_RIGHT, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, stationEntryX, playerFloor, stairCompanionPosition } from '../valkyrien';
 import { machinePosition } from '../rainbow';
 import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValkyrienHouse } from './valkyrien';
 
@@ -24,6 +24,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     for (const e of items) if (!e.dead && isTree(e.type)) drawEnemy(e, enemyX(e, t), t);
   });
   drawValkyrien(t);
+  drawValkyrienHouse(t);
   const prev = SECTIONS[SECTIONS.indexOf(sec) - 1];
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
@@ -58,12 +59,30 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     drawEnemy({ ...q.enemy, y: GROUND - q.y }, q.x, t);
     ctx.restore();
   }
+  const friendStairs = stairCompanionPosition(s, s.fx, t);
+  if (s.valkyrien.phase === 'stairs' || stairCompanionPosition(s, s.mx, t) || friendStairs) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(exitX(t) - STAIRS_WIDTH - 24, 0, STAIRS_WIDTH + 24 + EXIT_HOUSE_RIGHT, GROUND + 30);
+    ctx.clip();
+    drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
+    drawValkyrienHouse(t);
+    ctx.restore();
+    drawUndergroundFill(exitX(t) - STAIRS_WIDTH - 24, GROUND, STAIRS_WIDTH + 24 + EXIT_HOUSE_RIGHT,
+      VALKYRIEN_CEILING - GROUND);
+  }
   // companions
   const inChute = s.valkyrien.phase === 'chute';
   ctx.save();
   if (inChute) {
     ctx.beginPath();
     ctx.rect(stationEntryX(t) - ENTRY_HALF_WIDTH, 0, ENTRY_HALF_WIDTH * 2, VALKYRIEN_CEILING + 32);
+    ctx.clip();
+  }
+  if (s.valkyrien.ascendingAt !== undefined) {
+    ctx.beginPath();
+    ctx.rect(-1000, VALKYRIEN_CEILING, 2000, 1000);
+    ctx.rect(exitX(t) + EXIT_HOUSE_LEFT, 0, 2000, GROUND);
     ctx.clip();
   }
   if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) {
@@ -73,17 +92,9 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
       drawMachine(inChute ? s.p.x : machine.x, machine.y, t, machineMood(t), 0, t >= VICTORIA_WAKE_T + WAKE_HOPS);
     }
   }
-  const friendStairs = stairCompanionPosition(s, s.fx, t);
   const ninja = isNinja(t), f = s.friend, fy = friendStairs?.y ?? clampStationY(s, f.yHist.length ? f.yHist[0] : GROUND, 32);
   const fRising = f.yHist.length > 1 && f.yHist[1] < f.yHist[0];
-  ctx.save();
-  if (friendStairs) {
-    ctx.beginPath();
-    ctx.rect(-1000, VALKYRIEN_CEILING, 2000, 1000);
-    ctx.clip();
-  }
   if (!s.deathFlight?.friend) drawGirl('friend', inChute ? s.p.x : s.fx, inChute ? s.p.y : fy, t + 0.13, { ninja, air: !friendStairs && fy < playerFloor(s) && s.valkyrien.phase !== 'stairs', rising: fRising, atk: f.atk > 0 });
-  ctx.restore();
   // gone while dead; after respawning she flashes white, after an ordinary hit she blinks
   const white = s.healFlash > 0 || s.respawn > 0 && Math.floor(s.respawn * 8) % 2 === 1;
   if (s.deathFlight) {
@@ -123,17 +134,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     drawUndergroundFill(stationEntryX(t) - ENTRY_HALF_WIDTH - 14, GROUND, ENTRY_HALF_WIDTH * 2 + 28,
       VALKYRIEN_CEILING - GROUND);
   }
-  if (s.valkyrien.phase === 'stairs' || stairCompanionPosition(s, s.mx, t) || friendStairs) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(exitX(t) - STAIRS_WIDTH - 24, 0, STAIRS_WIDTH + 62, GROUND + 30);
-    ctx.clip();
-    drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt);
-    ctx.restore();
-    drawUndergroundFill(exitX(t) - STAIRS_WIDTH - 24, GROUND, STAIRS_WIDTH + 62,
-      VALKYRIEN_CEILING - GROUND);
-  }
-  drawValkyrienHouse(t);
+  if (s.valkyrien.ascendingAt !== undefined) drawValkyrienHouse(t, 0, W, true);
   drawValkyrienDarkness(t, () => {
     for (const e of s.enemies) if (!e.dead) drawEnemy(e, enemyX(e, t), t);
     for (const q of s.knocked) {

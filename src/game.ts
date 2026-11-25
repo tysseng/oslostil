@@ -7,7 +7,7 @@ import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, ene
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
 import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
-import { VALKYRIEN_FLOOR, belowSurface, clampStationY, enterValkyrien, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
+import { EXIT_HOUSE_ROOF, VALKYRIEN_FLOOR, belowSurface, clampStationY, enterValkyrien, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
 import { updateGhosts } from './ghosts';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, RAINBOW_T0, RAINBOW_T1, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX } from './timeline';
 
@@ -355,6 +355,9 @@ export class Game {
     } else {
       // a tram roof carries her back towards the left edge
       if (p.ride) p.x = Math.max(TRAM_EDGE, p.x - p.ride.rel * dt);
+      if (s.valkyrien.roofRide && s.valkyrien.phase === 'surface' && p.vy >= 0 && Math.abs(p.y - EXIT_HOUSE_ROOF) < 0.5) {
+        p.x -= 145 * dt;
+      }
       if (p.propRide && p.vy >= 0) p.x = Math.max(TRAM_EDGE, p.x - p.propRide.rel * dt);
       if (p.machineRide !== undefined && p.vy >= 0 && platformMachines(t).includes(p.machineRide)) {
         p.x = Math.max(TRAM_EDGE, p.x - STATION_VX * dt);

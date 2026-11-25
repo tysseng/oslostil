@@ -107,6 +107,9 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 
 - Valkyrien entrance uses a native 64x64 transparent bitmap, with 17-pixel concrete side walls, green columns, a five-pixel VALKYRIEN sign, T roundel and a dark iron-fence back without visible steps or handrails. The slightly darkened facade has a round lamp above each pole, with a separate padded 192x192 soft-glow bitmap and four times the original glow radius. The sign leaves 38 pixels of headroom. Generate both layers with `tools/sprites/valkyrien_entrance.py`.
 - Entry descent is controlled at 260 pixels/second until the party clears the underground ceiling, then ordinary gravity resumes; this keeps the drop animation visible.
+- The exit pavilion is a native 104x64 side-view bitmap with matching concrete, dark green-framed windows and a vertically seamed green metal roof starting at entrance-sign height, without a visible gable end. Generate with `tools/sprites/valkyrien_house.py`. Party clearance and Automat Victoria's hover recovery use its wider right edge.
+- Pavilion concrete has embossed square panels; a VALKYRIEN GRILL roof sign has three downward spotlights in a separate glow bitmap. Surface-route players render in front and can land on the moving roof (48 pixels high). Returning underground players render behind the facade but remain visible through translucent window panes; the opaque background and windowed foreground are separate bitmap layers.
+- During stair ascent, the entire party stays behind the surface ground strip, including beneath the exit pavilion; only above-ground portions inside the pavilion can show through its windows.
 
 - Automat Victoria follows the stair slope without hovering, then smoothly rises to her normal bobbing height over 100 pixels after her full sprite clears the exit house. The surface foreground hides the ascent until all companions are through.
 

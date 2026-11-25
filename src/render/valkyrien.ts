@@ -1,16 +1,22 @@
 import { GROUND, H, W } from '../config';
-import { STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_ENTRY, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, stationEntryX, valkyrienTrainNose } from '../valkyrien';
+import { EXIT_HOUSE_LEFT, EXIT_HOUSE_RIGHT, STAIRS_WIDTH, VALKYRIEN_BOTTOM, VALKYRIEN_CEILING, VALKYRIEN_DEPTH, VALKYRIEN_ENTRY, VALKYRIEN_FLOOR, VALKYRIEN_HEIGHT, exitX, stationEntryX, valkyrienTrainNose } from '../valkyrien';
 import { enemyHeight, enemyX, type Enemy } from '../state';
 import { HIRES_PPM, RES, R, ctx, drawToContext, drawVehicle, horizontalBounds, loadImage, meta, ready, text } from './draw';
 import subwayOldUrl from '../../assets/vehicles/hires/subway-old.png';
 import entranceUrl from '../../assets/sprites/valkyrien-entrance.png';
 import entranceLightUrl from '../../assets/sprites/valkyrien-entrance-light.png';
+import houseUrl from '../../assets/sprites/valkyrien-house.png';
+import houseFrontUrl from '../../assets/sprites/valkyrien-house-front.png';
+import houseLightUrl from '../../assets/sprites/valkyrien-house-light.png';
 import { drawGhost } from './ghost';
 import { isGhost } from '../schedule';
 
 const SUBWAY_OLD = loadImage(subwayOldUrl);
 const ENTRANCE = loadImage(entranceUrl);
 const ENTRANCE_LIGHT = loadImage(entranceLightUrl);
+const HOUSE = loadImage(houseUrl);
+const HOUSE_FRONT = loadImage(houseFrontUrl);
+const HOUSE_LIGHT = loadImage(houseLightUrl);
 const SUBWAY_PPM = 10;
 const LIGHT_SPACING = 140;
 const CONE_WIDTH = 100;
@@ -389,14 +395,17 @@ export function drawValkyrienBalustrade(t: number, minX = 0, maxX = W): void {
   ctx.restore();
 }
 
-/** Opaque front wall deliberately hides the party while they emerge inside the house. */
-export function drawValkyrienHouse(t: number, minX = 0, maxX = W): void {
+export function drawValkyrienHouse(t: number, minX = 0, maxX = W, foreground = false): void {
   const x = exitX(t);
-  if (x < minX - 100 || x > maxX + 80) return;
-  R(x - 22, GROUND - 45, 60, 45, '#a6a7a2');
-  polygon([[x - 28, GROUND - 45], [x + 8, GROUND - 68], [x + 44, GROUND - 45]], '#494f53');
-  R(x - 13, GROUND - 36, 15, 17, '#516b73');
-  R(x + 13, GROUND - 33, 19, 33, '#343a3d');
-  R(x + 26, GROUND - 17, 2, 2, '#dad3a0');
-  R(x - 24, GROUND - 2, 64, 2, '#d0d0c8');
+  const image = foreground ? HOUSE_FRONT : HOUSE;
+  if (x + EXIT_HOUSE_RIGHT + 16 < minX || x + EXIT_HOUSE_LEFT - 16 > maxX || !ready(image)) return;
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(image, Math.round(x + EXIT_HOUSE_LEFT), GROUND - 64, EXIT_HOUSE_RIGHT - EXIT_HOUSE_LEFT, 64);
+  if (ready(HOUSE_LIGHT)) {
+    ctx.globalCompositeOperation = 'screen';
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(HOUSE_LIGHT, Math.round(x + EXIT_HOUSE_LEFT - 16), GROUND - 80, 136, 96);
+  }
+  ctx.restore();
 }

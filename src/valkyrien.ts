@@ -13,6 +13,9 @@ export const VALKYRIEN_DEPTH = VALKYRIEN_FLOOR - GROUND;
 export const VALKYRIEN_HEIGHT = VALKYRIEN_FLOOR - VALKYRIEN_CEILING;
 export const ENTRY_HALF_WIDTH = 22;
 export const STAIRS_WIDTH = 140;
+export const EXIT_HOUSE_LEFT = -40;
+export const EXIT_HOUSE_RIGHT = 64;
+export const EXIT_HOUSE_ROOF = GROUND - 48;
 const SPEED = 145;
 const ENTRY_DROP_SPEED = 260;
 export const stationPlacement = (x: number, base: number, width: number, height: number, t: number): boolean =>
@@ -23,6 +26,7 @@ export interface ValkyrienState {
   phase: 'surface' | 'chute' | 'underground' | 'run-in' | 'stairs' | 'house' | 'exit';
   camera: number;
   ascendingAt?: number;
+  roofRide?: boolean;
 }
 
 export const stationEntryX = (t: number): number => PX + (VALKYRIEN_ENTRY - t) * SPEED;
@@ -41,7 +45,7 @@ export const clampStationY = (s: GameState, base: number, height: number): numbe
   ['underground', 'run-in'].includes(s.valkyrien.phase) ? Math.max(VALKYRIEN_CEILING + height, base) : base;
 
 export function stairCompanionPosition(s: GameState, x: number, t: number): { x: number; y: number } | null {
-  if (s.valkyrien.ascendingAt === undefined || x - 16 > exitX(t) + 40) return null;
+  if (s.valkyrien.ascendingAt === undefined || x - 16 > exitX(t) + EXIT_HOUSE_RIGHT) return null;
   const progress = Math.max(0, Math.min(1, (x - exitX(t) + STAIRS_WIDTH) / STAIRS_WIDTH));
   return { x, y: VALKYRIEN_FLOOR - VALKYRIEN_DEPTH * progress };
 }
@@ -65,11 +69,23 @@ export function enterValkyrien(s: GameState): boolean {
 /** Resolve the optional route after ordinary gravity, instead of surface ground landing. */
 export function resolveValkyrien(s: GameState, t: number, dt: number, previousY: number): void {
   const r = s.valkyrien, p = s.p;
+  r.roofRide = r.phase === 'surface' && s.down <= 0 && p.vy >= 0
+    && previousY <= EXIT_HOUSE_ROOF + 0.5 && p.y >= EXIT_HOUSE_ROOF
+    && p.x + 4 > exitX(t) + EXIT_HOUSE_LEFT + 1 && p.x - 4 < exitX(t) + EXIT_HOUSE_RIGHT - 1;
+  if (r.roofRide) {
+    p.y = EXIT_HOUSE_ROOF;
+    p.vy = 0;
+    p.jumps = 0;
+    p.ride = undefined;
+    p.propRide = undefined;
+    p.machineRide = undefined;
+    s.bounceChain = 0;
+  }
   if (r.phase === 'house') {
     p.y = GROUND;
     p.vy = 0;
     p.x += 130 * dt;
-    if (p.x - 16 > exitX(t) + 40) r.phase = 'exit';
+    if (p.x - 16 > exitX(t) + EXIT_HOUSE_RIGHT) r.phase = 'exit';
   }
   if (r.phase === 'chute') {
     p.x = stationEntryX(t);
