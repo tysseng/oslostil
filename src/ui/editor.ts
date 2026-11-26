@@ -6,7 +6,8 @@ import { drawScene } from '../render/scenes';
 import { drawEnemy, drawLampLights } from '../render/sprites';
 import { GHOST_IMAGES } from '../render/ghost';
 import { STATION_IMAGES } from '../render/station-assets';
-import { STATION_ASSETS, isStationAsset, isWallPoster } from '../schedule';
+import { NEON_CARS, STATION_ASSETS, isNeonCar, isStationAsset, isWallPoster } from '../schedule';
+import { NEON_CAR_IMAGES } from '../render/neon-cars';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
 import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
 import { GHOSTS, isGhost, POWERUPS, isPowerup, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
@@ -39,7 +40,7 @@ function itemCategory(kind: EnemyKind): Category {
   if (isLamp(kind)) return 'Lights';
   if (isTree(kind)) return 'Trees';
   if (isProp(kind) || kind === 'board_broken') return 'Props & platforms';
-  if (kind === 'tram') return 'Vehicles';
+  if (kind === 'tram' || isNeonCar(kind)) return 'Vehicles';
   if (TYPES[kind].pickup) return 'Tickets & coins';
   if (kind === 'suitcase' || kind === 'snow' || kind === 'fire' || kind === 'shot' || kind === 'fireball') return 'Hazards';
   return 'Enemies';
@@ -237,6 +238,22 @@ export class LevelEditor {
         img.src = tramUrl;
         img.alt = '';
         button.prepend(img);
+      } else if (isNeonCar(kind)) {
+        const preview = document.createElement('canvas'), { sprite, light } = NEON_CAR_IMAGES[kind];
+        const { w, h, light: { padding, cell: [lw, lh] } } = NEON_CARS[kind];
+        preview.width = 64; preview.height = 40;
+        const draw = () => {
+          const c = preview.getContext('2d')!, scale = 56 / w;
+          c.clearRect(0, 0, preview.width, preview.height);
+          c.imageSmoothingEnabled = false;
+          const x = (preview.width - w * scale) / 2, y = 31 - h * scale;
+          if (light.complete && light.naturalWidth) c.drawImage(light, x - padding * scale, y - padding * scale, lw * scale, lh * scale);
+          if (sprite.complete && sprite.naturalWidth) c.drawImage(sprite, x, y, w * scale, h * scale);
+        };
+        sprite.addEventListener('load', draw, { once: true });
+        light.addEventListener('load', draw, { once: true });
+        draw();
+        button.prepend(preview);
       } else if (isStationAsset(kind)) {
         const preview = document.createElement('canvas'), image = STATION_IMAGES[kind];
         preview.width = 64; preview.height = 48;
@@ -591,7 +608,8 @@ export class LevelEditor {
     const events = this.layeredEvents();
     const drawEvent = (event: ScheduledEvent): void => {
       const b = this.bounds(event);
-      if (b.x > W + this.viewOffset || b.x + b.w < -this.viewOffset) return;
+      const padding = isNeonCar(event.type) ? NEON_CARS[event.type].light.padding : 0;
+      if (b.x - padding > W + this.viewOffset || b.x + b.w + padding < -this.viewOffset) return;
       const enemy = createEnemy(event);
       drawEnemy(enemy, enemyX(enemy, t), t);
     };

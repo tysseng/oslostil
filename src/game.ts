@@ -1,7 +1,7 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
-import { BLOB_POP, LAMPS, POWERUPS, PROPS, isGhost, isLamp, isPowerup, isProp, isTree, isStationAsset, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
+import { BLOB_POP, LAMPS, POWERUPS, PROPS, isGhost, isLamp, isNeonCar, isPowerup, isProp, isTree, isStationAsset, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
 import { loadDefaultLevel } from './level';
 import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, enemyHeight, enemyX, hopPose, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
@@ -498,7 +498,7 @@ export class Game {
           }
         }
       }
-      if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type) || isStationAsset(e.type)) continue; // scenery has no side damage
+      if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type) || isStationAsset(e.type) || isNeonCar(e.type)) continue; // scenery has no side damage
       const h = enemyBodyHeight(e, t), top = ey - h;
       const previousTop = GROUND - enemyHeight(e, prevT) - enemyBodyHeight(e, prevT);
       if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase' || e.type === 'blob_hop') && s.down <= 0 && p.vy > 0 && prevY <= previousTop && p.y >= top) {

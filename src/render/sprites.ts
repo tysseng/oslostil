@@ -1,6 +1,6 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { BEAT, GROUND, PH, W } from '../config';
-import { POWERUPS, isGhost, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { POWERUPS, isGhost, isNeonCar, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
 import { boardFrame, enemyHeight, enemyX, hopPose, type BlobPop, type Enemy, type RainbowState } from '../state';
 import { ribbonLength, ribbonPoints } from '../rainbow';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
@@ -14,6 +14,7 @@ import enemiesUrl from '../../assets/sprites/enemies.png';
 import { drawGhost } from './ghost';
 import { isStationAsset } from '../schedule';
 import { drawStationAsset } from './station-assets';
+import { drawNeonCar } from './neon-cars';
 import propsUrl from '../../assets/sprites/props.png';
 import lampsUrl from '../../assets/sprites/lamps.png';
 import lightsUrl from '../../assets/sprites/lamps-light.png';
@@ -298,6 +299,10 @@ export function drawBlobPop(pop: BlobPop): void {
 
 export function drawEnemy(e: Enemy, x: number, t: number): void {
   const y = GROUND - enemyHeight(e, t);
+  if (isNeonCar(e.type)) {
+    drawNeonCar(e.type, x, y);
+    return;
+  }
   if (isStationAsset(e.type)) {
     drawStationAsset(e.type, x, y);
     return;

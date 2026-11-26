@@ -1,0 +1,18 @@
+{
+  "file": "neon-testarossa.png",
+  "cell": [
+    80,
+    23
+  ],
+  "frames": 1,
+  "w": 80,
+  "h": 23,
+  "light": {
+    "file": "neon-testarossa-light.png",
+    "cell": [
+      112,
+      55
+    ],
+    "padding": 16
+  }
+}

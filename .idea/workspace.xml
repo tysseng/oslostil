@@ -7,11 +7,40 @@
     <option name="selectedModelId" value="ensemble" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="So many things for valkyrien">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Fixed parallax in valkyrien.">
+      <change afterPath="$PROJECT_DIR$/assets/sprites/neon-countach-light.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/neon-countach.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/neon-countach.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/neon-testarossa-light.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/neon-testarossa.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/sprites/neon-testarossa.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/countach-glow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/countach-short-glow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/countach-short.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/countach.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/delorean-glow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/delorean-short-glow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/delorean-short.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/delorean.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/size-comparison-1x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/size-comparison-4x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/size-comparison-short-1x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/size-comparison-short-4x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/testarossa-glow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/testarossa-short-glow.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/testarossa-short.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/previews/neon-cars/testarossa.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/neon_cars_preview.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/sprites/neon_oslo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/NEXT_CHANGES.txt" beforeDir="false" afterPath="$PROJECT_DIR$/NEXT_CHANGES.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/valkyrien.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/valkyrien.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ART_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,23 +57,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000004922238" />
-      <entry key="MS500" value="1.017334005890229" />
-      <entry key="S2" value="2.1057777909187045" />
-      <entry key="S5" value="3.9927308050631547" />
-      <entry key="S10" value="5.224500979407155" />
-      <entry key="S30" value="6.3341863156974245" />
-      <entry key="S60" value="6.656837138017268" />
-      <entry key="M2" value="6.82577194418763" />
-      <entry key="M5" value="6.929694741382219" />
-      <entry key="M10" value="6.981716983648901" />
-      <entry key="M15" value="7.114848330041292" />
-      <entry key="M30" value="8.184822792691456" />
-      <entry key="H1" value="11.103339364614225" />
-      <entry key="H2" value="19.367446925550208" />
-      <entry key="H4" value="50.67925015979789" />
-      <entry key="D1" value="383.6223872252857" />
-      <entry key="W1" value="1097.8789343032745" />
+      <entry key="MS100" value="1.4796324259973825" />
+      <entry key="MS500" value="1.9517007279300693" />
+      <entry key="S2" value="3.6733968896084943" />
+      <entry key="S5" value="5.5396046596364075" />
+      <entry key="S10" value="6.648066835983318" />
+      <entry key="S30" value="7.868817278816457" />
+      <entry key="S60" value="8.356084586899517" />
+      <entry key="M2" value="8.653905612229831" />
+      <entry key="M5" value="8.888907384288462" />
+      <entry key="M10" value="9.41441896997687" />
+      <entry key="M15" value="10.158001084147292" />
+      <entry key="M30" value="12.346846509263111" />
+      <entry key="H1" value="16.113966476464505" />
+      <entry key="H2" value="24.50980828075506" />
+      <entry key="H4" value="54.35806677406062" />
+      <entry key="D1" value="385.59889511229653" />
+      <entry key="W1" value="1103.9848077572628" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -54,35 +83,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="5.90516746E-316" />
-      <entry key="M5" value="8.100146779301441E-127" />
-      <entry key="M10" value="9.000081543686936E-64" />
-      <entry key="M15" value="9.321753823375515E-43" />
-      <entry key="M30" value="9.654923005066044E-22" />
-      <entry key="H1" value="3.107237198069393E-11" />
-      <entry key="H2" value="5.574259769753604E-6" />
-      <entry key="H4" value="0.0023609870329490737" />
-      <entry key="D1" value="0.36490706089296115" />
-      <entry key="W1" value="0.8658738215402699" />
+      <entry key="M2" value="9.83E-322" />
+      <entry key="M5" value="3.9581626771012596E-129" />
+      <entry key="M10" value="6.291393070776335E-65" />
+      <entry key="M15" value="1.5818472595436662E-43" />
+      <entry key="M30" value="3.977244346961396E-22" />
+      <entry key="H1" value="1.994302972710373E-11" />
+      <entry key="H2" value="4.465761942502472E-6" />
+      <entry key="H4" value="0.0021132349473029543" />
+      <entry key="D1" value="0.358226709638146" />
+      <entry key="W1" value="0.8635913438753196" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="3.328914177531528E-8" />
-      <entry key="MS500" value="0.048926921652342685" />
-      <entry key="S2" value="1.525418096010686" />
-      <entry key="S5" value="3.6984196410022667" />
-      <entry key="S10" value="5.064303933209572" />
-      <entry key="S30" value="6.277577911485694" />
-      <entry key="S60" value="6.628110357987453" />
-      <entry key="M2" value="6.811301223661918" />
-      <entry key="M5" value="6.923880468674486" />
-      <entry key="M10" value="6.978803963555139" />
-      <entry key="M15" value="7.112898052292649" />
-      <entry key="M30" value="8.183813592239767" />
-      <entry key="H1" value="11.102763054871541" />
-      <entry key="H2" value="19.36705782632017" />
-      <entry key="H4" value="50.6812749609935" />
-      <entry key="D1" value="383.986989265577" />
-      <entry key="W1" value="1098.744721614088" />
+      <entry key="MS100" value="0.521104859990686" />
+      <entry key="MS500" value="1.2866800904167361" />
+      <entry key="S2" value="3.4279072254133913" />
+      <entry key="S5" value="5.431790480073718" />
+      <entry key="S10" value="6.592261951815228" />
+      <entry key="S30" value="7.849693526034183" />
+      <entry key="S60" value="8.346437343793673" />
+      <entry key="M2" value="8.649057576282372" />
+      <entry key="M5" value="8.886933406034025" />
+      <entry key="M10" value="9.413241446894137" />
+      <entry key="M15" value="10.157020621755825" />
+      <entry key="M30" value="12.346105897799209" />
+      <entry key="H1" value="16.11343411371039" />
+      <entry key="H2" value="24.509415313549198" />
+      <entry key="H4" value="54.359838476969955" />
+      <entry key="D1" value="385.9568156143775" />
+      <entry key="W1" value="1104.8483118511695" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -123,13 +152,20 @@
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/joakim/git/tysseng/oslostil",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "/Users/joakim/.local/share/mise/installs/pnpm/12.11.2/pnpm",
     "ts.external.directory.path": "/Users/joakim/Library/Caches/JetBrains/IntelliJIdea2026.3/ts-go-native-preview/v7.1.0-dev.jetbrains.20261006.2/node_modules/@typescript/typescript-darwin-arm64/lib"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -152,7 +188,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added logo to startup screen" />
     <MESSAGE value="Tram fixes etc" />
     <MESSAGE value="Longer delay before respawn" />
     <MESSAGE value="Added new assets, fixed lives" />
@@ -177,6 +212,7 @@
     <MESSAGE value="Fixed entrance" />
     <MESSAGE value="Fixed valkyrien exit" />
     <MESSAGE value="So many things for valkyrien" />
-    <option name="LAST_COMMIT_MESSAGE" value="So many things for valkyrien" />
+    <MESSAGE value="Fixed parallax in valkyrien." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed parallax in valkyrien." />
   </component>
 </project>

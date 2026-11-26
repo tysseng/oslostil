@@ -1,0 +1,18 @@
+{
+  "file": "neon-countach.png",
+  "cell": [
+    80,
+    24
+  ],
+  "frames": 1,
+  "w": 80,
+  "h": 24,
+  "light": {
+    "file": "neon-countach-light.png",
+    "cell": [
+      112,
+      56
+    ],
+    "padding": 16
+  }
+}

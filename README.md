@@ -95,6 +95,7 @@ Click **Level editor** on the title screen to edit the bundled layout. Scrub **S
 
 - Drag an existing item to move it, or right-click it to delete it.
 - Select a sprite in the visual palette, then click empty space to place copies. The selected tool stays active; **Move** or **Esc** stops placing. Existing items remain draggable with any tool selected.
+- The **Vehicles** palette includes the neon Countach and Testarossa as harmless, non-standable scenery, with their glow rendered behind them.
 - **Play level** starts the edited level from the beginning. **Back to editor** returns to the editing position.
 - Changes save automatically in this browser and are used for subsequent games, including after reload. They do not change the repository or other browsers.
 - **Download level** exports the current layout as `level.json`. **Import level** opens a previously downloaded JSON layout, validates it, and asks before replacing your draft.

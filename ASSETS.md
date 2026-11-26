@@ -163,6 +163,8 @@ No company marks or logos on the vehicles. References are in `inspiration/vehicl
 
 | Vehicle | Status | Files | Planned use |
 |---|---|---|---|
+| Neon Countach | ✅ | `assets/sprites/neon-countach.png` (80 × 24), `neon-countach-light.png` (112 × 56), `neon-countach.json` | editor-placeable scenery; not in the default level; nose left |
+| Neon Testarossa | ✅ | `assets/sprites/neon-testarossa.png` (80 × 23), `neon-testarossa-light.png` (112 × 55), `neon-testarossa.json` | editor-placeable scenery; not in the default level; nose left |
 | Local train, green | ✅ | hi-res: `local-train-green.svg` (3 cars), `-cab.svg` (2 cars) · **in game:** `assets/sprites/train-green-hd.png` (hi-res, drawn smoothly at 8 px per metre) · parked pixel version: `train-green.png` | Sandvika stasjon background (verse 1: brakes and stops by the machines) |
 | Local train, tomato soup (type 69) | ✅ | hi-res: `local-train-tomato-soup.svg` (3 cars), `-cab.svg` (2 cars) · **in game:** `assets/sprites/train-tomato-hd.png` · parked pixel version: `train-tomato.png` | Sandvika stasjon background (intro, pre-chorus 1) |
 | Airport express train | 🎨 | `airport-express.svg` (3 cars), `-cab.svg` (2 cars) | |
