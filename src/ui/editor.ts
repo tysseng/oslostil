@@ -6,8 +6,9 @@ import { drawScene } from '../render/scenes';
 import { drawEnemy, drawLampLights } from '../render/sprites';
 import { GHOST_IMAGES } from '../render/ghost';
 import { STATION_IMAGES } from '../render/station-assets';
-import { NEON_CARS, STATION_ASSETS, isNeonCar, isStationAsset, isWallPoster } from '../schedule';
+import { DEALERSHIP, NEON_CARS, STATION_ASSETS, isDealership, isNeonCar, isStationAsset, isWallPoster } from '../schedule';
 import { NEON_CAR_IMAGES } from '../render/neon-cars';
+import { DEALERSHIP_IMAGES, drawDealershipBeams } from '../render/neon-dealership';
 import { NINJAS, NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind } from '../ninjas';
 import { PASSENGERS, PASSENGER_CELL_W, PASSENGER_CELL_H, isPassenger } from '../passengers';
 import { GHOSTS, isGhost, POWERUPS, isPowerup, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, treeDepth, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, TYPES, type EnemyKind, type ScheduledEvent } from '../schedule';
@@ -31,7 +32,7 @@ import { drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValk
 
 const STORAGE_KEY = 'oslostil-level-v1';
 const kinds = Object.keys(TYPES) as EnemyKind[];
-const categories = ['Tunnel', 'Enemies', 'Power-ups', 'Tickets & coins', 'Lights', 'Props & platforms', 'Trees', 'Vehicles', 'Hazards'] as const;
+const categories = ['Tunnel', 'Enemies', 'Power-ups', 'Tickets & coins', 'Lights', 'Props & platforms', 'Trees', 'Backgrounds', 'Vehicles', 'Hazards'] as const;
 type Category = (typeof categories)[number];
 
 function itemCategory(kind: EnemyKind): Category {
@@ -39,6 +40,7 @@ function itemCategory(kind: EnemyKind): Category {
   if (isPowerup(kind) || kind === 'terminal') return 'Power-ups';
   if (isLamp(kind)) return 'Lights';
   if (isTree(kind)) return 'Trees';
+  if (isDealership(kind)) return 'Backgrounds';
   if (isProp(kind) || kind === 'board_broken') return 'Props & platforms';
   if (kind === 'tram' || isNeonCar(kind)) return 'Vehicles';
   if (TYPES[kind].pickup) return 'Tickets & coins';
@@ -238,6 +240,23 @@ export class LevelEditor {
         img.src = tramUrl;
         img.alt = '';
         button.prepend(img);
+      } else if (isDealership(kind)) {
+        const preview = document.createElement('canvas'), { building, light, beams } = DEALERSHIP_IMAGES;
+        preview.width = 64; preview.height = 40;
+        const draw = () => {
+          const c = preview.getContext('2d')!, scale = 56 / DEALERSHIP.w;
+          const x = (preview.width - DEALERSHIP.w * scale) / 2, y = 31 - DEALERSHIP.h * scale;
+          const padding = DEALERSHIP.light.padding;
+          c.clearRect(0, 0, preview.width, preview.height);
+          c.imageSmoothingEnabled = false;
+          if (light.complete && light.naturalWidth) c.drawImage(light, x - padding * scale, y - padding * scale,
+            (DEALERSHIP.w + 2 * padding) * scale, (DEALERSHIP.h + 2 * padding) * scale);
+          if (building.complete && building.naturalWidth) c.drawImage(building, x, y, DEALERSHIP.w * scale, DEALERSHIP.h * scale);
+          if (beams.complete && beams.naturalWidth) c.drawImage(beams, x, y, DEALERSHIP.w * scale, DEALERSHIP.h * scale);
+        };
+        for (const image of [building, light, beams]) image.addEventListener('load', draw, { once: true });
+        draw();
+        button.prepend(preview);
       } else if (isNeonCar(kind)) {
         const preview = document.createElement('canvas'), { sprite, light } = NEON_CAR_IMAGES[kind];
         const { w, h, light: { padding, cell: [lw, lh] } } = NEON_CARS[kind];
@@ -499,6 +518,7 @@ export class LevelEditor {
   private position(e: ScheduledEvent, x: number, base: number): boolean {
     const underground = base > GROUND;
     if ((isGhost(e.type) || isStationAsset(e.type)) && !underground) return false;
+    if (isDealership(e.type) && underground) return false;
     if (underground) {
       const clearance = isPowerup(e.type) ? 2 : e.type === 'ticket' ? 1 : 0;
       base = Math.min(VALKYRIEN_FLOOR - clearance, Math.round(base));
@@ -608,18 +628,22 @@ export class LevelEditor {
     const events = this.layeredEvents();
     const drawEvent = (event: ScheduledEvent): void => {
       const b = this.bounds(event);
-      const padding = isNeonCar(event.type) ? NEON_CARS[event.type].light.padding : 0;
+      const padding = isNeonCar(event.type) ? NEON_CARS[event.type].light.padding : isDealership(event.type) ? DEALERSHIP.light.padding : 0;
       if (b.x - padding > W + this.viewOffset || b.x + b.w + padding < -this.viewOffset) return;
       const enemy = createEnemy(event);
       drawEnemy(enemy, enemyX(enemy, t), t);
     };
     drawScene(sectionAt(t).scene, t, this.game.s.bgx, 0, undefined, () => {
-      for (const event of events) if (isTree(event.type)) drawEvent(event);
+      for (const event of events) if (isTree(event.type) || isDealership(event.type)) drawEvent(event);
     });
     drawValkyrien(t, -this.viewOffset, W + this.viewOffset, () => {
       for (const event of events) if (isWallPoster(event.type)) drawEvent(event);
     });
-    for (const event of events) if (!isTree(event.type) && !isWallPoster(event.type)) drawEvent(event);
+    for (const event of events) if (!isTree(event.type) && !isDealership(event.type) && !isWallPoster(event.type)) drawEvent(event);
+    for (const event of events) if (isDealership(event.type)) {
+      const enemy = createEnemy(event);
+      drawDealershipBeams(enemyX(enemy, t), GROUND - enemy.y);
+    }
     drawLampLights(events.map(createEnemy), t);
     drawValkyrienBalustrade(t, -this.viewOffset, W + this.viewOffset);
     drawValkyrienHouse(t, -this.viewOffset, W + this.viewOffset);

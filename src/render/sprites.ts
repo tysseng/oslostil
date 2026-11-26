@@ -1,6 +1,7 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { BEAT, GROUND, PH, W } from '../config';
-import { POWERUPS, isGhost, isNeonCar, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { POWERUPS, isDealership, isGhost, isNeonCar, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { drawDealership } from './neon-dealership';
 import { boardFrame, enemyHeight, enemyX, hopPose, type BlobPop, type Enemy, type RainbowState } from '../state';
 import { ribbonLength, ribbonPoints } from '../rainbow';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
@@ -299,6 +300,10 @@ export function drawBlobPop(pop: BlobPop): void {
 
 export function drawEnemy(e: Enemy, x: number, t: number): void {
   const y = GROUND - enemyHeight(e, t);
+  if (isDealership(e.type)) {
+    drawDealership(x, y);
+    return;
+  }
   if (isNeonCar(e.type)) {
     drawNeonCar(e.type, x, y);
     return;

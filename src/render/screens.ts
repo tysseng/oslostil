@@ -2,7 +2,8 @@
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { compareItems, enemyX } from '../state';
-import { isTree, isWallPoster, itemLayer } from '../schedule';
+import { isDealership, isTree, isWallPoster, itemLayer } from '../schedule';
+import { drawDealershipBeams } from './neon-dealership';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt } from '../timeline';
 import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
@@ -21,7 +22,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   ctx.translate(0, -s.valkyrien.camera);
   const items = s.enemies.slice().sort(compareItems);
   drawScene(sec.scene, t, s.bgx, beatFlash, s.taggerStoppedAt, () => {
-    for (const e of items) if (!e.dead && isTree(e.type)) drawEnemy(e, enemyX(e, t), t);
+    for (const e of items) if (!e.dead && (isTree(e.type) || isDealership(e.type))) drawEnemy(e, enemyX(e, t), t);
   });
   drawValkyrien(t, 0, W, () => {
     for (const e of items) if (!e.dead && isWallPoster(e.type)) drawEnemy(e, enemyX(e, t), t);
@@ -31,7 +32,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   if (prev && prev.scene !== sec.scene) flash(t, barT(sec.a), 0.25, '#fff'); // scene cut on the downbeat
   flash(t, COLOR_T, 0.35, '#ff2b4a'); // «skjermen skifter farge»
   flash(t, NINJA_T, 0.4, '#fff'); // ninja transformation
-  for (const e of items) if (!e.dead && !isTree(e.type) && !isWallPoster(e.type) && itemLayer(e.type) <= 1) drawEnemy(e, enemyX(e, t), t);
+  for (const e of items) if (!e.dead && !isTree(e.type) && !isDealership(e.type) && !isWallPoster(e.type) && itemLayer(e.type) <= 1) drawEnemy(e, enemyX(e, t), t);
   if (bossVisible(t)) {
     // walks in for a bar, then fires its coupler cannon on every beat and idles in between
     const walking = t - BOSS_AT < BAR, ph = beatPhase(t, BEAT);
@@ -126,6 +127,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.restore();
   }
   for (const q of s.parts) R(q.x, q.y, 2, 2, q.c);
+  for (const e of items) if (!e.dead && isDealership(e.type)) drawDealershipBeams(enemyX(e, t), GROUND - e.y);
   drawLampLights(s.enemies, t);
   for (const q of s.pops) text(q.txt, q.x, q.y, q.c, 6, 'center');
   drawValkyrienBalustrade(t);
