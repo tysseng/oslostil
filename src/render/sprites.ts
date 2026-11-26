@@ -1,7 +1,8 @@
 // Characters and enemies from sprite sheets; the boss and the tram are still drawn rectangle by rectangle.
 import { BEAT, GROUND, PH, W } from '../config';
-import { POWERUPS, isDealership, isGhost, isNeonCar, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
+import { POWERUPS, isDealership, isHighrise, isGhost, isNeonCar, isPowerup, BLOB_POP, BROKEN_BOARD, TREES, TREE_CELL_W, TREE_CELL_H, isTree, LAMPS, LAMP_CELL_W, LAMP_CELL_H, isLamp, PROPS, PROP_CELL_W, PROP_CELL_H, isProp, SHEET, SHEET_CELL, TRAM_PPM, type SheetKind } from '../schedule';
 import { drawDealership } from './neon-dealership';
+import { drawHighrise } from './neon-highrise';
 import { boardFrame, enemyHeight, enemyX, hopPose, type BlobPop, type Enemy, type RainbowState } from '../state';
 import { ribbonLength, ribbonPoints } from '../rainbow';
 import { NINJA_CELL_W, NINJA_CELL_H, THUGS, fighterRow, isFighter, isNinjaKind, ninjaColumn } from '../ninjas';
@@ -29,8 +30,9 @@ import boardLightUrl from '../../assets/sprites/board-broken-light.png';
 import powerupsUrl from '../../assets/sprites/powerups.png';
 import powerupLightsUrl from '../../assets/sprites/powerups-light.png';
 import tramUrl from '../../assets/vehicles/hires/tram-new.png';
+import neonTramUrl from '../../assets/vehicles/hires/tram-neon.png';
 import tokyoTramUrl from '../../assets/vehicles/hires/tram-tokyo.png';
-import { COLOR_T } from '../timeline';
+import { COLOR_T, sectionAt } from '../timeline';
 import bossUrl from '../../assets/sprites/kaostrikken.png';
 import bossMeta from '../../assets/sprites/kaostrikken.json';
 import celebrationUrl from '../../assets/sprites/celebrate.png';
@@ -215,12 +217,13 @@ export function drawRainbowMachine(r: RainbowState, t: number, mood: Mood): void
  * x = leading end (left end), wheels on y.
  */
 const TRAM_IMG = loadImage(tramUrl);
+const NEON_TRAM_IMG = loadImage(neonTramUrl);
 /** Tokyoslo's two-car green-and-cream tram (tools/vehicles/trams.py): same size, so the same physics. */
 const TOKYO_TRAM_IMG = loadImage(tokyoTramUrl);
 
 function drawTram(x: number, y: number, t: number, tokyo = false): void {
   if (x > W && Math.floor(t * 8) % 2) text('!', W - 12, GROUND - 52, '#ff4040', 16); // warning before it rolls in
-  drawVehicle(tokyo ? TOKYO_TRAM_IMG : TRAM_IMG, x, y, TRAM_PPM);
+  drawVehicle(sectionAt(t).scene === 'neon' ? NEON_TRAM_IMG : tokyo ? TOKYO_TRAM_IMG : TRAM_IMG, x, y, TRAM_PPM);
 }
 
 /** Enemies, obstacles, pickups and boss shots: one sheet row per kind (tools/sprites/enemies.py). */
@@ -302,6 +305,10 @@ export function drawEnemy(e: Enemy, x: number, t: number): void {
   const y = GROUND - enemyHeight(e, t);
   if (isDealership(e.type)) {
     drawDealership(x, y);
+    return;
+  }
+  if (isHighrise(e.type)) {
+    drawHighrise(e.type, x, y);
     return;
   }
   if (isNeonCar(e.type)) {

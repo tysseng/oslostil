@@ -1,5 +1,5 @@
 import { BEAT, GROUND, PH, PLAYER_MAX_HP, PX, W, rng } from './config';
-import { BLOB_HOP, BROKEN_BOARD, DEALERSHIP, isDealership, isGhost, isPowerup, isTree, isWallPoster, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
+import { BLOB_HOP, BROKEN_BOARD, DEALERSHIP, HIGHRISES, isDealership, isHighrise, isGhost, isPowerup, isTree, isWallPoster, itemLayer, treeDepth, TRAM_WARN, TYPES, type ScheduledEvent } from './schedule';
 import { loadDefaultLevel } from './level';
 import { sectionAt } from './timeline';
 import type { ValkyrienState } from './valkyrien';
@@ -56,7 +56,7 @@ export interface Player {
   star: number;
   /** the tram she is standing on */
   ride?: Enemy;
-  /** One-way prop platform supporting her. */
+  /** One-way scenery platform supporting her. */
   propRide?: Enemy;
   /** Index of the stationary Sandvika machine supporting her. */
   machineRide?: number;
@@ -122,12 +122,12 @@ export interface GameState {
 }
 
 export const eventSpeed = (e: ScheduledEvent): number =>
-  e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : isDealership(e.type) ? 0.75 : 1);
+  e.rel ?? (sectionAt(e.arr).speed + TYPES[e.type].own) * (e.type === 'tram' ? 1.2 : isDealership(e.type) ? 0.75 : isHighrise(e.type) ? 0.6 : 1);
 const movementSpeed = (e: ScheduledEvent): number =>
   (e.y ?? 0) < 0 ? (isWallPoster(e.type) ? 145 * 0.85 : 145)
   : eventSpeed(e) * (isTree(e.type) ? 0.5 + treeDepth(e) * 0.25 : 1);
 export const spawnTime = (e: ScheduledEvent): number =>
-  e.arr - (W + (isDealership(e.type) ? DEALERSHIP.w / 2 + DEALERSHIP.light.padding : 100) - PX + (e.type === 'blob_hop' ? 40 * BEAT : 0)) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
+  e.arr - (W + (isDealership(e.type) ? DEALERSHIP.w / 2 + DEALERSHIP.light.padding : isHighrise(e.type) ? HIGHRISES[e.type].w / 2 + HIGHRISES[e.type].light.padding : 100) - PX + (e.type === 'blob_hop' ? 40 * BEAT : 0)) / movementSpeed(e) - (e.type === 'tram' ? TRAM_WARN : 0);
 
 export function createEnemy(e: ScheduledEvent): Enemy {
   return { ...e, rel: movementSpeed(e), hp: TYPES[e.type].hp, y: e.y ?? TYPES[e.type].y };

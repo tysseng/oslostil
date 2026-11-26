@@ -1,7 +1,7 @@
 // Game rules: spawning, physics, combat, scoring and keyboard controls.
 import { AudioEngine } from './audio';
 import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, PX, W, WIN_AT, barT } from './config';
-import { BLOB_POP, LAMPS, POWERUPS, PROPS, isDealership, isGhost, isLamp, isNeonCar, isPowerup, isProp, isTree, isStationAsset, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
+import { BLOB_POP, DEALERSHIP, LAMPS, POWERUPS, PROPS, isBackgroundBuilding, isDealership, isGhost, isLamp, isNeonCar, isPowerup, isProp, isTree, isStationAsset, TRAM_EDGE, TRAM_LEN, TRAM_ROOF, TYPES, type PowerupKind } from './schedule';
 import { loadDefaultLevel } from './level';
 import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, enemyHeight, enemyX, hopPose, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
@@ -277,13 +277,13 @@ export class Game {
     if (s.down > 0 || p.ride || p.vy < 0) return;
     let highest = Infinity;
     for (const e of s.enemies) {
-      if (e.dead || (e.y < 0) !== belowSurface(s) || (!isProp(e.type) && !isLamp(e.type) && e.type !== 'board_broken')) continue;
-      const height = e.type === 'board_broken' ? boardTop(e, t) : isLamp(e.type) ? LAMPS[e.type].top : PROPS[e.type].top;
+      if (e.dead || (e.y < 0) !== belowSurface(s) || (!isProp(e.type) && !isLamp(e.type) && !isDealership(e.type) && e.type !== 'board_broken')) continue;
+      const height = e.type === 'board_broken' ? boardTop(e, t) : isLamp(e.type) ? LAMPS[e.type].top : isDealership(e.type) ? DEALERSHIP.top : PROPS[e.type].top;
       if (!height) continue; // lantern strings, neon signs: nothing to stand on
       const top = GROUND - e.y - height, x = enemyX(e, t);
       const previousTop = e.type === 'board_broken' ? GROUND - e.y - boardTop(e, prevT) : top;
       const riding = e === previousRide && Math.abs(prevY - previousTop) < 0.5;
-      const [left, right] = isLamp(e.type) ? LAMPS[e.type].top_span : [-TYPES[e.type].w / 2, TYPES[e.type].w / 2];
+      const [left, right] = isLamp(e.type) ? LAMPS[e.type].top_span : isDealership(e.type) ? DEALERSHIP.top_span : [-TYPES[e.type].w / 2, TYPES[e.type].w / 2];
       if (p.x + 4 <= x + left || p.x - 4 >= x + right
         || (!riding && (prevY > previousTop + 0.5 || p.y < top)) || top >= highest) continue;
       highest = top; p.propRide = e;
@@ -498,7 +498,7 @@ export class Game {
           }
         }
       }
-      if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type) || isStationAsset(e.type) || isNeonCar(e.type) || isDealership(e.type)) continue; // scenery has no side damage
+      if (e.type === 'tram' || e.type === 'board_broken' || isProp(e.type) || isLamp(e.type) || isTree(e.type) || isStationAsset(e.type) || isNeonCar(e.type) || isBackgroundBuilding(e.type)) continue; // scenery has no side damage
       const h = enemyBodyHeight(e, t), top = ey - h;
       const previousTop = GROUND - enemyHeight(e, prevT) - enemyBodyHeight(e, prevT);
       if ((e.type === 'pigeon' || e.type === 'drone' || e.type === 'gull' || e.type === 'suitcase' || e.type === 'blob_hop') && s.down <= 0 && p.vy > 0 && prevY <= previousTop && p.y >= top) {

@@ -235,6 +235,8 @@ def main():
         "file": "neon-dealership.png",
         "w": W,
         "h": H,
+        "top": H - 1,
+        "top_span": [3 - W // 2, W - 3 - W // 2],
         "light": {"file": "neon-dealership-light.png", "padding": GLOW_PAD},
         "beams": {"file": "neon-dealership-beams.png", "offset": [0, 0]},
     }

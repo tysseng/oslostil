@@ -12,6 +12,8 @@ import stationAssetsJson from '../assets/sprites/station-assets.json';
 import countachJson from '../assets/sprites/neon-countach.json';
 import testarossaJson from '../assets/sprites/neon-testarossa.json';
 import dealershipJson from '../assets/backgrounds/neon-dealership.json';
+import highriseJson from '../assets/backgrounds/neon-highrise-1.json';
+import enturHighriseJson from '../assets/backgrounds/neon-highrise-2.json';
 import { NINJAS, THUGS, type NinjaKind, type ThugKind } from './ninjas';
 import { PASSENGERS, type PassengerKind } from './passengers';
 
@@ -23,7 +25,7 @@ export const STATION_ASSETS = stationAssetsJson;
 export type StationAssetKind = keyof typeof STATION_ASSETS;
 export const isStationAsset = (kind: EnemyKind): kind is StationAssetKind => Object.hasOwn(STATION_ASSETS, kind);
 export const isWallPoster = (kind: EnemyKind): boolean => isStationAsset(kind) && STATION_ASSETS[kind].wall;
-export const itemLayer = (kind: EnemyKind): number => isWallPoster(kind) ? -2 : isTree(kind) ? -1 : isDealership(kind) ? -0.5 : kind === 'tram' ? 1 : isStationAsset(kind) || isNeonCar(kind) || isProp(kind) || isLamp(kind) || kind === 'board_broken' ? 0 : 2;
+export const itemLayer = (kind: EnemyKind): number => isWallPoster(kind) ? -2 : isTree(kind) ? -1 : isHighrise(kind) ? -0.75 : isDealership(kind) ? -0.5 : kind === 'tram' ? 1 : isStationAsset(kind) || isNeonCar(kind) || isProp(kind) || isLamp(kind) || kind === 'board_broken' ? 0 : 2;
 export const BROKEN_BOARD = boardJson;
 export const BLOB_HOP = sheetJson.blob_hop;
 export const GHOST = ghostJson;
@@ -51,10 +53,14 @@ export type NeonCarKind = keyof typeof NEON_CARS;
 export const isNeonCar = (kind: EnemyKind): kind is NeonCarKind => Object.hasOwn(NEON_CARS, kind);
 export const DEALERSHIP = dealershipJson;
 export const isDealership = (kind: EnemyKind): kind is 'neon_dealership' => kind === 'neon_dealership';
+export const HIGHRISES = { neon_highrise_1: highriseJson, neon_highrise_2: enturHighriseJson };
+export type HighriseKind = keyof typeof HIGHRISES;
+export const isHighrise = (kind: EnemyKind): kind is HighriseKind => Object.hasOwn(HIGHRISES, kind);
+export const isBackgroundBuilding = (kind: EnemyKind): kind is 'neon_dealership' | HighriseKind => isDealership(kind) || isHighrise(kind);
 
 export type EnemyKind =
   | 'suitcase' | 'snow' | 'pigeon' | 'ticket' | 'blob' | 'blob_hop' | 'board_broken' | 'ninja' | 'drone' | 'gull' | 'ghost'
-  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | GhostKind | PowerupKind | PropKind | LampKind | NinjaKind | ThugKind | PassengerKind | 'tagger_spray' | TreeKind | StationAssetKind | NeonCarKind | 'neon_dealership';
+  | 'tram' | 'bot' | 'terminal' | 'fire' | 'coin' | 'shot' | 'fireball' | GhostKind | PowerupKind | PropKind | LampKind | NinjaKind | ThugKind | PassengerKind | 'tagger_spray' | TreeKind | StationAssetKind | NeonCarKind | 'neon_dealership' | HighriseKind;
 
 /** One row of the enemy sprite sheet (assets/sprites/enemies.png, 32 × 32 bottom-centred cells). */
 export interface SheetRow {
@@ -68,7 +74,7 @@ export interface SheetRow {
   dy?: number;
 }
 /** Enemies and pickups use this sheet; trams and props have separate artwork. */
-export type SheetKind = Exclude<EnemyKind, GhostKind | 'tram' | 'board_broken' | PowerupKind | PropKind | LampKind | Exclude<NinjaKind, 'ninja'> | ThugKind | PassengerKind | 'tagger_spray' | TreeKind | StationAssetKind | NeonCarKind | 'neon_dealership'>;
+export type SheetKind = Exclude<EnemyKind, GhostKind | 'tram' | 'board_broken' | PowerupKind | PropKind | LampKind | Exclude<NinjaKind, 'ninja'> | ThugKind | PassengerKind | 'tagger_spray' | TreeKind | StationAssetKind | NeonCarKind | 'neon_dealership' | HighriseKind>;
 export const SHEET: Record<SheetKind, SheetRow> = sheetJson;
 export const SHEET_CELL = 32;
 
@@ -146,7 +152,7 @@ export const TYPES: Record<EnemyKind, EnemyType> = {
   fireball: fromSheet('fireball', { y: 28, hp: 1, own: 120 }),
   // every prop, lamp and tree in its JSON becomes solid scenery (new art needs no code change)
   ...scenery(PROPS), ...scenery(LAMPS), ...scenery(TREES), ...scenery(STATION_ASSETS), ...scenery(NEON_CARS),
-  ...scenery({ neon_dealership: DEALERSHIP }),
+  ...scenery({ neon_dealership: DEALERSHIP }), ...scenery(HIGHRISES),
   ...Object.fromEntries((Object.keys(POWERUPS) as PowerupKind[]).map(kind =>
     [kind, { w: POWERUPS[kind].w, h: POWERUPS[kind].h, y: 30, hp: 0, own: 0, pickup: true }])) as Record<PowerupKind, EnemyType>,
 };

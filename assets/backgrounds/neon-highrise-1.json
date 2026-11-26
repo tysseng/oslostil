@@ -1,0 +1,9 @@
+{
+  "file": "neon-highrise-1.png",
+  "w": 117,
+  "h": 76,
+  "light": {
+    "file": "neon-highrise-1-light.png",
+    "padding": 16
+  }
+}
