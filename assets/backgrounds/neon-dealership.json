@@ -1,0 +1,16 @@
+{
+  "file": "neon-dealership.png",
+  "w": 198,
+  "h": 61,
+  "light": {
+    "file": "neon-dealership-light.png",
+    "padding": 16
+  },
+  "beams": {
+    "file": "neon-dealership-beams.png",
+    "offset": [
+      0,
+      0
+    ]
+  }
+}
