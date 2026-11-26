@@ -14,6 +14,7 @@ import testarossaJson from '../assets/sprites/neon-testarossa.json';
 import dealershipJson from '../assets/backgrounds/neon-dealership.json';
 import highriseJson from '../assets/backgrounds/neon-highrise-1.json';
 import enturHighriseJson from '../assets/backgrounds/neon-highrise-2.json';
+import bekkHighriseJson from '../assets/backgrounds/neon-highrise-3.json';
 import { NINJAS, THUGS, type NinjaKind, type ThugKind } from './ninjas';
 import { PASSENGERS, type PassengerKind } from './passengers';
 
@@ -53,7 +54,7 @@ export type NeonCarKind = keyof typeof NEON_CARS;
 export const isNeonCar = (kind: EnemyKind): kind is NeonCarKind => Object.hasOwn(NEON_CARS, kind);
 export const DEALERSHIP = dealershipJson;
 export const isDealership = (kind: EnemyKind): kind is 'neon_dealership' => kind === 'neon_dealership';
-export const HIGHRISES = { neon_highrise_1: highriseJson, neon_highrise_2: enturHighriseJson };
+export const HIGHRISES = { neon_highrise_1: highriseJson, neon_highrise_2: enturHighriseJson, neon_highrise_3: bekkHighriseJson };
 export type HighriseKind = keyof typeof HIGHRISES;
 export const isHighrise = (kind: EnemyKind): kind is HighriseKind => Object.hasOwn(HIGHRISES, kind);
 export const isBackgroundBuilding = (kind: EnemyKind): kind is 'neon_dealership' | HighriseKind => isDealership(kind) || isHighrise(kind);

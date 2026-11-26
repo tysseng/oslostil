@@ -7,21 +7,28 @@
     <option name="selectedModelId" value="ensemble" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Added dealership">
+    <list default="true" id="47e0cca0-1116-4cd2-90b4-3d723f6f60aa" name="Changes" comment="Two highrises with neon, and neon tram">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ART_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/ART_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ASSETS.md" beforeDir="false" afterPath="$PROJECT_DIR$/ASSETS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CODE_BRIEF.md" beforeDir="false" afterPath="$PROJECT_DIR$/CODE_BRIEF.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/backgrounds/neon-dealership-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/backgrounds/neon-dealership-light.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/backgrounds/neon-dealership.json" beforeDir="false" afterPath="$PROJECT_DIR$/assets/backgrounds/neon-dealership.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/level.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/level.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/screens.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/screens.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/render/sprites.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/sprites.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/backgrounds/neon-dealership.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/backgrounds/neon-dealership.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/backgrounds/neon-highrise-2-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/backgrounds/neon-highrise-2-light.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/backgrounds/neon-highrise-2.png" beforeDir="false" afterPath="$PROJECT_DIR$/assets/backgrounds/neon-highrise-2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/previews/neon-dealership/dealership-beam-player-4x.png" beforeDir="false" afterPath="$PROJECT_DIR$/previews/neon-dealership/dealership-beam-player-4x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/previews/neon-dealership/dealership-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/previews/neon-dealership/dealership-light.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/previews/neon-dealership/dealership-scale-4x.png" beforeDir="false" afterPath="$PROJECT_DIR$/previews/neon-dealership/dealership-scale-4x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/previews/neon-dealership/dealership.png" beforeDir="false" afterPath="$PROJECT_DIR$/previews/neon-dealership/dealership.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/previews/neon-highrise/entur-comparison-4x.png" beforeDir="false" afterPath="$PROJECT_DIR$/previews/neon-highrise/entur-comparison-4x.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/previews/neon-highrise/entur-draft-light.png" beforeDir="false" afterPath="$PROJECT_DIR$/previews/neon-highrise/entur-draft-light.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/previews/neon-highrise/entur-draft.png" beforeDir="false" afterPath="$PROJECT_DIR$/previews/neon-highrise/entur-draft.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/render/neon-highrise.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/render/neon-highrise.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/schedule.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/schedule.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/state.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/editor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/editor.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tools/sprites/neon_dealership_preview.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/neon_dealership_preview.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/sprites/neon_entur_preview.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/sprites/neon_entur_preview.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,23 +45,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000014261384107" />
-      <entry key="MS500" value="1.0886816554697585" />
-      <entry key="S2" value="2.5024192752900896" />
-      <entry key="S5" value="4.039844140627379" />
-      <entry key="S10" value="4.888163945995135" />
-      <entry key="S30" value="5.595232491082203" />
-      <entry key="S60" value="5.7929989742142265" />
-      <entry key="M2" value="5.895317271682636" />
-      <entry key="M5" value="5.957839525732514" />
-      <entry key="M10" value="5.978871558027056" />
-      <entry key="M15" value="5.985903641637441" />
-      <entry key="M30" value="5.993083852803567" />
-      <entry key="H1" value="6.019935411416087" />
-      <entry key="H2" value="6.331312972179133" />
-      <entry key="H4" value="8.904936606155875" />
-      <entry key="D1" value="227.7193249775359" />
-      <entry key="W1" value="1027.8138635680589" />
+      <entry key="MS100" value="1.0086505600249378" />
+      <entry key="MS500" value="1.6900722468642797" />
+      <entry key="S2" value="4.251020200872261" />
+      <entry key="S5" value="6.667720433203083" />
+      <entry key="S10" value="8.069556537812854" />
+      <entry key="S30" value="9.284638559887213" />
+      <entry key="S60" value="9.632346075938939" />
+      <entry key="M2" value="9.813598259088927" />
+      <entry key="M5" value="9.924810591560396" />
+      <entry key="M10" value="9.962299672121928" />
+      <entry key="M15" value="9.974874636292503" />
+      <entry key="M30" value="10.001221506783827" />
+      <entry key="H1" value="10.282698678199846" />
+      <entry key="H2" value="11.384067172569615" />
+      <entry key="H4" value="14.166697756061769" />
+      <entry key="D1" value="210.65664076967596" />
+      <entry key="W1" value="1019.4040844687474" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -65,34 +72,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="3.52361339816935E-200" />
-      <entry key="M10" value="1.8771290307726158E-100" />
-      <entry key="M15" value="3.278406113284262E-67" />
-      <entry key="M30" value="5.7257367327569316E-34" />
-      <entry key="H1" value="2.3928511722957172E-17" />
-      <entry key="H2" value="4.891677802447419E-9" />
-      <entry key="H4" value="6.994053047016069E-5" />
-      <entry key="D1" value="0.202980734790866" />
-      <entry key="W1" value="0.7962784718745078" />
+      <entry key="M5" value="5.2796239040667224E-216" />
+      <entry key="M10" value="2.2977432197847314E-108" />
+      <entry key="M15" value="1.7412761924017477E-72" />
+      <entry key="M30" value="1.3195742466423465E-36" />
+      <entry key="H1" value="1.1487272289984075E-18" />
+      <entry key="H2" value="1.071786932649577E-9" />
+      <entry key="H4" value="3.273815713581921E-5" />
+      <entry key="D1" value="0.17885827511019864" />
+      <entry key="W1" value="0.782015888518882" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="5.507315982028492E-4" />
-      <entry key="MS500" value="0.30420167176721313" />
-      <entry key="S2" value="2.1340094540994548" />
-      <entry key="S5" value="3.856066453805608" />
-      <entry key="S10" value="4.787873385648935" />
-      <entry key="S30" value="5.559636278476542" />
-      <entry key="S60" value="5.77490876460574" />
-      <entry key="M2" value="5.886197428247963" />
-      <entry key="M5" value="5.954173426905575" />
-      <entry key="M10" value="5.977035462813113" />
-      <entry key="M15" value="5.984678899909983" />
-      <entry key="M30" value="5.99247114224999" />
-      <entry key="H1" value="6.0196289526148075" />
-      <entry key="H2" value="6.331159182514132" />
-      <entry key="H4" value="8.904918404139416" />
-      <entry key="D1" value="227.92211933167252" />
-      <entry key="W1" value="1028.6100597483521" />
+      <entry key="MS100" value="0.9810663196196359" />
+      <entry key="MS500" value="1.6782176208267554" />
+      <entry key="S2" value="4.200229807356256" />
+      <entry key="S5" value="6.620356669460758" />
+      <entry key="S10" value="8.03793027222672" />
+      <entry key="S30" value="9.271834435980338" />
+      <entry key="S60" value="9.62562400938815" />
+      <entry key="M2" value="9.810154161549475" />
+      <entry key="M5" value="9.923412612889619" />
+      <entry key="M10" value="9.961597258616594" />
+      <entry key="M15" value="9.97440559065813" />
+      <entry key="M30" value="10.000985192767015" />
+      <entry key="H1" value="10.282566419460085" />
+      <entry key="H2" value="11.383974679328736" />
+      <entry key="H4" value="14.16665983132855" />
+      <entry key="D1" value="210.83532991221574" />
+      <entry key="W1" value="1020.1860188394058" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
@@ -169,7 +176,6 @@
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added new assets, fixed lives" />
     <MESSAGE value="Added lamps" />
     <MESSAGE value="Lots of new sprites. Tagging tagger" />
     <MESSAGE value="Lots of work on japan" />
@@ -194,6 +200,7 @@
     <MESSAGE value="Fixed parallax in valkyrien." />
     <MESSAGE value="Added neon cars" />
     <MESSAGE value="Added dealership" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added dealership" />
+    <MESSAGE value="Two highrises with neon, and neon tram" />
+    <option name="LAST_COMMIT_MESSAGE" value="Two highrises with neon, and neon tram" />
   </component>
 </project>

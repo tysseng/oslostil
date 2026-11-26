@@ -4,10 +4,13 @@ import buildingUrl from '../../assets/backgrounds/neon-highrise-1.png';
 import lightUrl from '../../assets/backgrounds/neon-highrise-1-light.png';
 import enturBuildingUrl from '../../assets/backgrounds/neon-highrise-2.png';
 import enturLightUrl from '../../assets/backgrounds/neon-highrise-2-light.png';
+import bekkBuildingUrl from '../../assets/backgrounds/neon-highrise-3.png';
+import bekkLightUrl from '../../assets/backgrounds/neon-highrise-3-light.png';
 
 export const HIGHRISE_IMAGES: Record<HighriseKind, { building: HTMLImageElement; light: HTMLImageElement }> = {
   neon_highrise_1: { building: loadImage(buildingUrl), light: loadImage(lightUrl) },
   neon_highrise_2: { building: loadImage(enturBuildingUrl), light: loadImage(enturLightUrl) },
+  neon_highrise_3: { building: loadImage(bekkBuildingUrl), light: loadImage(bekkLightUrl) },
 };
 
 export function drawHighrise(kind: HighriseKind, x: number, base: number): void {

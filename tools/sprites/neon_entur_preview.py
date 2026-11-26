@@ -22,11 +22,8 @@ def entur():
     l = ImageDraw.Draw(lines)
     interiors = []
     lit_windows = {(14, 2), (36, 2), (49, 2), (83, 2), (4, 30), (61, 30), (71, 30), (91, 30)}
-    lit_bottom = ((35, 58),)
     window_light = Image.new("L", (W + 2 * GLOW_PAD, H + 2 * GLOW_PAD))
     wd = ImageDraw.Draw(window_light)
-    for left, right in lit_bottom:
-        wd.rectangle((left + GLOW_PAD, 59 + GLOW_PAD, right + GLOW_PAD, 82 + GLOW_PAD), fill=180)
 
     l.line((0, H - 1, 0, 0, W - 1, 0), fill=PINK_MID)
     l.line((1, 0, W - 2, 0), fill=PINK)
@@ -86,12 +83,9 @@ def entur():
     d = ImageDraw.Draw(building)
     for bounds, lit in interiors:
         d.rectangle(bounds, fill=CYAN if lit else BLACK)
-    for left, right in lit_bottom:
-        d.rectangle((left, 59, right, 82), fill=CYAN)
-    for left, right in ((5, 29), (64, 85)):
+    for left, right in ((5, 29), (34, 59), (64, 85)):
         for x in (left + (right - left) // 3, left + 2 * (right - left) // 3):
             d.line((x, 59, x, 82), fill=CYAN_DARK)
-    d.line((35, 83, 59, 83), fill=CYAN)
 
     sign_width = 108
     extended = Image.new("RGBA", (sign_width, H))

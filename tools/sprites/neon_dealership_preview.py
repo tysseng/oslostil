@@ -110,7 +110,7 @@ def spotlight(image, x):
 def make_dealership():
     building = Image.new("RGBA", (W, H))
     d = ImageDraw.Draw(building)
-    d.rectangle((4, 4, W - 5, H - 1), fill=BLACK)
+    d.rectangle((4, 12, W - 5, H - 1), fill=BLACK)
     d.rectangle((8, 17, W - 9, H - 5), fill=GLASS)
 
     # Subtle reflections leave the cars clearly visible behind the glass.
@@ -139,22 +139,16 @@ def make_dealership():
 
     frame = Image.new("RGBA", (W, H))
     f = ImageDraw.Draw(frame)
-    # Broad, blank fascia with a row of canopy lights, like a gas station.
-    f.polygon([(3, 1), (W - 4, 1), (W - 2, 3), (W - 2, 16),
-               (1, 16), (1, 3)], fill=FRAME)
-    f.line((3, 1, W - 4, 1), fill=PINK)
-    f.line((1, 3, 1, 15), fill=PINK_MID)
-    f.line((W - 2, 3, W - 2, 15), fill=PINK_MID)
-    f.point((2, 2), fill=PINK_MID)
-    f.point((W - 3, 2), fill=PINK_MID)
-    f.line((2, 16, W - 3, 16), fill=PINK_MID)
+    f.rectangle((1, 12, W - 2, 16), fill=FRAME)
+    f.line((1, 12, W - 2, 12), fill=PINK)
+    f.line((1, 13, 1, 15), fill=PINK_MID)
+    f.line((W - 2, 13, W - 2, 15), fill=PINK_MID)
+    f.line((2, 16, W - 3, 16), fill=CYAN_MID)
     label = "SHORTSH/FT"
     start = (W - (len(label) * 4 - 1)) // 2
-    for i, char in enumerate(label):
-        for y, row in enumerate(SIGN_FONT[char]):
-            for x, pixel in enumerate(row):
-                if pixel == "1":
-                    f.point((start + i * 4 + x, 4 + y), fill=CYAN if char == "/" else PINK)
+    sign_left, sign_right = start - 2, start + len(label) * 4
+    f.line((sign_left + 4, 11, sign_left + 4, 12), fill=PINK_MID)
+    f.line((sign_right - 4, 11, sign_right - 4, 12), fill=PINK_MID)
     for x in range(10, W - 10, 14):
         f.line((x, 14, x + 3, 14), fill=PINK)
 
@@ -169,20 +163,35 @@ def make_dealership():
     f.line((5, H - 1, W - 6, H - 1), fill=CYAN)
     f.point((4, H - 2), fill=CYAN_MID)
     f.point((W - 5, H - 2), fill=CYAN_MID)
+
+    expanded_building = Image.new("RGBA", (W, H + 1))
+    expanded_building.alpha_composite(building, (0, 1))
+    building = expanded_building
+    expanded_frame = Image.new("RGBA", (W, H + 1))
+    expanded_frame.alpha_composite(frame, (0, 1))
+    frame = expanded_frame
+    f = ImageDraw.Draw(frame)
+    f.rectangle((sign_left, 0, sign_right, 10), fill=BLACK, outline=PINK)
+    for i, char in enumerate(label):
+        for y, row in enumerate(SIGN_FONT[char]):
+            for x, pixel in enumerate(row):
+                if pixel == "1":
+                    f.point((start + i * 4 + x, 2 + y), fill=CYAN if char == "/" else PINK)
+
     building.alpha_composite(frame)
     glow_sources = frame.copy()
     g = ImageDraw.Draw(glow_sources)
     for x0, x1 in columns:
-        g.line((x0, 17, x0, H - 5), fill=PINK)
-        g.line((x1, 17, x1, H - 5), fill=CYAN)
+        g.line((x0, 18, x0, H - 4), fill=PINK)
+        g.line((x1, 18, x1, H - 4), fill=CYAN)
     light = glow_layer(glow_sources)
-    inner_glow = light.crop((GLOW_PAD, GLOW_PAD, W + GLOW_PAD, H + GLOW_PAD))
-    inner_mask = Image.new("L", (W, H))
+    inner_glow = light.crop((GLOW_PAD, GLOW_PAD, W + GLOW_PAD, H + 1 + GLOW_PAD))
+    inner_mask = Image.new("L", (W, H + 1))
     mask_draw = ImageDraw.Draw(inner_mask)
-    mask_draw.polygon([(3, 2), (W - 4, 2), (W - 3, 3), (W - 3, 15),
-                       (2, 15), (2, 3)], fill=255)
-    mask_draw.rectangle((4, 17, W - 5, H - 5), fill=255)
-    inner_glow.putalpha(Image.composite(inner_glow.getchannel("A"), Image.new("L", (W, H)), inner_mask))
+    mask_draw.rectangle((1, 13, W - 2, 17), fill=255)
+    mask_draw.rectangle((sign_left, 0, sign_right, 12), fill=255)
+    mask_draw.rectangle((4, 18, W - 5, H - 4), fill=255)
+    inner_glow.putalpha(Image.composite(inner_glow.getchannel("A"), Image.new("L", (W, H + 1)), inner_mask))
     building.alpha_composite(inner_glow)
     highlights = frame.copy()
     highlights.putdata([
@@ -193,23 +202,26 @@ def make_dealership():
     building.alpha_composite(highlights)
     d = ImageDraw.Draw(building)
     for x in (47, 150):
-        d.rounded_rectangle((x - 3, 13, x + 3, 17), radius=1, fill=PINK_DARK, outline=PINK)
-        d.line((x - 1, 17, x + 1, 17), fill=CYAN)
+        d.rounded_rectangle((x - 3, 14, x + 3, 18), radius=1, fill=PINK_DARK, outline=PINK)
+        d.line((x - 1, 18, x + 1, 18), fill=CYAN)
     beams = Image.new("RGBA", (W, H))
     for x in (47, 150):
         spotlight(beams, x)
+    expanded_beams = Image.new("RGBA", (W, H + 1))
+    expanded_beams.alpha_composite(beams, (0, 1))
+    beams = expanded_beams
     return building, light, beams
 
 
 def preview(building, light, beams, show_player=False):
     scene = Image.new("RGBA", (238, 168), (25, 13, 37, 255))
     ground = 76
-    scene.alpha_composite(light, (19 - GLOW_PAD, ground - H - GLOW_PAD))
-    scene.alpha_composite(building, (19, ground - H))
+    scene.alpha_composite(light, (19 - GLOW_PAD, ground - building.height - GLOW_PAD))
+    scene.alpha_composite(building, (19, ground - building.height))
     victoria = Image.open(SPRITES / "victoria.png").convert("RGBA").crop((0, 0, 24, 32))
     if show_player:
         scene.alpha_composite(victoria, (19 + 47 - 12, ground - 32))
-    scene.alpha_composite(beams, (19, ground - H))
+    scene.alpha_composite(beams, (19, ground - building.height))
     d = ImageDraw.Draw(scene)
     d.line((5, ground, 232, ground), fill=(90, 60, 109, 255))
 
@@ -234,8 +246,8 @@ def main():
     metadata = {
         "file": "neon-dealership.png",
         "w": W,
-        "h": H,
-        "top": H - 1,
+        "h": H + 1,
+        "top": H - 12,
         "top_span": [3 - W // 2, W - 3 - W // 2],
         "light": {"file": "neon-dealership-light.png", "padding": GLOW_PAD},
         "beams": {"file": "neon-dealership-beams.png", "offset": [0, 0]},
