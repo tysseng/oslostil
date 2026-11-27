@@ -145,7 +145,7 @@ const LYRICS_RAW: [number, string][] = [
   [122.38, 'du og jeg, helt uten bil – (Oslostil, Oslostil)'],
   [126.24, 'sett inn kort, det blir et spill – Oslostil, Oslostil!'],
   [132.1, 'Hey! Hey! Hey! Yeah!'],
-  [145.3, 'Ta meg med i Oslo-STIL!'],
+  [145.3, 'Ta meg med i Oslostil!'],
 ];
 
 export const LYRICS: LyricLine[] = LYRICS_RAW.map(([start, text], i) => {

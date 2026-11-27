@@ -172,7 +172,7 @@ No company marks or logos on the vehicles. References are in `inspiration/vehicl
 | Bus, red, articulated | 🎨 | `bus-red-articulated.svg` | burning buses in pre-chorus 2? |
 | Bus, green (3 axles, lime) | 🎨 | `bus-green.svg` | |
 | Bus, old | ✖ | | dropped |
-| Tram, new (light blue) | 🎨 | `tram-new.svg` (5 sections), `tram-new-short.svg` (3) | in-game tram obstacle? |
+| Tram, new (light blue) | 🎨 | `tram-new.svg` (5 sections), `tram-new-short.svg` (3) | Destination sign: 13 LILLEAKER. |
 | Subway, new (light grey) | 🎨 | `subway-new.svg` (3 cars), `subway-new-2.svg` (2 cars) | |
 | Subway, old (red and blue) | 🎨 | `subway-old.svg` (3 cars), `subway-old-2.svg` (2 cars) | |
 | Tram, Tokyoslo (two identical green-and-cream cars, chained) | ✅ | `tram-tokyo.svg/.png` (`tools/vehicles/trams.py`, `tokyo_tram()`) | the tram obstacle for trams due after 1:42 (`drawTram`); same length and roof height as `tram-new`, so the physics are unchanged |
@@ -202,7 +202,7 @@ Flat elevations from `tools/landmarks/landmarks.py` → `assets/landmarks/hires/
 | Domkirken | ✅ v1 | 44 × 57 | `domkirken.v1.*` | west front: brick tower, clock, portal, copper spire; nave wings + stair turret |
 | Grand Hotel | ✅ v1 | 96 × 47 | `grand.v1.*` | white facade, mansard with green dormers, corner turret, clock tower + copper cupola; grey annex right. No flags |
 | Postgirobygget | ✅ v1 | 69 × 111 | `postgiro.v1.*` | two bronze/glass slabs, 32.4 m wide each (103 m / 111 m) + glazed core just below the left one; window bands stop at the same height on both, glass above; no signs |
-| Oslostil title logo | ⬜ | | `assets/ui/title-logo.png` | redo: smoother, same pixel size as the sprites (measure from the displayed logo), synthwave/80s neon, «Oslostil», sun in the middle, Munch + Holmenkollen silhouettes instead of palm trees |
+| Oslostil title logo | ✅ in game | 212 × 70 game px | `assets/ui/title-logo-pixel.png` + `title-logo-pixel-light.png` (244 × 102, 16 px padding) | `python3 tools/logo/title_logo.py`. Pixel art 1:1, striped sun, Munch tower (tallest) in a black skyline with yellow lit windows (none on Munch), two neon lamps whose light falls diagonally across the word, chrome Russo One-style letters rebuilt on the grid (squashed, sharp blue→pink split), black behind/between the letters; light only downward from the lenses. Drawn unsmoothed at (54, 12) in `drawStartupBackdrop` (`src/render/screens.ts`), light in front at (38, −4). The old hi-res `title-logo.png` is no longer used. |
 
 ## Backgrounds
 

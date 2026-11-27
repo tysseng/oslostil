@@ -29,7 +29,7 @@ export class DevPanel {
         <input type="range" min="0" max="${(WIN_AT - 0.5).toFixed(1)}" step="0.05" value="0" aria-label="Song position">
         <span class="time">0:00.00 · bar 1.1</span></div>
       <div class="row jumps"></div>
-      <div class="row"><span>1 = dev panel · 2 = mark time · 3 / 4 = sync - / +50 ms · 5 = clean pause</span><span class="marks"></span></div>`;
+      <div class="row"><span>1 = devpanel · 2 = marker tid · 3 / 4 = synk - / +50 ms · 5 = ren pause</span><span class="marks"></span></div>`;
     after.after(this.el);
     this.slider = this.el.querySelector('input')!;
     this.time = this.el.querySelector('.time')!;

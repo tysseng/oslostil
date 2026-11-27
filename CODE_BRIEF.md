@@ -55,7 +55,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
    - attack, throw, scoring with PERFECT on the beat, combo, dying and respawning (`die`, `respawn`);
    - the triple-throw power-up from the terminal;
    - the friend's assist from chorus 1, boss damage, the final hit and the win.
-7. `src/audio.ts`: song playback is the **master clock** (`time() = ctx.currentTime − t0 − outputLatency + syncOffset`), plus synth sound effects. The song plays through its own `music` gain node, so **M** mutes only the soundtrack (`toggleMusic`, `musicMuted`, starts muted); the effects always play. The muted song keeps running as the clock.
+7. `src/audio.ts`: song playback is the **master clock** (`time() = ctx.currentTime − t0 − outputLatency + syncOffset`), plus synth sound effects. The song plays through its own `music` gain node, so **M** toggles only the soundtrack (`toggleMusic`, `musicMuted`, starts muted); the title screen shows its current state. The effects always play, and the muted song keeps running as the clock.
 8. `src/main.ts`: wiring, the frame loop, dev-mode key, resize/fit, resume-after-reload, the `window.__oslo` test hook.
 9. `src/render/`:
    - **`draw.ts`:** `RES = 4` canvas px per game px. `R()` snaps to game pixels; also `text`, `flash`, `resetTransform`, `drawHiRes` and `loadImage`/`ready`.
@@ -96,6 +96,7 @@ This is the handover for whoever (human or AI) writes the game code. Read it ful
 ### Dev mode
 
 - **Clean pause:** **5** freezes gameplay/audio without the pause overlay or text, retaining subtitles. Press **5**, **P**, **Escape** or **Enter** to resume. From ordinary pause, **5** switches to clean pause. Both the shortcut and clean rendering flag are gated to dev builds.
+- **Pause screen:** P or Escape pauses; P or Enter resumes, and Escape returns to the intro.
 - **Toggle:** **1**. The panel and shortcuts are available only in `pnpm dev` and the dev build, gated by `__DEV_MODE_DEFAULT__`; the release build cannot activate them.
 - **What it shows:** a seek slider and jump buttons (they seek the audio *and* the game state), and **2** to mark the current time while playing, paused or editing with the panel enabled. **3 / 4** adjust sync -/+50 ms. `DevPanel.keyDown` handles these before gameplay/editor input and UI button focus checks; text/file inputs and modifier combinations are ignored.
 - **Testing hook:** `window.__oslo.seek(t)`, `window.__oslo.snap(t, lead = 1.5)` and `window.__oslo.game` (state, `pause()`, `resume()`).

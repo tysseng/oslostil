@@ -100,7 +100,7 @@ def new_tram(sections=5):
     # destination sign near the front
     fx = xs[-1]
     svg.add(rect(fx + 206, 106, 84, 22, '#14161a', 3, sw=3))   # side destination sign, in its own slot
-    svg.add(f'<text x="{fx + 248}" y="122" font-family="monospace" font-weight="700" font-size="14" fill="#ffb21a" text-anchor="middle">17 SINSEN</text>')
+    svg.add(f'<text x="{fx + 248}" y="122" font-family="Menlo,monospace" font-weight="700" font-size="9" fill="#ffb21a" text-anchor="middle">13 LILLEAKER</text>')
     return svg.doc(L, H, 'New Oslo tram (light blue)'), L
 
 

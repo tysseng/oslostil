@@ -70,7 +70,7 @@ The panel and its shortcuts are available only in `pnpm dev` and the dev build, 
 | X | hit |
 | C | throw a ticket, or a shuriken in ninja mode. Every throw uses a ticket: collect them at Sandvika stasjon. |
 | ← → | move |
-| P / Esc | pause |
+| P / Esc | pause; P or Enter resumes, Esc returns to the intro |
 | M | soundtrack on/off (starts off; sound effects always play) |
 | 1 | toggle dev panel (dev builds only) |
 | 2 | mark the current time with the dev panel enabled (dev builds only) |

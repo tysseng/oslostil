@@ -32,9 +32,9 @@ export class Highscores {
       <div class="score-placement"></div>
       <div class="initials-entry">
         <div class="score-entry"><div id="score-initials" class="arcade-initials" tabindex="0" role="textbox"
-          aria-label="Three player initials" aria-describedby="initials-help"><div class="initials-letters" aria-hidden="true"><span></span><span></span><span></span></div></div>
+          aria-label="Tre initialer" aria-describedby="initials-help"><div class="initials-letters" aria-hidden="true"><span></span><span></span><span></span></div></div>
           <span class="current-score"></span></div>
-        <div id="initials-help">UP/DOWN: LETTER &nbsp; LEFT/RIGHT: SLOT</div>
+        <div id="initials-help">OPP/NED: BOKSTAV &nbsp; VENSTRE/HØYRE: PLASS</div>
       </div>
       <table><thead><tr><th scope="col">PLACE</th><th scope="col">PLAYER</th><th scope="col">SCORE</th></tr></thead><tbody></tbody></table>
       <p role="status"></p>`;
@@ -88,7 +88,7 @@ export class Highscores {
       }
     } catch (error) {
       console.error('Could not load highscores', error);
-      this.loadError = 'Could not load saved scores.';
+      this.loadError = 'Kunne ikke laste lagrede poengsummer.';
     }
   }
 
@@ -119,7 +119,7 @@ export class Highscores {
       this.loadError = '';
     } catch (error) {
       console.error('Could not save highscores', error);
-      message = 'Save failed. Scores are temporary.';
+      message = 'Kunne ikke lagre. Poengsummene er midlertidige.';
     }
     this.showTable(performance.now(), message, entry);
   }
@@ -153,7 +153,7 @@ export class Highscores {
       letter.append(character, blank);
       letter.classList.toggle('active-letter', index === this.letterIndex);
     });
-    this.input.setAttribute('aria-label', `Initials ${this.initials}, letter ${this.letterIndex + 1} selected. Use arrow keys or type letters.`);
+    this.input.setAttribute('aria-label', `Initialer ${this.initials}, bokstav ${this.letterIndex + 1} er valgt. Bruk piltastene eller skriv bokstaver.`);
   }
 
   private render(current?: Highscore): void {
@@ -193,7 +193,7 @@ export class Highscores {
       this.entry.hidden = false;
       this.table.hidden = true;
       this.el.classList.add('entering-score');
-      this.heading.textContent = 'ENTER HIGHSCORE';
+      this.heading.textContent = 'SKRIV INITIALER';
       this.score.textContent = String(this.game.s.score).padStart(6, '0');
       this.status.textContent = this.loadError;
       this.render();

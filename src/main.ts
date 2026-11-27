@@ -26,7 +26,7 @@ const editor = new LevelEditor(game, screen);
 const highscores = new Highscores(game, screen);
 if (__DEV_MODE_DEFAULT__) {
   const help = document.createElement('span');
-  help.innerHTML = ' · <b>1</b> dev panel · <b>2</b> mark time · <b>3 / 4</b> sync · <b>5</b> clean pause';
+  help.innerHTML = ' · <b>1</b> devpanel · <b>2</b> marker tid · <b>3 / 4</b> synk · <b>5</b> ren pause';
   document.querySelector('.note')?.append(help);
 }
 
@@ -65,6 +65,7 @@ function fit(): void {
   screen.style.setProperty('--play-width', W * s + 'px');
   subtitles.fit(canvas.getBoundingClientRect().width / W);
   screen.style.setProperty('--game-scale', String(canvas.clientWidth / W));
+  document.documentElement.style.setProperty('--game-pixel', `${canvas.clientWidth / W}px`);
 }
 addEventListener('resize', fit);
 fit();
@@ -82,7 +83,7 @@ function frame(now: number): void {
     fit();
   }
   resetTransform();
-  if (game.mode === 'loading' || game.mode === 'title') { subtitles.set(null); drawTitle(now / 1000, game.mode === 'loading'); }
+  if (game.mode === 'loading' || game.mode === 'title') { subtitles.set(null); drawTitle(now / 1000, game.mode === 'loading', audio.musicMuted); }
   else if (game.mode === 'celebrate') { subtitles.set(null); drawCelebration(game); }
   else if (game.mode === 'win') { subtitles.set(null); drawWin(game, now / 1000, highscores.place(game.s.score)); }
   else if (game.mode === 'highscore') { subtitles.set(null); drawHighscore(now / 1000); }

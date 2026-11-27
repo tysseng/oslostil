@@ -1,19 +1,21 @@
 // Composes a full frame: game view + HUD, title screen, win screen.
-import { BAR, BEAT, FINAL_HIT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } from '../config';
+import { BAR, BEAT, FINAL_HIT, FONT, GROUND, H, PH, PLAYER_MAX_HP, W, barAt, barT } from '../config';
 import type { Game } from '../game';
 import { compareItems, enemyX } from '../state';
 import { isBackgroundBuilding, isDealership, isTree, isWallPoster, itemLayer } from '../schedule';
 import { drawDealershipBeams } from './neon-dealership';
 import { BANNERS, BANNER_TIME, COLOR_T, NINJA_T, SECTIONS, VICTORIA_WAKE_T, WAKE_HOPS, WAKE_RISE, beatPhase, BOSS_AT, bossVisible, bossX, isNinja, lyricAt, sectionAt } from '../timeline';
-import { R, ctx, drawHiRes, flash, loadImage, ready, resetTransform, text } from './draw';
+import { R, ctx, flash, loadImage, ready, resetTransform, text } from './draw';
 import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
-import titleLogoUrl from '../../assets/ui/title-logo.png';
+import titleLogoUrl from '../../assets/ui/title-logo-pixel.png';
+import titleLogoLightUrl from '../../assets/ui/title-logo-pixel-light.png';
 import { ENTRY_HALF_WIDTH, EXIT_HOUSE_LEFT, EXIT_HOUSE_RIGHT, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, stationEntryX, playerFloor, stairCompanionPosition } from '../valkyrien';
 import { machinePosition } from '../rainbow';
 import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValkyrienHouse } from './valkyrien';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
+const TITLE_LOGO_LIGHT = loadImage(titleLogoLightUrl); // 16 px padding on every side
 
 export function drawGame(g: Game, t: number, dev: boolean): void {
   const s = g.s, sec = sectionAt(t), beatFlash = Math.max(0, 1 - beatPhase(t, BEAT) * 4);
@@ -151,7 +153,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   if (t >= FINAL_HIT) { // «-STIL!»
     const k = Math.min(1, (t - FINAL_HIT) * 3);
     flash(t, FINAL_HIT, 0.5, '#fff');
-    text('OSLO-STIL!', W / 2, 70 - k * 10, '#ff2bd6', 16 + Math.round(k * 4), 'center', '#2bf0ff');
+    text('OSLOSTIL!', W / 2, 70 - k * 10, '#ff2bd6', 16 + Math.round(k * 4), 'center', '#2bf0ff');
   }
   // HUD
   R(0, 0, W, 14, '#000000aa');
@@ -177,7 +179,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
   if (sec.id.startsWith('chorus') && [1, 3, 5].includes(barAt(t) - sec.a) && (((t - PH) % BAR) + BAR) % BAR < 0.5) {
     text('OSLOSTIL!', W - 6, 20, '#2bf0ff', 8, 'right', '#ff2bd6');
   }
-  if (g.musicToast > 0) text(g.audio.musicMuted ? 'MUSIKK AV · MUSIC OFF' : 'MUSIKK PÅ · MUSIC ON', W - 4, 18, '#7cf', 5, 'right');
+  if (g.musicToast > 0) text(g.audio.musicMuted ? 'MUSIKK AV' : 'MUSIKK PÅ', W - 4, 18, '#7cf', 5, 'right');
   else if (g.syncToast > 0) {
     const off = g.audio.syncOffset;
     text('SYNC ' + (off >= 0 ? '+' : '') + Math.round(off * 1000) + ' MS', W - 4, 18, '#7cf', 5, 'right');
@@ -198,7 +200,8 @@ function machineMood(t: number): Mood {
 export function drawPause(): void {
   ctx.globalAlpha = 0.6; R(0, 0, W, H, '#000'); ctx.globalAlpha = 1;
   text('PAUSE', W / 2, 80, '#fff', 16, 'center');
-  text('P / ENTER: FORTSETT · RESUME', W / 2, 104, '#ccc', 6, 'center');
+  text('P / ENTER: FORTSETT', W / 2, 104, '#ccc', 6, 'center');
+  text('ESC: TIL INTRO', W / 2, 115, '#ccc', 6, 'center');
 }
 
 function drawStartupBackdrop(t: number, titleLogo = false): void {
@@ -206,21 +209,47 @@ function drawStartupBackdrop(t: number, titleLogo = false): void {
   for (let i = 0; i < 12; i++) R((((i * 32 - t * 60) % 384) + 384) % 384 - 32, GROUND, 1, H - GROUND, '#ff4fd8');
   R(0, GROUND, W, H - GROUND, '#160022'); R(0, GROUND, W, 1, '#ff4fd8');
   if (titleLogo) {
-    if (ready(TITLE_LOGO)) drawHiRes(TITLE_LOGO, 54.4, 11.6, 211.2, 70.4);
-  } else text('OSLO-STIL', W / 2, 28, '#ffe14a', 24, 'center', '#ff2bd6');
+    // Pixel-art logo, 1 image px = 1 game px, unsmoothed at whole pixels; lamp light in front.
+    if (ready(TITLE_LOGO)) ctx.drawImage(TITLE_LOGO, 54, 12);
+    if (ready(TITLE_LOGO_LIGHT)) ctx.drawImage(TITLE_LOGO_LIGHT, 54 - 16, 12 - 16);
+  } else text('OSLOSTIL', W / 2, 28, '#ffe14a', 24, 'center', '#ff2bd6');
 }
 
-export function drawTitle(t: number, loading: boolean): void {
+function drawTitleControls(musicMuted: boolean): void {
+  const y = GROUND + 18, size = 5, color = '#ccc';
+  const prefix = 'C KAST   ', suffix = ` LØP   P PAUSE   M MUSIKK (${musicMuted ? 'AV' : 'PÅ'})`;
+  ctx.font = `${size}px ${FONT}`;
+  const arrowWidth = ctx.measureText('↑').width;
+  const prefixWidth = ctx.measureText(prefix).width;
+  const slashWidth = ctx.measureText('/').width;
+  const padding = 1;
+  const left = Math.round((W - prefixWidth - 2 * arrowWidth - slashWidth - 2 * padding - ctx.measureText(suffix).width) / 2);
+  text(prefix, left, y, color, size);
+  const arrow = (x: number, leftward: boolean) => {
+    ctx.save();
+    ctx.translate(x + arrowWidth / 2, y + size / 2);
+    if (leftward) ctx.scale(-1, 1);
+    ctx.rotate(Math.PI / 2);
+    text('↑', 0, -size / 2, color, size, 'center');
+    ctx.restore();
+  };
+  arrow(left + prefixWidth, true);
+  text('/', left + prefixWidth + arrowWidth + padding, y, color, size);
+  arrow(left + prefixWidth + arrowWidth + slashWidth + 2 * padding, false);
+  text(suffix, left + prefixWidth + 2 * arrowWidth + slashWidth + 2 * padding, y, color, size);
+}
+
+export function drawTitle(t: number, loading: boolean, musicMuted: boolean): void {
   drawStartupBackdrop(t, true);
-  text('AN AUTOMAT VICTORIA ADVENTURE', W / 2, 80, '#2bf0ff', 6, 'center');
+  text('ET AUTOMAT VICTORIA SPILL', W / 2, 87, '#2bf0ff', 6, 'center');
   drawGirl('friend', 130, GROUND, t, { ninja: false, idle: true });
   drawGirl('victoria', 152, GROUND, t + 0.5, { ninja: false, idle: true });
   drawMachine(184, GROUND - 4, t, 'idle', 2, true);
   const promptY = Math.round((80 + 6 + GROUND - 32 - 7) / 2);
   if (loading) text('LASTER SPILL …', W / 2, promptY, '#fff', 6, 'center');
-  else if (Math.floor(t * 2) % 2) text('Trykk enter for å aktivere tekst-til-tale.', W / 2, promptY, '#fff', 7, 'center');
-  text('SPACE/↑ HOPP·JUMP   ↓ SKLI·SLIDE   X SLÅ·HIT', W / 2, GROUND + 8, '#ccc', 5, 'center');
-  text('C KAST·THROW   ←→ FLYTT·MOVE   P PAUSE   M MUSIKK·MUSIC', W / 2, GROUND + 18, '#ccc', 5, 'center');
+  else if (t % 1.5 < 1) text('Trykk enter for å aktivere tekst-til-tale.', W / 2, promptY, '#fff', 7, 'center');
+  text('SPACE/↑ HOPP   ↓ SKLI/NED   X SLÅ   ESC PAUSE/INTRO', W / 2, GROUND + 8, '#ccc', 5, 'center');
+  drawTitleControls(musicMuted);
 }
 
 export function drawCelebration(g: Game): void {
@@ -231,7 +260,7 @@ export function drawCelebration(g: Game): void {
   for (const q of g.s.parts) R(q.x, q.y, 2, 2, q.c);
   flash(FINAL_HIT + c.elapsed, FINAL_HIT, 0.5, '#fff');
   resetTransform();
-  text('OSLO-STIL!', W / 2, 45, '#ff2bd6', 20, 'center', '#2bf0ff');
+  text('OSLOSTIL!', W / 2, 45, '#ff2bd6', 20, 'center', '#2bf0ff');
   const walkTime = 1.8, walk = Math.min(1, c.elapsed / walkTime);
   for (const [member, target, delay] of [['friend', 134, 0.15], ['victoria', 160, 0], ['machine', 186, 0.3]] as const) {
     const start = c[member], x = start.x + (target - start.x) * walk;
@@ -255,9 +284,8 @@ export function drawWin(g: Game, t: number, place: number): void {
     R(W / 2 + Math.cos(a) * (60 + Math.sin(t * 3 + i) * 10), 78 + Math.sin(a) * 40, 2, 2, ['#ff2bd6', '#2bf0ff', '#ffe14a'][i % 3]);
   }
   text('DU VANT!', W / 2, 16, '#ffe14a', 16, 'center', '#ff2bd6');
-  text('YOU WIN!', W / 2, 38, '#2bf0ff', 8, 'center');
   const rows: [string, number][] = [
-    ['SCORE', s.score], ['FIENDER · ENEMIES', s.kills], ['BILLETTER · TICKETS', s.tickets],
+    ['SCORE', s.score], ['FIENDER', s.kills], ['BILLETTER', s.tickets],
     ['PERFECT', s.perfect], ['CONTINUES', s.continues], ['BEST', s.best ?? s.score],
   ];
   rows.forEach(([k, v], i) => { text(k, 70, 58 + i * 11, '#ccc', 6); text(String(v), 250, 58 + i * 11, '#fff', 6, 'right'); });

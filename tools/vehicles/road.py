@@ -23,7 +23,7 @@ def arch(cx, r, col='#1a1c22'):
 
 def dest_sign(x, y, w, h, txt):
     return (rect(x, y, w, h, '#14161a', 3, sw=3) +
-            f'<text x="{x + w / 2}" y="{y + h * .74:.1f}" font-family="monospace" font-weight="700" font-size="{h * .7:.1f}" '
+            f'<text x="{x + w / 2}" y="{y + h * .74:.1f}" font-family="Menlo,monospace" font-weight="700" font-size="{h * .7:.1f}" '
             f'fill="#ffb21a" text-anchor="middle">{txt}</text>')
 
 
@@ -43,7 +43,7 @@ def city_body(svg, x0, L, front, rear, top=98, bot=244):
     return d
 
 
-def city_bus(articulated=False, pal=None, three_axle=False, sign='31 SANDVIKA', title='Red city bus'):
+def city_bus(articulated=False, pal=None, three_axle=False, sign='130 SKØYEN', title='Red city bus'):
     """City/regional bus. articulated = 18 m bendy bus; three_axle = 15 m bus with a tag axle behind the rear axle."""
     RB = pal or globals()['RB']
     svg = Svg()
@@ -162,5 +162,5 @@ if __name__ == '__main__':
     render(HIRES, {
         'bus-red.svg': city_bus(False)[0],
         'bus-red-articulated.svg': city_bus(True)[0],
-        'bus-green.svg': city_bus(pal=GB, three_axle=True, sign='79 ÅSBRÅTEN', title='Green regional bus')[0],
+        'bus-green.svg': city_bus(pal=GB, three_axle=True, sign='230 ILA', title='Green regional bus')[0],
     })

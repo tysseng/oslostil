@@ -115,13 +115,13 @@ export class LevelEditor {
           <select aria-label="Glitch hop variant"><option value="">Normal</option><option value="low">Low</option><option value="high">High</option><option value="double">Double</option></select></label>
       </div>
       <details class="editor-help">
-      <summary>Editor help</summary>
-      <p>To publish this layout as the default: download it, replace src/level.json with the downloaded file, then rebuild/deploy. Use default level discards the browser draft.</p>
-      <p>Drag any item to move it. Right-click an item to delete it. Select an item below, then click empty space to place copies. Move / Esc stops placing.</p>
-      <p>Left/right arrows or scrolling move through time. Up/down arrows or Shift + scrolling pan vertically to view Valkyrien.</p>
-      <p>Press O to toggle asset outlines for a clean level preview. Placement, dragging and deletion still work with outlines hidden.</p>
-      <p>Broken boards crumble when landed on. Select a hopping glitch to edit its hop variant; tool settings also apply to new copies.</p>
-      <p>Ghosts can only be placed inside Valkyrien. They glow green, damage on contact and start following after you pass them. Press Down/S at the square surface entrance to enter the station.</p>
+      <summary>Hjelp til editoren</summary>
+      <p>For å publisere oppsettet som standard: Last det ned, erstatt src/level.json med den nedlastede filen og bygg/publiser på nytt. «Use default level» forkaster utkastet i nettleseren.</p>
+      <p>Dra et objekt for å flytte det, eller høyreklikk for å slette det. Velg et objekt nedenfor og klikk på et tomt sted for å plassere kopier. «Move» eller Esc avslutter plasseringen.</p>
+      <p>Venstre/høyre eller musehjulet flytter deg i tid. Opp/ned eller Shift + musehjulet flytter visningen vertikalt, slik at du kan se Valkyrien.</p>
+      <p>Trykk O for å vise eller skjule objektenes omriss. Du kan fortsatt plassere, flytte og slette objekter når omrissene er skjult.</p>
+      <p>Ødelagte planker smuldrer når noen lander på dem. Velg en hoppende glitch for å endre hoppvariant; innstillingen gjelder også nye kopier.</p>
+      <p>Spøkelser kan bare plasseres inne på Valkyrien. De lyser grønt, skader ved kontakt og begynner å følge etter deg når du har passert dem. Trykk ned/S ved den firkantede inngangen på overflaten for å gå inn på stasjonen.</p>
       </details>`;
     this.entry.after(this.panel);
     this.slider = this.panel.querySelector('input[type="range"]')!;

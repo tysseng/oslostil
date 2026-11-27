@@ -44,7 +44,7 @@ When a PNG in `assets/` changes, the running dev server reloads it straight away
    - **Trains, subways and trams:** wheel sets (bogies) are drawn **behind** the body.
 6. **Doors** must never overlap a wheel or wheel arch, and **windows** must never sit behind a door or overlap each other. The generators check this with `check_clear`; keep using it.
 7. **No pantographs** on trains or trams for now, because they didn't look good.
-8. **Destination signs** with amber text are fine, for example «31 SANDVIKA» and «17 SINSEN».
+8. **Destination signs** use amber text: green buses display «230 ILA», red buses «130 SKØYEN» and the new tram «13 LILLEAKER».
 
 ### Vehicle-specific fixes
 
@@ -131,6 +131,14 @@ Automat Victoria and the platform machines are seen from the front. They have **
 - No flags on any building. No inscriptions (blank plaques).
 - Follow the reference photos closely; when a shape is iconic (ski jump, opera) trace it rather than invent it.
 - Approved landmarks are frozen as `<name>.v1.*`; never overwrite a versioned file.
+
+### Title logo (Joakim, 27 Nov)
+
+- Pixel art at 1 image px = 1 game px, about 212 × 70; drawn unsmoothed at integer coordinates. Light (lamp glow) is a separate padded layer.
+- Lettering: chrome «Oslostil» in a thick, upright 80s-game face (Russo One style, rebuilt by hand on the grid with AA tones on the curves), slightly squashed (cap 24, x-height 18). No italic, no pink edge; black fills the counters and the gaps between letters, reaching 1 px below the baseline (into the outline row). The chrome goes cyan → darker blue and then switches sharply to pink: no light-blue or white line at the split.
+- Sun: pink-heavy gradient with stripes starting near the top.
+- Skyline in front of the sun is a pure black silhouette (no outlines), with single-colour lit window dots; MUNCH is part of it as the tallest block (tower only, top leaning left, both edges stepping identically) and carries no windows.
+- Street lamps: the arm and head form one line tilted up toward the centre, with a rounded bend from the pole into the arm; the lens faces along the beam, which falls diagonally across the letters almost to their bottom. Warm yellow light (a pink-light variant was tried and not chosen). The light only goes down out of the lens, never up onto the lamp itself.
 
 ## Technical contract
 

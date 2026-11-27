@@ -119,7 +119,8 @@ export class Game {
     }
     if (c === 'KeyM') { this.audio.toggleMusic(); this.musicToast = 1.5; }
     if (this.mode === 'play' && (c === 'KeyP' || c === 'Escape')) return this.pause();
-    if (this.mode === 'pause' && (c === 'KeyP' || c === 'Escape' || c === 'Enter')) return this.resume();
+    if (this.mode === 'pause' && c === 'Escape') return this.cleanPause ? this.resume() : this.intro();
+    if (this.mode === 'pause' && (c === 'KeyP' || c === 'Enter')) return this.resume();
     if (this.mode !== 'play' || this.s.down > 0) return; // no control while dead
     if (routeControlsPlayer(this.s)) return;
     const p = this.s.p;
@@ -154,7 +155,7 @@ export class Game {
     const { s } = this, p = s.p, powered = s.power > s.lastT;
     if (s.ammo <= 0) { // out of tickets
       p.star = 0.3;
-      s.pops.push({ x: p.x, y: p.y - 34, txt: 'TOM! · EMPTY', life: 0.6, c: '#ff8080' });
+      s.pops.push({ x: p.x, y: p.y - 34, txt: 'TOM!', life: 0.6, c: '#ff8080' });
       return;
     }
     s.ammo--;
