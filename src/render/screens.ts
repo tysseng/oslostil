@@ -10,9 +10,10 @@ import { SKY, drawScene, sky } from './scenes';
 import { drawBlobPop, drawBoss, drawCelebrating, drawEnemy, drawEnemySprite, drawGirl, drawLampLights, drawMachine, drawRainbowMachine, type Mood } from './sprites';
 import titleLogoUrl from '../../assets/ui/title-logo-pixel.png';
 import titleLogoLightUrl from '../../assets/ui/title-logo-pixel-light.png';
-import { ENTRY_HALF_WIDTH, EXIT_HOUSE_LEFT, EXIT_HOUSE_RIGHT, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitX, stationEntryX, playerFloor, stairCompanionPosition } from '../valkyrien';
+import { ENTRY_HALF_WIDTH, EXIT_HOUSE_RIGHT, STAIRS_WIDTH, VALKYRIEN_CEILING, clampStationY, exitSurfaceClip, exitX, stationEntryX, playerFloor, stairCompanionPosition } from '../valkyrien';
 import { machinePosition } from '../rainbow';
 import { drawUndergroundFill, drawValkyrien, drawValkyrienBalustrade, drawValkyrienDarkness, drawValkyrienHouse } from './valkyrien';
+import { drawRainbowBoost } from './rainbow-boost';
 
 const TITLE_LOGO = loadImage(titleLogoUrl);
 const TITLE_LOGO_LIGHT = loadImage(titleLogoLightUrl); // 16 px padding on every side
@@ -88,9 +89,10 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     ctx.clip();
   }
   if (s.valkyrien.ascendingAt !== undefined) {
+    const clip = exitSurfaceClip(t);
     ctx.beginPath();
     ctx.rect(-1000, VALKYRIEN_CEILING, 2000, 1000);
-    ctx.rect(exitX(t) + EXIT_HOUSE_LEFT, 0, 2000, GROUND);
+    ctx.rect(clip.x, 0, clip.width, GROUND);
     ctx.clip();
   }
   if (!s.deathFlight?.machine && t >= VICTORIA_WAKE_T) {
@@ -148,6 +150,7 @@ export function drawGame(g: Game, t: number, dev: boolean): void {
     }
     drawValkyrienBalustrade(t);
   }, s.enemies);
+  for (const effect of s.rainbowBoosts) drawRainbowBoost(effect, s.valkyrien.camera);
   resetTransform();
 
   if (t >= FINAL_HIT) { // «-STIL!»

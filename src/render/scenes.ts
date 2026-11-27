@@ -331,7 +331,6 @@ export function drawScene(scene: SceneName, t: number, bx: number, beatFlash: nu
         const gy = (r() * GROUND + t * 90) % GROUND;
         ctx.globalAlpha = 0.35; R(left, gy, right - left, 2 + r() * 4, r() < 0.5 ? '#ff2bd6' : '#2bf0ff'); ctx.globalAlpha = 1;
       }
-      if (Math.floor(t * 4) % 2) text('A-A-A-AUTOMAT', W / 2, 60, '#ff2bd6', 8, 'center');
     }
   } else if (name === 'neon' || name === 'boss') {
     ctx.save();

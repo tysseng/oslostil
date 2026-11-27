@@ -31,6 +31,7 @@ export interface Pop { x: number; y: number; txt: string; life: number; c: strin
 export interface KnockedEnemy { enemy: Enemy; x: number; y: number; vx: number; vy: number; splash: boolean; squash?: number }
 export interface Dropping { x: number; y: number; vy: number; life: number; landed: boolean; floor?: number }
 export interface BlobPop { x: number; y: number; age: number }
+export interface RainbowBoostEffect { x: number; y: number; age: number }
 export interface RainbowPoint { x: number; y: number; t: number }
 export interface RainbowState {
   x: number;
@@ -51,6 +52,10 @@ export interface Player {
   jumps: number;
   slide: number;
   slideDirection: -1 | 1;
+  /** Whether the airborne player was touching the rainbow on the previous frame. */
+  rainbowContact?: boolean;
+  rainbowCooldown: number;
+  offscreenTime: number;
   atk: number;
   cd: number;
   star: number;
@@ -93,6 +98,7 @@ export interface GameState {
   fx: number;
   mx: number;
   rainbow?: RainbowState;
+  rainbowBoosts: RainbowBoostEffect[];
   p: Player;
   friend: { yHist: number[]; atk: number; cd: number };
   /** background scroll distance */
@@ -141,10 +147,10 @@ export function compareItems(a: Enemy, b: Enemy): number {
 export function createState(events: ScheduledEvent[] = loadDefaultLevel()): GameState {
   return {
     valkyrien: { phase: 'surface', camera: 0 },
-    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [], droppings: [], blobPops: [], boardShake: 0,
+    ev: events.slice().sort((a, b) => spawnTime(a) - spawnTime(b)), ei: 0, enemies: [], stars: [], parts: [], pops: [], knocked: [], droppings: [], blobPops: [], rainbowBoosts: [], boardShake: 0,
     score: 0, kills: 0, tickets: 0, ammo: START_AMMO, perfect: 0, continues: 0, combo: 0, bounceChain: 0,
     hp: PLAYER_MAX_HP, inv: 0, healFlash: 0, fx: PX - 22, mx: PX - 46,
-    p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, slideDirection: 1, atk: 0, cd: 0, star: 0 },
+    p: { x: PX, y: GROUND, vy: 0, jumps: 0, slide: 0, slideDirection: 1, rainbowCooldown: 0, offscreenTime: 0, atk: 0, cd: 0, star: 0 },
     friend: { yHist: [], atk: 0, cd: 0 },
     bgx: 0, lastT: 0, shake: 0, power: 0, down: 0, respawn: 0,
     boss: { hp: 60, max: 60, hit: 0 }, final: false, won: false,

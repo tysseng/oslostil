@@ -1,4 +1,4 @@
-import { GROUND, H, PX } from './config';
+import { GROUND, H, PX, W } from './config';
 import type { GameState } from './state';
 
 const PLATFORM_ENTRY = 87.8;
@@ -33,6 +33,10 @@ export interface ValkyrienState {
 export const stationEntryX = (t: number): number => PX + (VALKYRIEN_ENTRY - t) * SPEED;
 export const platformStartX = (t: number): number => stationEntryX(t) + STAIRS_WIDTH;
 export const exitX = (t: number): number => PX + (VALKYRIEN_EXIT - t) * SPEED;
+export function exitSurfaceClip(t: number): { x: number; width: number } {
+  const x = exitX(t) + EXIT_HOUSE_LEFT;
+  return { x, width: Math.max(0, W - x) };
+}
 export const VALKYRIEN_TRAIN_START = PLATFORM_ENTRY + (PX - 20) / SPEED;
 export function valkyrienTrainNose(t: number): number | null {
   if (t < VALKYRIEN_TRAIN_START) return null;

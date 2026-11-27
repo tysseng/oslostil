@@ -7,6 +7,8 @@ import { EXIT_HOUSE_RIGHT, belowSurface, clampStationY, exitX, playerFloor, stai
 const LANDING_TIME = 1;
 const TRAIL_TIME = 1.2;
 const TRAIL_LENGTH = 150;
+export const RAINBOW_BOOST_EFFECT_DURATION = 0.4;
+export const RAINBOW_BOOST_LABEL_DURATION = 0.8;
 
 export function machinePosition(s: GameState, t: number): { x: number; y: number } {
   const stairs = stairCompanionPosition(s, s.mx, t);
@@ -156,4 +158,41 @@ export function seekRainbow(s: GameState, t: number): void {
 
 export function ribbonLength(r: RainbowState, t: number): number {
   return r.landing ? r.landing.length * Math.max(0, 1 - (t - RAINBOW_T1) / 0.6) : TRAIL_LENGTH;
+}
+
+/** Test the player's swept hitbox against the same segments used to draw the ribbon. */
+export function ribbonContact(r: RainbowState, t: number, from: { x: number; y: number }, to: { x: number; y: number }): { hit: boolean; overlapping: boolean; point?: { x: number; y: number } } {
+  let hit = false, overlapping = false;
+  let first = Infinity, hitPoint: { x: number; y: number } | undefined;
+  if (r.blend <= 0) return { hit, overlapping };
+  for (const point of ribbonPoints(r, ribbonLength(r, t))) {
+    const minX = point.x - rainbowMeta.tail.w / 2 - 4, maxX = point.x + rainbowMeta.tail.w / 2 + 4;
+    const minY = point.y - rainbowMeta.tail.centre_y, maxY = point.y + rainbowMeta.tail.h - rainbowMeta.tail.centre_y + 24;
+    if (to.x >= minX && to.x <= maxX && to.y >= minY && to.y <= maxY) overlapping = true;
+    let enter = 0, exit = 1;
+    for (const [start, delta, min, max] of [
+      [from.x, to.x - from.x, minX, maxX],
+      [from.y, to.y - from.y, minY, maxY],
+    ]) {
+      if (delta === 0) {
+        if (start < min || start > max) { exit = -1; break; }
+      } else {
+        const a = (min - start) / delta, b = (max - start) / delta;
+        enter = Math.max(enter, Math.min(a, b));
+        exit = Math.min(exit, Math.max(a, b));
+      }
+    }
+    if (enter <= exit) {
+      hit = true;
+      if (enter < first) {
+        first = enter;
+        const x = from.x + (to.x - from.x) * enter, y = from.y + (to.y - from.y) * enter;
+        hitPoint = {
+          x: Math.max(point.x - rainbowMeta.tail.w / 2, Math.min(point.x + rainbowMeta.tail.w / 2, x)),
+          y: Math.max(point.y - rainbowMeta.tail.centre_y, Math.min(point.y + rainbowMeta.tail.h - rainbowMeta.tail.centre_y, y - 12)),
+        };
+      }
+    }
+  }
+  return { hit, overlapping, point: hitPoint };
 }

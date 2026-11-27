@@ -40,7 +40,7 @@ import automatCelebrationUrl from '../../assets/sprites/automat-celebrate.png';
 import celebrationMeta from '../../assets/sprites/celebrate.json';
 import rainbowUrl from '../../assets/sprites/automat-rainbow.png';
 import rainbowTailUrl from '../../assets/sprites/rainbow-tail.png';
-import rainbowLightUrl from '../../assets/sprites/rainbow-tail-light.png';
+import { RAINBOW_LIGHT } from './rainbow-light';
 import rainbowSparkleUrl from '../../assets/sprites/rainbow-sparkle.png';
 import rainbowMeta from '../../assets/sprites/rainbow.json';
 
@@ -164,7 +164,7 @@ export function drawMachine(x: number, y: number, t: number, mood: Mood = 'idle'
 }
 
 const RAINBOW_MACHINE = loadImage(rainbowUrl), RAINBOW_TAIL = loadImage(rainbowTailUrl);
-const RAINBOW_LIGHT = loadImage(rainbowLightUrl), RAINBOW_SPARKLE = loadImage(rainbowSparkleUrl);
+const RAINBOW_SPARKLE = loadImage(rainbowSparkleUrl);
 
 export function drawRainbowMachine(r: RainbowState, t: number, mood: Mood): void {
   const points = ribbonPoints(r, ribbonLength(r, t));

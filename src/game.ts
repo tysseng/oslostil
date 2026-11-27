@@ -6,7 +6,7 @@ import { loadDefaultLevel } from './level';
 import { boardImpactAt, boardTop, createEnemy, createState, enemyBodyHeight, enemyHeight, enemyX, hopPose, spawnTime, type Enemy, type GameState } from './state';
 import { isFighter, isNinjaKind, ninjaJump } from './ninjas';
 import { isPassenger } from './passengers';
-import { machinePosition, seekRainbow, updateRainbow } from './rainbow';
+import { RAINBOW_BOOST_LABEL_DURATION, machinePosition, ribbonContact, seekRainbow, updateRainbow } from './rainbow';
 import { EXIT_HOUSE_ROOF, VALKYRIEN_FLOOR, belowSurface, clampStationY, enterValkyrien, playerFloor, resolveValkyrien, routeControlsPlayer } from './valkyrien';
 import { updateGhosts } from './ghosts';
 import { MACHINE_HEIGHT, MACHINE_WIDTH, RAINBOW_T0, RAINBOW_T1, STATION_VX, VICTORIA_WAKE_T, WAKE_HOPS, bossVisible, bossX, isNinja, machineCenter, platformMachines, sectionAt, subwayTaggerX } from './timeline';
@@ -17,6 +17,21 @@ const DEATH_TIME = 0.85;
 const RESPAWN_FLASH = 1.2;
 /** she drops back in from this height (screen y of her feet) */
 const DROP_Y = GROUND - 100;
+const SLIDE_DURATION = 0.6;
+const SLIDE_BURST = 0.15;
+const SLIDE_SPEED = 220;
+const RAINBOW_BOOST_SPEED = 420;
+const RAINBOW_BOOST_COOLDOWN = 1.5;
+const OFFSCREEN_RECOVERY_TIME = 2;
+
+function slideDistance(remaining: number, dt: number): number {
+  const start = SLIDE_DURATION - remaining;
+  const end = Math.min(SLIDE_DURATION, start + dt);
+  const distanceAt = (t: number) => t <= SLIDE_BURST ? SLIDE_SPEED * t
+    : SLIDE_SPEED * (SLIDE_BURST + (t - SLIDE_BURST)
+      - (t - SLIDE_BURST) ** 2 / (2 * (SLIDE_DURATION - SLIDE_BURST)));
+  return distanceAt(end) - distanceAt(start);
+}
 
 export type Mode = 'loading' | 'title' | 'play' | 'pause' | 'celebrate' | 'win' | 'editor' | 'highscore';
 const BEST_KEY = 'oslostil-best';
@@ -130,7 +145,7 @@ export class Game {
     if (c === 'ArrowDown' || c === 'KeyS') {
       if (enterValkyrien(this.s)) return;
       if (p.y >= playerFloor(this.s) || p.ride || p.propRide || p.machineRide !== undefined) {
-        p.slide = 0.45;
+        p.slide = SLIDE_DURATION;
         p.slideDirection = this.keys.has('ArrowLeft') || this.keys.has('KeyA') ? -1 : 1;
       } else p.vy = 340;
     }
@@ -317,10 +332,12 @@ export class Game {
   // ---------- update ----------
   update(t: number, dt: number): void {
     const { s } = this, p = s.p;
-    const prevT = s.lastT, prevX = p.x, prevY = p.y;
+    const prevT = s.lastT, prevX = p.x, prevY = p.y, wasRouteControlled = routeControlsPlayer(s);
     s.lastT = t;
     s.bgx += sectionAt(t).speed * dt;
     s.boardShake = Math.max(0, s.boardShake - dt);
+    for (const effect of s.rainbowBoosts) effect.age += dt;
+    s.rainbowBoosts = s.rainbowBoosts.filter(effect => effect.age < RAINBOW_BOOST_LABEL_DURATION);
     for (const pop of s.blobPops) { pop.x -= sectionAt(t).speed * dt; pop.age += dt; }
     s.blobPops = s.blobPops.filter(pop => pop.age < BLOB_POP.frames / BLOB_POP.fps);
     this.syncToast = Math.max(0, this.syncToast - dt);
@@ -363,12 +380,17 @@ export class Game {
       if (p.machineRide !== undefined && p.vy >= 0 && platformMachines(t).includes(p.machineRide)) {
         p.x = Math.max(TRAM_EDGE, p.x - STATION_VX * dt);
       }
-      if (!routeControlsPlayer(s) && (this.keys.has('ArrowLeft') || this.keys.has('KeyA'))) {
-        const backwardSpeed = sectionAt(t).speed + 80;
-        p.x = Math.max(TRAM_EDGE, p.x - backwardSpeed * dt);
+      if (!routeControlsPlayer(s)) {
+        if (p.slide > 0) {
+          p.x = Math.max(TRAM_EDGE, Math.min(W - 30, p.x + p.slideDirection * slideDistance(p.slide, dt)));
+        } else {
+          if (this.keys.has('ArrowLeft') || this.keys.has('KeyA')) {
+            const backwardSpeed = sectionAt(t).speed + 80;
+            p.x = Math.max(TRAM_EDGE, p.x - backwardSpeed * dt);
+          }
+          if (this.keys.has('ArrowRight') || this.keys.has('KeyD')) p.x = Math.min(W - 30, p.x + 130 * dt);
+        }
       }
-      if (!routeControlsPlayer(s) && (this.keys.has('ArrowRight') || this.keys.has('KeyD'))) p.x = Math.min(W - 30, p.x + 130 * dt);
-      if (p.slide > 0 && p.x !== prevX) p.slideDirection = p.x < prevX ? -1 : 1;
       p.vy += 900 * dt; p.y += p.vy * dt;
       if (!routeControlsPlayer(s)) {
         this.tram(t, prevY);
@@ -397,6 +419,18 @@ export class Game {
     if (t < VICTORIA_WAKE_T + WAKE_HOPS) s.mx = machineCenter(t); // stays put while she wakes up and hops
     else s.mx += (p.x - 46 - s.mx) * Math.min(1, dt * 2.5);
     updateRainbow(s, t, dt);
+    p.rainbowCooldown = Math.max(0, p.rainbowCooldown - dt);
+    if (s.rainbow && s.down <= 0 && p.jumps > 0 && !routeControlsPlayer(s)) {
+      const contact = ribbonContact(s.rainbow, t, { x: prevX, y: prevY }, p);
+      if (contact.hit && contact.point && !p.rainbowContact && p.rainbowCooldown === 0) {
+        p.vy = Math.min(p.vy, -RAINBOW_BOOST_SPEED);
+        p.y = Math.min(p.y, playerFloor(s));
+        p.rainbowCooldown = RAINBOW_BOOST_COOLDOWN;
+        s.rainbowBoosts.push({ ...contact.point, age: 0 });
+        this.audio.sfx('jump');
+      }
+      p.rainbowContact = contact.overlapping;
+    } else p.rainbowContact = false;
     const dec = (v: number) => Math.max(0, v - dt);
     p.slide = dec(p.slide); p.atk = dec(p.atk); p.cd = dec(p.cd); p.star = dec(p.star);
     s.inv = dec(s.inv); s.shake = dec(s.shake); s.respawn = dec(s.respawn);
@@ -556,6 +590,17 @@ export class Game {
     }
     // Resolve stomp crossings before landing, including fast falls that cross an enemy and the ground in one frame.
     resolveValkyrien(s, t, dt, prevY);
+    const screenY = p.y - s.valkyrien.camera;
+    const offscreen = p.x + 16 <= 0 || p.x - 16 >= W || screenY <= 0 || screenY - 32 >= H;
+    p.offscreenTime = s.down <= 0 && !wasRouteControlled && !routeControlsPlayer(s) && offscreen ? p.offscreenTime + dt : 0;
+    if (p.offscreenTime >= OFFSCREEN_RECOVERY_TIME) {
+      p.x = PX;
+      p.y = clampStationY(s, playerFloor(s) - 35, 32);
+      p.vy = 0; p.jumps = 1; p.slide = 0; p.offscreenTime = 0;
+      p.ride = undefined; p.propRide = undefined; p.machineRide = undefined;
+      s.valkyrien.roofRide = false;
+      s.fx = p.x - 22; s.mx = p.x - 46; s.friend.yHist = [p.y];
+    }
     s.enemies = s.enemies.filter((e) => !e.gone && !(e.dead && enemyX(e, t) < (e.type === 'tram' ? -TRAM_LEN - 20 : -120)));
     if (p.ride?.dead) p.ride = undefined;
 
